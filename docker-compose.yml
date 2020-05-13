@@ -1,0 +1,64 @@
+version: '3.3'
+
+services:
+
+  webserver:
+    container_name: webserver
+    image: encircle.nginx:1.17.9-alpine
+    build:
+      context: ./
+      dockerfile: ./images/webserver/Dockerfile
+    ports:
+      - '8080:80'
+      - '8443:443'
+    depends_on:
+      - wordpress
+    volumes:
+      - ./conf/nginx/conf.d:/etc/nginx/conf.d
+      - ./conf/nginx/certs:/etc/nginx/certs
+      - ./logs/nginx/:/var/log/nginx
+      - ./wordpress/:/var/www/html
+    restart: unless-stopped
+    links:
+      - wordpress
+
+  database:
+    container_name: database
+    image: encircle.mariadb:10.5.1-ubuntu
+    build:
+      context: ./
+      dockerfile: ./images/database/Dockerfile
+    expose:
+      - '3306'
+    volumes:
+      - ./database/data:/var/lib/mysql
+      - ./migrations/:/docker-entrypoint-initdb.d
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${ROOT_PASS}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${USER_PASS}
+
+  wordpress:
+    container_name: wordpress
+    image: encircle.wordpress:php7.3-fpm-alpine
+    build:
+      context: ./
+      dockerfile: ./images/wordpress/Dockerfile
+    expose:
+      - '9000'
+    depends_on:
+      - database
+    working_dir: /var/www/html
+    volumes:
+      - ./wordpress:/var/www/html
+    restart: unless-stopped
+    environment:
+      WORDPRESS_DB_HOST: database
+      WORDPRESS_DB_USER: ${DB_USER}
+      WORDPRESS_DB_PASSWORD: ${USER_PASS}
+      WORDPRESS_DB_NAME: ${DB_NAME}
+      WORDPRESS_TABLE_PREFIX: ${TABLE_PREFIX}
+    links:
+      - database
