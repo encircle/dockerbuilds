@@ -9,18 +9,19 @@ services:
       context: ./
       dockerfile: ./images/webserver/Dockerfile
     ports:
-      - '8080:80'
+      - '9080:80'
       - '8443:443'
     depends_on:
       - wordpress
     volumes:
-      - ./conf/nginx/conf.d:/etc/nginx/conf.d
-      - ./conf/nginx/certs:/etc/nginx/certs
       - ./logs/nginx/:/var/log/nginx
       - ./wordpress/:/var/www/html
     restart: unless-stopped
     links:
       - wordpress
+    environment:
+      SITE: ${SITE}
+      ENV: ${ENV}
 
   database:
     container_name: database
