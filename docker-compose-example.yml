@@ -4,18 +4,15 @@ services:
 
   webserver:
     container_name: webserver
-    image: encircle.nginx:1.17.9-alpine
-    build:
-      context: ./
-      dockerfile: ./images/webserver/Dockerfile
+    image: encircle/nginx:latest
     ports:
-      - '9080:80'
-      - '8443:443'
+      - '80:80'
+      - '443:443'
     depends_on:
       - wordpress
     volumes:
-      - ./logs/nginx:/var/log/nginx
-      - ./wordpress:/var/www/html
+      - ./logs/nginx/:/var/log/nginx
+      - ./wordpress/:/var/www/html
     restart: unless-stopped
     links:
       - wordpress
@@ -24,10 +21,7 @@ services:
 
   database:
     container_name: database
-    image: encircle.mariadb:10.5.1-ubuntu
-    build:
-      context: ./
-      dockerfile: ./images/database/Dockerfile
+    image: encircle/mariadb:latest
     expose:
       - '3306'
     volumes:
@@ -42,10 +36,7 @@ services:
 
   wordpress:
     container_name: wordpress
-    image: encircle.wordpress:php7.3-fpm-alpine
-    build:
-      context: ./
-      dockerfile: ./images/wordpress/Dockerfile
+    image: encircle/wordpress:latest
     expose:
       - '9000'
     depends_on:

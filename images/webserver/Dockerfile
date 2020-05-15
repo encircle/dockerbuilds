@@ -1,7 +1,5 @@
 FROM nginx:1.18.0-alpine-perl
 
-RUN addgroup -g 10011 -S site && adduser --uid 10011 -S site -G site
-
 RUN rm /etc/nginx/nginx.conf
 RUN rm /etc/nginx/conf.d/default.conf
 RUN printf "USER:MbMfkhm4azvtI" >> /etc/nginx/.htpasswd
