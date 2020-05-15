@@ -5,6 +5,7 @@ echo "WordPress version : "$WORDPRESS_VERSION
 if [ $VOLUME_VERSION != $WORDPRESS_VERSION ]; then
     echo "Forcing WordPress code update..."
     rm -f /var/www/html/index.php
+    rm -rf /var/www/html/wp-includes/version.php
 fi
 
 docker-entrypoint.sh php-fpm
