@@ -4,7 +4,7 @@ services:
 
   webserver:
     container_name: webserver
-    image: encircle.nginx:1.17.9-alpine
+    image: encircle/nginx:v1.0
     build:
       context: ./
       dockerfile: ./images/webserver/Dockerfile
@@ -24,7 +24,7 @@ services:
 
   database:
     container_name: database
-    image: encircle.mariadb:10.5.1-ubuntu
+    image: encircle/mariadb:v1.0
     build:
       context: ./
       dockerfile: ./images/database/Dockerfile
@@ -42,7 +42,7 @@ services:
 
   wordpress:
     container_name: wordpress
-    image: encircle.wordpress:php7.3-fpm-alpine
+    image: encircle/wordpress:v1.0
     build:
       context: ./
       dockerfile: ./images/wordpress/Dockerfile
