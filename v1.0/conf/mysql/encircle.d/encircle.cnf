@@ -1,0 +1,7 @@
+[mysqld]
+local-infile=0
+symbolic-links=0
+log_warnings=2
+log_output=FILE
+general_log_file=/var/log/mysql/audit.log
+general_log=ON
