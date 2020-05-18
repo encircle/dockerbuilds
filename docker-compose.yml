@@ -21,6 +21,8 @@ services:
       - wordpress
     environment:
       ENV: ${ENV}
+      SITE: ${SITE}
+      LETSENCRYPT: ${LETSENCRYPT}
 
   database:
     container_name: database
