@@ -1,5 +1,7 @@
 function exit_if_installed_already() {
-  [[ -d /var/www/html/.well-known/acme-challenge/ ]] && exit 0
+  if [ -d /var/www/html/.well-known/acme-challenge ]; then
+    exit 0
+  fi
 }
 
 function install_packages() {
