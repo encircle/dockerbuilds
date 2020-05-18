@@ -81,7 +81,20 @@ echo 'USER_PASS=password' >> .env
 echo 'TABLE_PREFIX=wp_' >> .env
 ```
 
-7. Run the stack
+7. Apply standard permissions to wordpress folder and containing folders/files
+
+```console
+find wordpress -exec chown 101:82 {} \;
+find wordpress -type d -exec chmod 750 {} \;
+find wordpress -type f -exec chmod 640 {} \;
+find wordpress -name wp-content -type d -exec chmod 750 {} \;
+find wordpress -wholename *wp-content/uploads* -type d -exec chmod 770 {} \;
+find wordpress -wholename *wp-content/uploads* -type f -exec chmod 660 {} \;
+find wordpress -wholename *wp-content/plugins* -type d -exec chmod 770 {} \;
+find wordpress -wholename *wp-content/plugins* -type f -exec chmod 660 {} \;
+```
+
+8. Run the stack
 
 ```console
 docker-compose up -d
