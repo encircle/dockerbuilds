@@ -15,9 +15,6 @@ COPY conf/nginx/site.key        /etc/nginx/certs/site.key
 COPY conf/nginx/site.crt        /etc/nginx/certs/site.crt
 COPY conf/nginx/dhparam         /etc/nginx/dhparam
 
-# Following packages required for LetsEncrypt
-RUN apk add netcat-openbsd bc curl wget git bash openssl libressl
-
 # Run entry script prior to base image
 COPY entry/webserver/entrypoint.sh /usr/local/bin
 ENTRYPOINT [ "bash", "entrypoint.sh"]
