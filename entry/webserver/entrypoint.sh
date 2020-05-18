@@ -35,6 +35,8 @@ function install_cert()
     --keypath /etc/nginx/ssl/letsencrypt/$SITE/$SITE.key \
     --fullchainpath /etc/nginx/ssl/letsencrypt/$SITE/$SITE.cer \
     --reloadcmd 'nginx -s reload'
+  ln -s -f /root/.acme.sh/enciraa50.miniserver.com/enciraa50.miniserver.com.cer /etc/nginx/certs/site.crt
+  ln -s -f /root/.acme.sh/enciraa50.miniserver.com/enciraa50.miniserver.com.key /etc/nginx/certs/site.key
 }
 
 function letsencrypt()
