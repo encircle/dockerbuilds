@@ -17,4 +17,5 @@ COPY conf/nginx/dhparam         /etc/nginx/dhparam
 
 # Run entry script prior to base image
 COPY entry/webserver/entrypoint.sh /usr/local/bin
-ENTRYPOINT [ "sh", "/usr/local/bin/entrypoint.sh"]
+RUN chmod 755 /usr/local/bin/entrypoint.sh
+RUN /usr/local/bin/entrypoint.sh

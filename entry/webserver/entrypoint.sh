@@ -26,6 +26,7 @@ function setup()
 
 function request_cert()
 {
+  nginx -s start
   cd /root/.acme.sh
   ./acme.sh --issue -w /var/www/html -d $SITE -k 4096 --debug
 }
