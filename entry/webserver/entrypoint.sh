@@ -1,5 +1,5 @@
-function check_if_installed_already() {
-  [[ -d /var/www/.well-known/acme-challenge ]] && exit 1
+function exit_if_installed_already() {
+  [[ -d /var/www/html/.well-known/acme-challenge/ ]] && exit 1
 }
 
 function install_packages() {
@@ -40,16 +40,16 @@ function install_cert()
 function letsencrypt()
 {
   if [[ "$LETSENCRYPT" == "YES" ]]; then
-    exist_if_installed_already
+    exit_if_installed_already
     install_packages
     install_client
     setup
-    request_cert
-    install_cert
+    request_cert && install_cert
   fi
 }
 
 function main() {
+  set -e
   letsencrypt
 }
 
