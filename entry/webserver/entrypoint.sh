@@ -1,3 +1,11 @@
+function check_if_installed_already() {
+  [[ -d /var/www/.well-known/acme-challenge ]] && exit 1
+}
+
+function install_packages() {
+  apk add netcat-openbsd bc curl wget git bash openssl libressl;
+}
+
 function install_client()
 {
   cd /tmp && git clone https://github.com/Neilpang/acme.sh.git
@@ -29,12 +37,20 @@ function install_cert()
     --reloadcmd '/etc/init.d/nginx restart'
 }
 
-main()
+function letsencrypt()
 {
-  install_client
-  setup
-  request_cert
-  install_cert
+  if [[ "$LETSENCRYPT" == "YES" ]]; then
+    exist_if_installed_already
+    install_packages
+    install_client
+    setup
+    request_cert
+    install_cert
+  fi
+}
+
+function main() {
+  letsencrypt
 }
 
 main
