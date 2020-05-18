@@ -10,12 +10,12 @@ cp docker-compose-example.yml docker-compose.yml
 
 2. Set environment variables in .env file
 
-ENV -> If not prod, basic auth will be required
-ROOT_PASS -> Desired MySQL root password
-DB_NAME -> Desired MySQL database name
-DB_USER -> Desired MySQL Wordpress user
-USER_PASS -> Desired MySQL user password
-TABLE_PREFIX -> Desired Wordpress database table prefix
+ - ENV -> If not prod, basic auth will be required
+ - ROOT_PASS -> Desired MySQL root password
+ - DB_NAME -> Desired MySQL database name
+ - DB_USER -> Desired MySQL Wordpress user
+ - USER_PASS -> Desired MySQL user password
+ - TABLE_PREFIX -> Desired Wordpress database table prefix
 
 ```console
 echo 'ENV=PROD' > .env
