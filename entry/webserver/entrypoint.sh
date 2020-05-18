@@ -34,7 +34,7 @@ function install_cert()
   ./acme.sh --installcert -d $SITE \
     --keypath /etc/nginx/ssl/letsencrypt/$SITE/$SITE.key \
     --fullchainpath /etc/nginx/ssl/letsencrypt/$SITE/$SITE.cer \
-    --reloadcmd '/etc/init.d/nginx restart'
+    --reloadcmd 'nginx -s reload'
 }
 
 function letsencrypt()
