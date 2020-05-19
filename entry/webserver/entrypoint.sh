@@ -34,6 +34,11 @@ function get_cert()
     --debug 
 }
 
+function restart_nginx() {
+  nginx -s stop
+  nginx -g 'daemon off;'
+}
+
 function letsencrypt()
 {
   start_nginx
@@ -45,6 +50,7 @@ function letsencrypt()
       get_cert
     fi
   fi
+  restart_nginx
 }
 
 function main() {
