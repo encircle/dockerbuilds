@@ -40,7 +40,7 @@ function install_cert()
   cd /root/.acme.sh
   ./acme.sh --installcert -d $SITE \
     --fullchain-file /etc/nginx/certs/fullchain.crt
-    --key-file /etc/nginx/certs/site.key
+    --keypath /etc/nginx/certs/site.key
     --cert-file /etc/nginx/certs/site.crt
     --reloadcmd 'nginx -s reload'
 }
