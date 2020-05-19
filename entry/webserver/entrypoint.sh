@@ -1,5 +1,5 @@
 function start_nginx() {
-  nginx -g 'daemon off;'
+  nginx -g 'daemon off;' &
 }
 
 function exit_if_installed_already() {
