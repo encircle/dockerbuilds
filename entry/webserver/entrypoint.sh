@@ -39,11 +39,10 @@ function install_cert()
 {
   cd /root/.acme.sh
   ./acme.sh --installcert -d $SITE \
-    --keypath /etc/nginx/ssl/letsencrypt/$SITE/$SITE.key \
-    --fullchainpath /etc/nginx/ssl/letsencrypt/$SITE/$SITE.cer \
+    --fullchain-file /etc/nginx/certs/fullchain.crt
+    --key-file /etc/nginx/certs/site.key
+    --cert-file /etc/nginx/certs/site.crt
     --reloadcmd 'nginx -s reload'
-  ln -s -f /root/.acme.sh/enciraa50.miniserver.com/enciraa50.miniserver.com.cer /etc/nginx/certs/site.crt
-  ln -s -f /root/.acme.sh/enciraa50.miniserver.com/enciraa50.miniserver.com.key /etc/nginx/certs/site.key
 }
 
 function letsencrypt()
