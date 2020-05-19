@@ -35,22 +35,24 @@ function get_cert()
 }
 
 function restart_nginx() {
-  nginx -s stop || true
+  nginx -s stop
   nginx -g 'daemon off;'
 }
 
 function letsencrypt()
 {
-  start_nginx
   if [[ "$LETSENCRYPT" == "YES" ]]; then
     if [ ! -d /var/www/html/.well-known/acme-challenge ]; then
+      start_nginx
       install_packages
       install_client
       setup
       get_cert
+      restart_nginx
     fi
+  else
+    nginx -g 'daemon off;'
   fi
-  restart_nginx
 }
 
 function main() {
