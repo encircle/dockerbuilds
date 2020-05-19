@@ -2,12 +2,6 @@ function start_nginx() {
   nginx -g 'daemon off;' &
 }
 
-function exit_if_installed_already() {
-  if [ -d /var/www/html/.well-known/acme-challenge ]; then
-    exit 0
-  fi
-}
-
 function install_packages() {
   apk add netcat-openbsd bc curl wget git bash openssl libressl;
 }
@@ -44,11 +38,12 @@ function letsencrypt()
 {
   start_nginx
   if [[ "$LETSENCRYPT" == "YES" ]]; then
-    exit_if_installed_already
-    install_packages
-    install_client
-    setup
-    get_cert
+    if [ ! -d /var/www/html/.well-known/acme-challenge ]; then
+      install_packages
+      install_client
+      setup
+      get_cert
+    fi
   fi
 }
 
