@@ -10,6 +10,8 @@ cp docker-compose-example.yml docker-compose.yml
 
 2. Set environment variables in .env file
 
+ - SITE -> DNS to use for LetsEncrypt verification
+ - LETSENCRYPT -> YES/NO -> Whether to install LetsEncrypt certificate with automatic renewals (DNS must be configured and firewalls open for LetsEncrypt verification)
  - ENV -> If not prod, basic auth will be required
  - ROOT_PASS -> Desired MySQL root password
  - DB_NAME -> Desired MySQL database name
@@ -18,6 +20,8 @@ cp docker-compose-example.yml docker-compose.yml
  - TABLE_PREFIX -> Desired Wordpress database table prefix
 
 ```console
+echo 'SITE=www.example.com' > .env
+echo 'LETSENCRYPT=YES' >> .env
 echo 'ENV=PROD' > .env
 echo 'ROOT_PASS=password' >> .env
 echo 'DB_NAME=wp_db' >> .env
@@ -73,7 +77,9 @@ mkdir wordpress && tar -xvzf /tmp/wordpress.tar.gz -C wordpress
 ** Note, DB_NAME, DB_USER, USER_PASS and TABLE_PREFIX must match existing site **
 
 ```console
-echo 'ENV=PROD' > .env
+echo 'SITE=www.example.com' > .env
+echo 'LETSENCRYPT=YES' >> .env
+echo 'ENV=PROD' >> .env
 echo 'ROOT_PASS=password' >> .env
 echo 'DB_NAME=wp_db' >> .env
 echo 'DB_USER=wp_usr' >> .env
