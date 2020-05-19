@@ -37,7 +37,6 @@ function get_cert()
     --cert-file /etc/nginx/certs/site.crt \
     --key-file /etc/nginx/certs/site.key \
     --fullchain-file /etc/nginx/certs/fullchain.crt \
-    --reloadcmd 'nginx -s reload' \
     --debug 
 }
 
