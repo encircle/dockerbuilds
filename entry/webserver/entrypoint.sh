@@ -32,17 +32,15 @@ function request_cert()
 {
   nginx -s start
   cd /root/.acme.sh
-  ./acme.sh --issue -w /var/www/html -d $SITE -k 4096 --debug
-}
-
-function install_cert()
-{
-  cd /root/.acme.sh
-  ./acme.sh --installcert -d $SITE \
-    --fullchain-file /etc/nginx/certs/fullchain.crt
-    --keypath /etc/nginx/certs/site.key
-    --cert-file /etc/nginx/certs/site.crt
-    --reloadcmd 'nginx -s reload'
+  ./acme.sh --issue \ 
+	    --cert-file /etc/nginx/certs/site.crt
+            --key-file /etc/nginx/certs/site.key
+	    --fullchain-file /etc/nginx/certs/fullchain.crt
+	    -w /var/www/html
+	    -d $SITE
+	    -k 4096
+            --reloadcmd 'nginx -s reload'
+	    --debug
 }
 
 function letsencrypt()
