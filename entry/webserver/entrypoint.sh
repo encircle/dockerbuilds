@@ -35,7 +35,7 @@ function get_cert()
 }
 
 function restart_nginx() {
-  nginx -s stop
+  nginx -s stop || true
   nginx -g 'daemon off;'
 }
 
