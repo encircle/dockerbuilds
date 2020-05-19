@@ -32,6 +32,7 @@ function get_cert()
 {
   cd /root/.acme.sh
   ./acme.sh --issue -w /var/www/html -d $SITE \
+    --staging \
     --keylength 4096 \
     --cert-file /etc/nginx/certs/site.crt \
     --key-file /etc/nginx/certs/site.key \
