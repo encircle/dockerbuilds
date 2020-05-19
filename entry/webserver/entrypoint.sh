@@ -28,9 +28,8 @@ function setup()
   openssl dhparam -dsaparam -out /etc/nginx/ssl/letsencrypt/$SITE/dhparams.pem 4096
 }
 
-function request_cert()
+function get_cert()
 {
-  nginx -s start
   cd /root/.acme.sh
   ./acme.sh --issue -w /var/www/html -d $SITE \
     --keylength 4096 \
@@ -49,7 +48,7 @@ function letsencrypt()
     install_packages
     install_client
     setup
-    request_cert && install_cert
+    get_cert
   fi
 }
 
