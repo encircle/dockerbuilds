@@ -23,6 +23,7 @@ services:
       ENV: ${ENV}
       SITE: ${SITE}
       LETSENCRYPT: ${LETSENCRYPT}
+      FPM_HOST: ${FPM_HOST}
 
   database:
     container_name: database

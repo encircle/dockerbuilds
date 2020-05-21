@@ -13,6 +13,7 @@ cp docker-compose-example.yml docker-compose.yml
  - SITE -> DNS to use for LetsEncrypt verification
  - LETSENCRYPT -> YES/NO -> Whether to install LetsEncrypt certificate with automatic renewals (DNS must be configured and firewalls open for LetsEncrypt verification)
  - ENV -> If not prod, basic auth will be required
+ - FPM_HOST -> Docker network hostname for FPM host
  - ROOT_PASS -> Desired MySQL root password
  - DB_NAME -> Desired MySQL database name
  - DB_USER -> Desired MySQL Wordpress user
@@ -22,7 +23,8 @@ cp docker-compose-example.yml docker-compose.yml
 ```console
 echo 'SITE=www.example.com' > .env
 echo 'LETSENCRYPT=YES' >> .env
-echo 'ENV=PROD' > .env
+echo 'ENV=PROD' >> .env
+echo 'FPM_HOST=wordpress' >> .env
 echo 'ROOT_PASS=password' >> .env
 echo 'DB_NAME=wp_db' >> .env
 echo 'DB_USER=wp_usr' >> .env
@@ -80,6 +82,7 @@ mkdir wordpress && tar -xvzf /tmp/wordpress.tar.gz -C wordpress
 echo 'SITE=www.example.com' > .env
 echo 'LETSENCRYPT=YES' >> .env
 echo 'ENV=PROD' >> .env
+echo 'FPM_HOST=wordpress' >> .env
 echo 'ROOT_PASS=password' >> .env
 echo 'DB_NAME=wp_db' >> .env
 echo 'DB_USER=wp_usr' >> .env
