@@ -25,29 +25,6 @@ services:
       LETSENCRYPT: ${LETSENCRYPT}
       FPM_HOST: ${FPM_HOST}
 
-  webserver-modsec:
-    container_name: webserver
-    image: encircle/nginx:latest
-    build:
-      context: ./
-      dockerfile: ./images/nginx/Dockerfile
-    ports:
-      - '9080:80'
-      - '8443:443'
-    depends_on:
-      - wordpress
-    volumes:
-      - ./logs/nginx:/var/log/nginx
-      - ./wordpress:/var/www/html
-    restart: unless-stopped
-    links:
-      - wordpress
-    environment:
-      ENV: ${ENV}
-      SITE: ${SITE}
-      LETSENCRYPT: ${LETSENCRYPT}
-      FPM_HOST: ${FPM_HOST}
-
   database:
     container_name: database
     image: encircle/mariadb:latest
