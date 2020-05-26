@@ -42,14 +42,12 @@ function restart_nginx() {
 function letsencrypt()
 {
   if [[ "$LETSENCRYPT" == "YES" ]]; then
-    if [ ! -d /var/www/html/.well-known/acme-challenge ]; then
-      start_nginx
-      install_packages
-      install_client
-      setup
-      get_cert
-      restart_nginx
-    fi
+    start_nginx
+    install_packages
+    install_client
+    setup
+    get_cert
+    restart_nginx
   else
     nginx -g 'daemon off;'
   fi
