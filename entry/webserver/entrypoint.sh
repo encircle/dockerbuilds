@@ -42,6 +42,7 @@ function restart_nginx() {
 function letsencrypt()
 {
   if [[ "$LETSENCRYPT" == "YES" ]]; then
+    rm -rf /var/www/.well-known
     start_nginx
     install_packages
     install_client
