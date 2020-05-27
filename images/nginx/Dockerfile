@@ -19,11 +19,12 @@ COPY conf/nginx/dhparam         /etc/nginx/dhparam
 RUN apk add pcre-dev zlib-dev openssl-dev libmaxminddb yajl-dev
 RUN mkdir /etc/nginx/modsec
 
-COPY files/nginx/modsecurity-precompiled.tar.gz /tmp/modsecurity-precompiled.tar.gz
-COPY files/nginx/ngx_http_modsecurity_module.so /usr/lib/nginx/modules/ngx_http_modsecurity_module.so
-COPY files/nginx/modsecurity.conf /etc/nginx/modsec/modsecurity.conf
-COPY files/nginx/unicode.mapping /etc/nginx/modsec/unicode.mapping
-COPY files/nginx/owasp-modsecurity-crs-3.0.2.tar.gz /tmp/owasp-modsecurity-crs-3.0.2.tar.gz
+COPY software/modsecurity-precompiled.tar.gz /tmp/modsecurity-precompiled.tar.gz
+COPY software/ngx_http_modsecurity_module.so /usr/lib/nginx/modules/ngx_http_modsecurity_module.so
+COPY software/owasp-modsecurity-crs-3.0.2.tar.gz /tmp/owasp-modsecurity-crs-3.0.2.tar.gz
+
+COPY conf/modsecurity/modsecurity.conf /etc/nginx/modsec/modsecurity.conf
+COPY conf/modsecurity/unicode.mapping /etc/nginx/modsec/unicode.mapping
 COPY conf/nginx/modsecurity.conf /etc/nginx/conf.d/modsecurity.conf
 
 RUN tar -xvzf /tmp/modsecurity-precompiled.tar.gz -C /usr/local
@@ -35,10 +36,10 @@ RUN rm -rf /tmp/owasp-modsecurity-crs-3.0.2.tar.gz
 
 # Maldetect
 RUN apk add bash
-COPY files/nginx/maldetect-current.tar.gz /tmp/maldetect-current.tar.gz
+COPY software/maldetect-current.tar.gz /tmp/maldetect-current.tar.gz
 RUN tar -xvzf /tmp/maldetect-current.tar.gz -C /tmp
 RUN cd $(ls -d /tmp/maldet* | grep -v tar) && bash install.sh
-COPY files/nginx/conf.maldet /usr/local/maldetect/conf.maldet
+COPY conf/maldetect/conf.maldet /usr/local/maldetect/conf.maldet
 RUN rm -rf /tmp/maldetect*
 
 # Run entry script prior to base image
