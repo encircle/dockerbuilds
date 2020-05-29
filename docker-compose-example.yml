@@ -4,7 +4,7 @@ services:
 
   webserver:
     container_name: webserver
-    image: encircle/nginx:latest
+    image: encircle/nginx-modsec-clamav:latest
     ports:
       - '80:80'
       - '443:443'
