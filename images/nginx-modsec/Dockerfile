@@ -35,6 +35,6 @@ RUN rm -rf /tmp/modsecurity-precompiled.tar.gz
 RUN rm -rf /tmp/owasp-modsecurity-crs-3.0.2.tar.gz
 
 # Run entry script prior to base image
-COPY entry/webserver/entrypoint.sh /usr/local/bin
+COPY entry/webserver/entrypoint-modsec.sh /usr/local/bin/entrypoint.sh
 RUN chmod 755 /usr/local/bin/entrypoint.sh
 CMD /usr/local/bin/entrypoint.sh
