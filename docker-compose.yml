@@ -8,22 +8,20 @@ services:
     build:
       context: ./
       dockerfile: ./images/nginx/Dockerfile
-    ports:
-      - '9080:80'
-      - '8443:443'
-    depends_on:
-      - wordpress
-    volumes:
-      - ./logs/nginx:/var/log/nginx
-      - ./wordpress:/var/www/html
-    restart: unless-stopped
-    links:
-      - wordpress
-    environment:
-      ENV: ${ENV}
-      SITE: ${SITE}
-      LETSENCRYPT: ${LETSENCRYPT}
-      FPM_HOST: ${FPM_HOST}
+
+  webserver-modsec:
+    container_name: webserver-modsec
+    image: encircle/nginx-modsec:latest
+    build:
+      context: ./
+      dockerfile: ./images/nginx-modsec/Dockerfile
+
+  webserver-modsec-clamav:
+    container_name: webserver-modsec-clamav
+    image: encircle/nginx-modsec-clamav:latest
+    build:
+      context: ./
+      dockerfile: ./images/nginx-modsec-clamav/Dockerfile
 
   database:
     container_name: database
@@ -31,17 +29,6 @@ services:
     build:
       context: ./
       dockerfile: ./images/mariadb/Dockerfile
-    expose:
-      - '3306'
-    volumes:
-      - ./database/data:/var/lib/mysql
-      - ./migrations/:/docker-entrypoint-initdb.d
-    restart: unless-stopped
-    environment:
-      MYSQL_ROOT_PASSWORD: ${ROOT_PASS}
-      MYSQL_DATABASE: ${DB_NAME}
-      MYSQL_USER: ${DB_USER}
-      MYSQL_PASSWORD: ${USER_PASS}
 
   wordpress:
     container_name: wordpress
@@ -49,19 +36,3 @@ services:
     build:
       context: ./
       dockerfile: ./images/wordpress/Dockerfile
-    expose:
-      - '9000'
-    depends_on:
-      - database
-    working_dir: /var/www/html
-    volumes:
-      - ./wordpress:/var/www/html
-    restart: unless-stopped
-    environment:
-      WORDPRESS_DB_HOST: database
-      WORDPRESS_DB_USER: ${DB_USER}
-      WORDPRESS_DB_PASSWORD: ${USER_PASS}
-      WORDPRESS_DB_NAME: ${DB_NAME}
-      WORDPRESS_TABLE_PREFIX: ${TABLE_PREFIX}
-    links:
-      - database
