@@ -14,10 +14,7 @@ COPY conf/nginx/cloudflare.conf /etc/nginx/conf.d/cloudflare.conf
 COPY conf/nginx/site.key        /etc/nginx/certs/site.key
 COPY conf/nginx/site.crt        /etc/nginx/certs/site.crt
 COPY conf/nginx/dhparam         /etc/nginx/dhparam
-<<<<<<< HEAD
-=======
 COPY conf/nginx/error.html      /var/www/error.html
->>>>>>> v1.0.5
 
 # Run entry script prior to base image
 COPY entry/webserver/entrypoint.sh /usr/local/bin
