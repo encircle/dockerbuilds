@@ -8,27 +8,28 @@ RUN rm /etc/nginx/conf.d/default.conf
 RUN printf "USER:MbMfkhm4azvtI" >> /etc/nginx/.htpasswd
 
 # Copy over configurations
-COPY conf/nginx/nginx-modsec.conf      /etc/nginx/nginx.conf
-COPY conf/nginx/default.conf    /etc/nginx/conf.d/default.conf
-COPY conf/nginx/cloudflare.conf /etc/nginx/conf.d/cloudflare.conf
-COPY conf/nginx/site.key        /etc/nginx/certs/site.key
-COPY conf/nginx/site.crt        /etc/nginx/certs/site.crt
-COPY conf/nginx/dhparam         /etc/nginx/dhparam
+COPY conf/nginx/nginx-modsec.conf  /etc/nginx/nginx.conf
+COPY conf/nginx/default.conf       /etc/nginx/conf.d/default.conf
+COPY conf/nginx/cloudflare.conf    /etc/nginx/conf.d/cloudflare.conf
+COPY conf/nginx/site.key           /etc/nginx/certs/site.key
+COPY conf/nginx/site.crt           /etc/nginx/certs/site.crt
+COPY conf/nginx/dhparam            /etc/nginx/dhparam
+COPY conf/nginx/error.html         /var/www/error.html
 
 # Modsecurity
 RUN apk add pcre-dev zlib-dev openssl-dev libmaxminddb yajl-dev
 RUN mkdir /etc/nginx/modsec
 
-COPY software/modsecurity-precompiled.tar.gz /tmp/modsecurity-precompiled.tar.gz
-COPY software/ngx_http_modsecurity_module.so /usr/lib/nginx/modules/ngx_http_modsecurity_module.so
+COPY software/modsecurity-precompiled.tar.gz     /tmp/modsecurity-precompiled.tar.gz
+COPY software/ngx_http_modsecurity_module.so     /usr/lib/nginx/modules/ngx_http_modsecurity_module.so
 COPY software/owasp-modsecurity-crs-3.0.2.tar.gz /tmp/owasp-modsecurity-crs-3.0.2.tar.gz
 
 COPY conf/modsecurity/modsecurity.conf /etc/nginx/modsec/modsecurity.conf
-COPY conf/modsecurity/unicode.mapping /etc/nginx/modsec/unicode.mapping
-COPY conf/nginx/modsecurity.conf /etc/nginx/conf.d/modsecurity.conf
+COPY conf/modsecurity/unicode.mapping  /etc/nginx/modsec/unicode.mapping
+COPY conf/nginx/modsecurity.conf       /etc/nginx/conf.d/modsecurity.conf
 
-RUN tar -xvzf /tmp/modsecurity-precompiled.tar.gz -C /usr/local
-RUN tar -xvzf /tmp/owasp-modsecurity-crs-3.0.2.tar.gz -C /etc/nginx/modsec
+RUN tar -xvzf /tmp/modsecurity-precompiled.tar.gz -C                        /usr/local
+RUN tar -xvzf /tmp/owasp-modsecurity-crs-3.0.2.tar.gz -C                    /etc/nginx/modsec
 RUN mv /etc/nginx/modsec/owasp-modsecurity-crs-3.0.2/crs-setup.conf.example /etc/nginx/modsec/owasp-modsecurity-crs-3.0.2/crs-setup.conf
 
 RUN rm -rf /tmp/modsecurity-precompiled.tar.gz
