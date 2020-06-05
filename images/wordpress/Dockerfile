@@ -6,6 +6,7 @@ RUN cd /tmp && curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/
 RUN chmod 750 /tmp/wp-cli.phar
 RUN mv /tmp/wp-cli.phar /usr/local/bin/wp
 
+COPY conf/php/max_file_upload.ini /usr/local/etc/php/conf.d/max_file_upload.ini
 COPY conf/php/cookie-security.ini /usr/local/etc/php/conf.d/cookie-security.ini
 COPY conf/php/www.conf /usr/local/etc/php-fpm.d/www.conf
 COPY entry/wordpress/entrypoint.sh /usr/local/bin/
