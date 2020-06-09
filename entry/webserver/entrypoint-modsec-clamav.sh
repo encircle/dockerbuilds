@@ -37,13 +37,16 @@ function get_cert()
 function letsencrypt()
 {
   if [[ "$LETSENCRYPT" == "YES" ]]; then
-    rm -rf /var/www/.well-known
-    start_nginx
-    install_packages
-    install_client
-    setup
-    get_cert
-    nginx -s stop
+    if [[ ! -f /tmp/.gotcert ]]; then
+      rm -rf /var/www/.well-known
+      start_nginx
+      install_packages
+      install_client
+      setup
+      get_cert
+      nginx -s stop
+      touch /tmp/.gotcert
+    fi
   fi
 }
 
