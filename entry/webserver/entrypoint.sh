@@ -8,6 +8,7 @@ function install_packages() {
 
 function install_client()
 {
+  rm -rf /tmp/acme.sh
   cd /tmp && git clone https://github.com/Neilpang/acme.sh.git
   cd acme.sh && ./acme.sh --install
 }
