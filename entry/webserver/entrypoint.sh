@@ -42,13 +42,16 @@ function restart_nginx() {
 function letsencrypt()
 {
   if [[ "$LETSENCRYPT" == "YES" ]]; then
-    rm -rf /var/www/.well-known
-    start_nginx
-    install_packages
-    install_client
-    setup
-    get_cert
-    restart_nginx
+    if [[ ! -f /tmp/.gotcert ]]; then
+      rm -rf /var/www/.well-known
+      start_nginx
+      install_packages
+      install_client
+      setup
+      get_cert
+      restart_nginx
+      touch /tmp/.gotcert
+    fi
   else
     nginx -g 'daemon off;'
   fi
