@@ -65,7 +65,7 @@ mysqldump --defaults-file=/etc/mysql/debian.cnf db_name > /tmp/dump.sql
 4. Create a directory named migrations in the same directory as the docker-compose.yml and move the SQL dump into this folder
 
 ```console
-mkdir migrations && mv /tmp/dump.sql migrations/
+mkdir migrations && mv /tmp/dump.sql migrations/ && chown -R 999:999 migrations
 ```
 
 5. Create a directory named wordpress and decompress the Wordpress archive into this directory
