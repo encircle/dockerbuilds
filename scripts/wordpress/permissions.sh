@@ -19,7 +19,7 @@ find /var/www/html/wp-includes -type f -exec chmod 740 {} \;
 
 # /wp-content
 chown root:10013 /var/www/html/wp-content
-chmod 760 /var/www/html/wp-content
+chmod 750 /var/www/html/wp-content
 find /var/www/html/wp-content -exec chown root:www-data {} \;
 find /var/www/html/wp-content -type f -exec chmod 760 {} \;
 
