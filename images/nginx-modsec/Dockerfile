@@ -104,6 +104,13 @@ RUN cd /tmp \
  && mv /etc/nginx/modsec/owasp-modsecurity-crs-${ENV_OWASP_CRS_VERSION}/crs-setup.conf.example /etc/nginx/modsec/owasp-modsecurity-crs-${ENV_OWASP_CRS_VERSION}/crs-setup.conf \
  && rm -rf /tmp/owasp-modsecurity-crs-${ENV_OWASP_CRS_VERSION}.tar.gz
 
+# Permissions
+RUN apk add shadow \
+ && usermod -u 10014 nginx \
+ && groupmod -g 10014 nginx \
+ && groupmod -g 10013 www-data \
+ && usermod -aG www-data nginx
+
 # Entrypoint
 COPY entry/webserver/entrypoint-modsec.sh /usr/local/bin/entrypoint.sh
 RUN chmod 755 /usr/local/bin/entrypoint.sh
