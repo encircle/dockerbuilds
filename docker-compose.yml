@@ -2,13 +2,6 @@ version: '3.3'
 
 services:
 
-  webserver:
-    container_name: webserver
-    image: encircle/nginx:latest
-    build:
-      context: ./
-      dockerfile: ./images/nginx/Dockerfile
-
   webserver-modsec:
     container_name: webserver-modsec
     image: encircle/nginx-modsec:latest

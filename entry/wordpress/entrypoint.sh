@@ -1,3 +1,5 @@
+set -x
+
 # Only do this is Wordpress is already installed
 if [[ -f /var/www/html/wp-config.php ]]; then
 
@@ -20,7 +22,7 @@ if [[ -f /var/www/html/wp-config.php ]]; then
 
 fi
 
-# Hook official docker wordpress
-# entrypoint
-docker-entrypoint.sh php-fpm
+# Start crontab
+/usr/sbin/crond -f -l 8 &
 
+docker-entrypoint.sh php-fpm
