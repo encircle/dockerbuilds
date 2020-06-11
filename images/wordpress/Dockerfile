@@ -17,8 +17,6 @@ COPY conf/php/max_file_upload.ini /usr/local/etc/php/conf.d/max_file_upload.ini
 COPY conf/php/cookie-security.ini /usr/local/etc/php/conf.d/cookie-security.ini
 COPY conf/php/www.conf /usr/local/etc/php-fpm.d/www.conf
 
-RUN echo boo
-
 # Scripts
 COPY scripts/wordpress/permissions.sh /usr/local/bin
 RUN chmod 755 /usr/local/bin/permissions.sh \
