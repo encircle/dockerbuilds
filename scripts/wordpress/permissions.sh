@@ -2,35 +2,22 @@
 # /
 chown root:10013 /var/www/html
 chmod 750 /var/www/html
-find /var/www/html -maxdepth 1 -type f -exec chown root:10013 {} \;
+find /var/www/html -maxdepth 1 -type f -exec chown root:www-data {} \;
 find /var/www/html -maxdepth 1 -type f -exec chmod 740 {} \;
 
-# /wp-admin
-chown root:root /var/www/html/wp-admin
-chmod 750 /var/www/html/wp-admin
-find /var/www/html/wp-admin -exec chown root:www-data {} \;
-find /var/www/html/wp-admin -type f -exec chmod 740 {} \;
+# Generic
+find /var/www/html -exec chown root:www-data {} \;
+find /var/www/html -type d -exec chmod 750 {} \;
+find /var/www/html -type f -exec chmod 640 {} \;
 
-# /wp-includes
-chown root:www-data /var/www/html/wp-includes
-chmod 750 /var/www/html/wp-includes
-find /var/www/html/wp-includes -exec chown root:www-data {} \;
-find /var/www/html/wp-includes -type f -exec chmod 740 {} \;
+# Git
+find /var/www/html/.git -exec chown root:root {} \;
+find /var/www/html/.git -type d -exec chmod 750 {} \;
+find /var/www/html/.git -type f -exec chmod 640 {} \;
 
-# /wp-content
-chown root:10013 /var/www/html/wp-content
-chmod 750 /var/www/html/wp-content
-find /var/www/html/wp-content -exec chown root:www-data {} \;
-find /var/www/html/wp-content -type f -exec chmod 760 {} \;
-
-# /wp-content/themes
-chown root:10013 /var/www/html/wp-content/themes
-find /var/www/html/wp-content/themes -exec chown root:www-data {} \;
-find /var/www/html/wp-content/themes -type f -exec chmod 760 {} \;
-
-# /wp-content/plugins
-find /var/www/html/wp-content/plugins -exec chown root:www-data {} \;
-find /var/www/html/wp-content/plugins -type f -exec chmod 740 {} \;
+# /wp-content/uploads
+find /var/www/html/wp-content/uploads -type d -exec chmod 770 {} \;
+find /var/www/html/wp-content/uploads -type f -exec chmod 660 {} \;
 
 # /wp-config.php
 chmod 400 /var/www/html/wp-config.php
