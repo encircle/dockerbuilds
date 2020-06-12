@@ -60,11 +60,17 @@ function htpasswd()
   echo "$HTPASS" > /etc/nginx/.htpasswd
 }
 
+function log_acl()
+{
+  chmod 600 /var/log/nginx/*.log
+}
+
 function main() {
   set -e
   env_sub
   letsencrypt
   htpasswd
+  log_acl
   nginx -g 'daemon off;'
 }
 

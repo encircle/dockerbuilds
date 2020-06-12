@@ -108,7 +108,7 @@ RUN cd /tmp \
  && mv /etc/nginx/modsec/owasp-modsecurity-crs-${ENV_OWASP_CRS_VERSION}/crs-setup.conf.example /etc/nginx/modsec/owasp-modsecurity-crs-${ENV_OWASP_CRS_VERSION}/crs-setup.conf \
  && rm -rf /tmp/owasp-modsecurity-crs-${ENV_OWASP_CRS_VERSION}.tar.gz
 
-# Permissions
+# Users and groups
 RUN apk add shadow \
  && usermod -u 10014 nginx \
  && groupmod -g 10014 nginx \
