@@ -21,6 +21,7 @@ services:
       SITE: ${SITE}
       LETSENCRYPT: ${LETSENCRYPT}
       FPM_HOST: ${FPM_HOST}
+      HTPASS: ${HTPASS}
 
   database:
     container_name: database
