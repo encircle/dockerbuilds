@@ -34,6 +34,11 @@ function get_cert()
     --debug 
 }
 
+function env_sub()
+{
+  envsubst '${SITE},${FPM_HOST}' < /etc/nginx/conf.d/default.conf > /tmp/default.conf && mv /tmp/default.conf /etc/nginx/conf.d/default.conf
+}
+
 function letsencrypt()
 {
   if [[ "$LETSENCRYPT" == "YES" ]]; then
@@ -57,6 +62,7 @@ function htpasswd()
 
 function main() {
   set -e
+  env_sub
   letsencrypt
   htpasswd
   nginx -g 'daemon off;'

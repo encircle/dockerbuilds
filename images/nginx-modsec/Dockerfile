@@ -78,6 +78,8 @@ RUN rm /etc/nginx/nginx.conf \
  && rm /etc/nginx/conf.d/default.conf \
  && printf "USER:MbMfkhm4azvtI" >> /etc/nginx/.htpasswd
 
+RUN echo world
+
 COPY conf/nginx/nginx-modsec.conf  /etc/nginx/nginx.conf
 COPY conf/nginx/default.conf       /etc/nginx/conf.d/default.conf
 COPY conf/nginx/cloudflare.conf    /etc/nginx/conf.d/cloudflare.conf
