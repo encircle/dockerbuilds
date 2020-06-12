@@ -83,10 +83,10 @@ RUN echo world
 COPY conf/nginx/nginx-modsec.conf  /etc/nginx/nginx.conf
 COPY conf/nginx/default.conf       /etc/nginx/conf.d/default.conf
 COPY conf/nginx/cloudflare.conf    /etc/nginx/conf.d/cloudflare.conf
-COPY conf/nginx/site.key           /etc/nginx/certs/site.key
-COPY conf/nginx/site.crt           /etc/nginx/certs/site.crt
-COPY conf/nginx/444.key           /etc/nginx/certs/444.key
-COPY conf/nginx/444.crt           /etc/nginx/certs/444.crt
+COPY conf/nginx/certs/site.key     /etc/nginx/certs/site.key
+COPY conf/nginx/certs/site.crt     /etc/nginx/certs/site.crt
+COPY conf/nginx/certs/444.key      /etc/nginx/certs/444.key
+COPY conf/nginx/certs/444.crt      /etc/nginx/certs/444.crt
 COPY conf/nginx/dhparam            /etc/nginx/dhparam
 COPY conf/nginx/error.html         /var/www/error.html
 
@@ -113,15 +113,10 @@ RUN apk add shadow \
  && usermod -u 10014 nginx \
  && groupmod -g 10014 nginx \
  && groupmod -g 10013 www-data \
- && usermod -aG www-data nginx
-
-RUN touch /var/log/nginx/access.log \
- && touch /var/log/nginx/error.log \
- && touch /var/log/nginx/modsec_audit.log \
- && touch /var/log/nginx/modsec_debug.log \
- && chmod 700 /var/log/nginx/*.log
+ && usermod -aG www-data nginx \
+ && apk del shadow
 
 # Entrypoint
-COPY entry/webserver/entrypoint-modsec.sh /usr/local/bin/entrypoint.sh
+COPY entry/nginx-modsec/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod 755 /usr/local/bin/entrypoint.sh
 CMD /usr/local/bin/entrypoint.sh

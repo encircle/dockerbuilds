@@ -19,6 +19,7 @@ cp docker-compose-example.yml docker-compose.yml
  - DB_USER -> Desired MySQL Wordpress user
  - USER_PASS -> Desired MySQL user password
  - TABLE_PREFIX -> Desired Wordpress database table prefix
+ - HTPASS -> .htpasswd format credentials (user:hash)
 
 ```console
 echo 'SITE=www.example.com' > .env
@@ -30,6 +31,7 @@ echo 'DB_NAME=wp_db' >> .env
 echo 'DB_USER=wp_usr' >> .env
 echo 'USER_PASS=password' >> .env
 echo 'TABLE_PREFIX=wp_' >> .env
+echo "HTPASS=USER:$(openssl passwd -apr1 PASSWORD)" >> .env
 ```
 
 3. Run the stack
@@ -88,6 +90,7 @@ echo 'DB_NAME=wp_db' >> .env
 echo 'DB_USER=wp_usr' >> .env
 echo 'USER_PASS=password' >> .env
 echo 'TABLE_PREFIX=wp_' >> .env
+echo "HTPASS=USER:$(openssl passwd -apr1 PASSWORD)" >> .env
 ```
 
 7. Apply standard permissions to wordpress folder and containing folders/files

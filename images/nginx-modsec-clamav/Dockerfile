@@ -90,8 +90,8 @@ RUN rm /etc/nginx/nginx.conf \
 COPY conf/nginx/nginx-modsec.conf  /etc/nginx/nginx.conf
 COPY conf/nginx/default.conf       /etc/nginx/conf.d/default.conf
 COPY conf/nginx/cloudflare.conf    /etc/nginx/conf.d/cloudflare.conf
-COPY conf/nginx/site.key           /etc/nginx/certs/site.key
-COPY conf/nginx/site.crt           /etc/nginx/certs/site.crt
+COPY conf/nginx/certs/site.key           /etc/nginx/certs/site.key
+COPY conf/nginx/certs/site.crt           /etc/nginx/certs/site.crt
 COPY conf/nginx/dhparam            /etc/nginx/dhparam
 COPY conf/nginx/error.html         /var/www/error.html
 
@@ -114,6 +114,6 @@ RUN cd /tmp \
  && rm -rf /tmp/owasp-modsecurity-crs-${ENV_OWASP_CRS_VERSION}.tar.gz
 
 # Entrypoint
-COPY entry/webserver/entrypoint-modsec.sh /usr/local/bin/entrypoint.sh
+COPY entry/nginx-modsec-clamav/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod 755 /usr/local/bin/entrypoint.sh
 CMD /usr/local/bin/entrypoint.sh
