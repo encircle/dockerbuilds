@@ -111,6 +111,12 @@ RUN apk add shadow \
  && groupmod -g 10013 www-data \
  && usermod -aG www-data nginx
 
+RUN touch /var/log/nginx/access.log \
+ && touch /var/log/nginx/error.log \
+ && touch /var/log/nginx/modsec_audit.log \
+ && touch /var/log/nginx/modsec_debug.log \
+ && chmod 700 /var/log/nginx/*.log
+
 # Entrypoint
 COPY entry/webserver/entrypoint-modsec.sh /usr/local/bin/entrypoint.sh
 RUN chmod 755 /usr/local/bin/entrypoint.sh
