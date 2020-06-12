@@ -50,9 +50,15 @@ function letsencrypt()
   fi
 }
 
+function htpasswd()
+{
+  echo "$HTPASS" > /etc/nginx/.htpasswd
+}
+
 function main() {
   set -e
   letsencrypt
+  htpasswd
   nginx -g 'daemon off;'
 }
 
