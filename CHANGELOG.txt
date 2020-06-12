@@ -9,4 +9,6 @@ v1.0.12
    -> New server block added for port 443, this is now the default_server
 - Site and fpm_host variables now replaced using envsubst rather than perl module
    -> New procedure added to NGINX entrypoint to run envsubst against nginx.conf
+- NGINX log permissions made stricter
+   -> New procedure added to NGINX entrypoint to chmod 700 log files
 - File cleanup
