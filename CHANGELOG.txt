@@ -1,4 +1,16 @@
 v1.0.12
+=======
+ISSUES
+------
+#5589 -> 444 on default nginx server
+#5888 -> .htpass permissions
+#5887 -> container logs are world readable
+#5886 -> block /license.txt
+#5884 -> NGINX and PHP versions not hidden in server headers
+#5883 -> Certificate chain incomplete on letsencrypt certs
+#5841 -> Audit of docker fs permissions
+
+DETAILS
 -------
 - CHANGELOG.txt added
 - PHP version hidden
@@ -11,4 +23,6 @@ v1.0.12
    -> New procedure added to NGINX entrypoint to run envsubst against nginx.conf
 - NGINX log permissions made stricter
    -> New procedure added to NGINX entrypoint to chmod 700 log files
+- wp-config.php permissions made stricter
+   -> Added line to wordpress permissions.sh script to chmod 400 wp-config.php
 - File cleanup
