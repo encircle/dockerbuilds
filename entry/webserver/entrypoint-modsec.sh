@@ -28,9 +28,9 @@ function get_cert()
   cd /root/.acme.sh
   ./acme.sh --issue -w /var/www/html -d $SITE \
     --keylength 4096 \
-    --cert-file /etc/nginx/certs/site.crt \
+    --cert-file /etc/nginx/certs/domain.crt \
     --key-file /etc/nginx/certs/site.key \
-    --fullchain-file /etc/nginx/certs/fullchain.crt \
+    --fullchain-file /etc/nginx/certs/site.crt \
     --debug 
 }
 
