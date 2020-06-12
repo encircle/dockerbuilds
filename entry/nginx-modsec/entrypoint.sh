@@ -62,6 +62,10 @@ function htpasswd()
 
 function log_acl()
 {
+  touch /var/log/nginx/access.log
+  touch /var/log/nginx/error.log
+  touch /var/log/nginx/modsec_audit.log
+  touch /var/log/nginx/modsec_debug.log
   chmod 600 /var/log/nginx/*.log
 }
 

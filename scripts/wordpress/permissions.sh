@@ -31,3 +31,6 @@ find /var/www/html/wp-content/themes -type f -exec chmod 760 {} \;
 # /wp-content/plugins
 find /var/www/html/wp-content/plugins -exec chown root:www-data {} \;
 find /var/www/html/wp-content/plugins -type f -exec chmod 740 {} \;
+
+# /wp-config.php
+chmod 400 /var/www/html/wp-config.php
