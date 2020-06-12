@@ -1,0 +1,12 @@
+v1.0.12
+-------
+- CHANGELOG.txt added
+- PHP version hidden
+   -> expose_php.ini added to wordpress image with expose_php = off
+- NGINX version hidden
+   -> server_token = off; added to nginx.conf
+- Server names not matching any server_name blocks now blocked with 444 response
+   -> New server block added for port 443, this is now the default_server
+- Site and fpm_host variables now replaced using envsubst rather than perl module
+   -> New procedure added to NGINX entrypoint to run envsubst against nginx.conf
+- File cleanup
