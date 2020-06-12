@@ -83,6 +83,8 @@ COPY conf/nginx/default.conf       /etc/nginx/conf.d/default.conf
 COPY conf/nginx/cloudflare.conf    /etc/nginx/conf.d/cloudflare.conf
 COPY conf/nginx/site.key           /etc/nginx/certs/site.key
 COPY conf/nginx/site.crt           /etc/nginx/certs/site.crt
+COPY conf/nginx/444.key           /etc/nginx/certs/444.key
+COPY conf/nginx/444.crt           /etc/nginx/certs/444.crt
 COPY conf/nginx/dhparam            /etc/nginx/dhparam
 COPY conf/nginx/error.html         /var/www/error.html
 
