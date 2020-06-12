@@ -74,7 +74,7 @@ COPY --from=build /tmp/nginx-${NGINX_VERSION}/objs/ngx_http_modsecurity_module.s
 COPY --from=build /usr/local/modsecurity/ /usr/local/modsecurity/
 
 # ClamAV
-COPY conf/modsecurity/clamav-hook.pl /usr/local/bin/clamav-hook.pl
+COPY scripts/clamav/clamav-hook.pl /usr/local/bin/clamav-hook.pl
 RUN chmod 750 /usr/local/bin/clamav-hook.pl
 RUN apk add clamav clamav-libunrar
 RUN mkdir /run/clamav
