@@ -29,3 +29,10 @@ services:
     build:
       context: ./
       dockerfile: ./images/wordpress/Dockerfile
+
+  postfix:
+    container_name: postfix
+    image: encircle/postfix:v0.1
+    build:
+      context: ./
+      dockerfile: ./images/postfix/Dockerfile
