@@ -16,8 +16,8 @@ RUN apk add shadow \
 COPY conf/php/max_file_upload.ini /usr/local/etc/php/conf.d/max_file_upload.ini
 COPY conf/php/cookie-security.ini /usr/local/etc/php/conf.d/cookie-security.ini
 COPY conf/php/expose_php.ini /usr/local/etc/php/conf.d/expose_php.ini
+COPY conf/php/postfix.ini /usr/local/etc/php/conf.d/postfix.ini
 COPY conf/php/www.conf /usr/local/etc/php-fpm.d/www.conf
-COPY conf/php/postfix.ini /usr/local/etc/php-fpm.d/postfix.ini
 
 # Scripts
 COPY scripts/wordpress/permissions.sh /usr/local/bin
