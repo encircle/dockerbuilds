@@ -32,7 +32,7 @@ services:
 
   postfix:
     container_name: postfix
-    image: encircle/postfix:v0.1
+    image: encircle/postfix:latest
     build:
       context: ./
       dockerfile: ./images/postfix/Dockerfile
