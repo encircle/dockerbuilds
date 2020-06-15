@@ -26,3 +26,13 @@ DETAILS
 - wp-config.php permissions made stricter
    -> Added line to wordpress permissions.sh script to chmod 400 wp-config.php
 - File cleanup
+
+v1.0.13
+=======
+- Wordpress version updated to 5.4.2
+
+v1.0.14
+=======
+- External SMTP server configuration added to wordpress image
+   -> postfix.ini file added
+- Postfix image added
