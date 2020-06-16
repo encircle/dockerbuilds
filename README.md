@@ -40,7 +40,15 @@ echo "HTPASS=USER:$(openssl passwd -apr1 PASSWORD)" >> .env
 docker-compose up -d
 ```
 
-4. Check status of stack components
+4. Apply standard permissions to wordpress folder and containing folders/files. This script runs within the container every hour,
+   however it should be run manually when the container is first created.
+
+```console
+docker exec -it wordpress /bin/sh
+permissions.sh
+```
+
+5. Check status of stack components
 
 ```console
 docker ps -a
@@ -93,17 +101,12 @@ echo 'TABLE_PREFIX=wp_' >> .env
 echo "HTPASS=USER:$(openssl passwd -apr1 PASSWORD)" >> .env
 ```
 
-7. Apply standard permissions to wordpress folder and containing folders/files
+7. Apply standard permissions to wordpress folder and containing folders/files. This script runs within the container every hour,
+   however it should be run manually when the container is first created.
 
 ```console
-find wordpress -exec chown 101:82 {} \;
-find wordpress -type d -exec chmod 750 {} \;
-find wordpress -type f -exec chmod 640 {} \;
-find wordpress -name wp-content -type d -exec chmod 750 {} \;
-find wordpress -wholename *wp-content/uploads* -type d -exec chmod 770 {} \;
-find wordpress -wholename *wp-content/uploads* -type f -exec chmod 660 {} \;
-find wordpress -wholename *wp-content/plugins* -type d -exec chmod 770 {} \;
-find wordpress -wholename *wp-content/plugins* -type f -exec chmod 660 {} \;
+docker exec -it wordpress /bin/sh
+permissions.sh
 ```
 
 8. Run the stack
