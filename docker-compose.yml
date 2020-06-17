@@ -4,35 +4,35 @@ services:
 
   webserver-modsec:
     container_name: webserver-modsec
-    image: encircle/nginx-modsec:v1.0.14
+    image: encircle/nginx-modsec:latest
     build:
       context: ./
       dockerfile: ./images/nginx-modsec/Dockerfile
 
   webserver-modsec-clamav:
     container_name: webserver-modsec-clamav
-    image: encircle/nginx-modsec-clamav:v1.0.14
+    image: encircle/nginx-modsec-clamav:latest
     build:
       context: ./
       dockerfile: ./images/nginx-modsec-clamav/Dockerfile
 
   database:
     container_name: database
-    image: encircle/mariadb:v1.0.14
+    image: encircle/mariadb:latest
     build:
       context: ./
       dockerfile: ./images/mariadb/Dockerfile
 
   wordpress:
     container_name: wordpress
-    image: encircle/wordpress:v1.0.14
+    image: encircle/wordpress:latest
     build:
       context: ./
       dockerfile: ./images/wordpress/Dockerfile
 
   postfix:
     container_name: postfix
-    image: encircle/postfix:v1.0.14
+    image: encircle/postfix:latest
     build:
       context: ./
       dockerfile: ./images/postfix/Dockerfile

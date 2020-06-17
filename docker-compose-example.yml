@@ -6,14 +6,13 @@ services:
     container_name: webserver
     image: encircle/nginx-modsec:latest
     ports:
-      - '5.153.254.26:80:80'
-      - '5.153.254.26:443:443'
+      - '80:80'
+      - '443:443'
     depends_on:
       - wordpress
     volumes:
       - ./logs/nginx/:/var/log/nginx
       - ./wordpress/:/var/www/html
-      - ./nginx/certs/:/etc/nginx/certs
     restart: unless-stopped
     networks:
       - frontend
