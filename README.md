@@ -41,9 +41,9 @@ docker-compose -f docker-compose-wp.yml up -d
 docker-compose -f docker-compose-dr.yml up -d
 ```
 
-3. Apply standard permissions to wordpress folder and containing folders/files.
+3. Apply standard permissions to wordpress folder and containing folders/files
 
-*** This script runs within the container every hour, however it should be run manually when the container is first created. ***
+*** This script runs within the container every hour, however it should be run manually when the container is first created ***
 
 ```console
 docker exec -it wordpress /bin/sh
@@ -113,8 +113,9 @@ echo 'TABLE_PREFIX=wp_' >> .env
 echo "HTPASS=USER:$(openssl passwd -apr1 PASSWORD)" >> .env
 ```
 
-7. Apply standard permissions to wordpress/drupal (web root) folder and containing folders/files. This script runs within the container every hour,
-   however it should be run manually when the container is first created.
+7. Apply standard permissions to wordpress/drupal (web root) folder and containing folders/files
+
+*** This script runs within the container every hour, however it should be run manually when the container is first created ***
 
 ```console
 docker exec -it wordpress /bin/sh
