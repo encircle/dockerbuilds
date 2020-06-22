@@ -1,0 +1,69 @@
+version: '3.4'
+
+services:
+
+  webserver:
+    container_name: webserver
+    image: encircle/nginx-modsec:latest
+    ports:
+      - '80:80'
+      - '443:443'
+    depends_on:
+      - drupal
+    volumes:
+      - ./logs/nginx/:/var/log/nginx
+      - ./drupal/:/var/www/html
+    restart: unless-stopped
+    networks:
+      - frontend
+    environment:
+      ENV: ${ENV}
+      FPM_HOST: ${FPM_HOST}
+      SITE: ${SITE}
+      LETSENCRYPT: ${LETSENCRYPT}
+      HTPASS: ${HTPASS}
+
+  database:
+    container_name: database
+    image: encircle/mariadb:latest
+    expose:
+      - '3306'
+    volumes:
+      - ./database/data:/var/lib/mysql
+      - ./migrations/:/docker-entrypoint-initdb.d
+    networks:
+      - backend
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${ROOT_PASS}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${USER_PASS}
+      
+  drupal:
+    container_name: drupal
+    image: encircle/drupal:latest
+    expose:
+      - '9000'
+    depends_on:
+      - database
+    volumes:
+      - ./drupal:/var/www/html
+    networks:
+      - frontend
+      - backend
+      # - mail
+    restart: unless-stopped
+    environment:
+      WORDPRESS_DB_HOST: database
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      USER_PASS: ${USER_PASS}
+      TABLE_PREFIX: ${TABLE_PREFIX}
+
+networks:
+  frontend:
+  backend:
+#    mail:
+#      external:
+#        name: postfix
