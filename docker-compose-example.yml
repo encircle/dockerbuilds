@@ -4,7 +4,7 @@ services:
 
   webserver:
     container_name: webserver
-    image: encircle/nginx-modsec:v1.0.14
+    image: encircle/nginx-modsec:latest
     ports:
       - '80:80'
       - '443:443'
