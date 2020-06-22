@@ -12,6 +12,7 @@ COPY conf/php/cookie-security.ini /usr/local/etc/php/conf.d/cookie-security.ini
 COPY conf/php/expose_php.ini /usr/local/etc/php/conf.d/expose_php.ini
 COPY conf/php/postfix.ini /usr/local/etc/php/conf.d/postfix.ini
 COPY conf/php/www.conf /usr/local/etc/php-fpm.d/www.conf
+COPY conf/drupal/settings.template /var/www/html/sites/default/settings.template
 
 # Scripts
 COPY scripts/drupal/permissions.sh /usr/local/bin
@@ -23,3 +24,8 @@ RUN chmod 755 /usr/local/bin/permissions.sh \
 
 # Set permissions
 RUN /usr/local/bin/permissions.sh || true
+
+RUN apk add gettext
+COPY entry/drupal/entrypoint.sh /usr/local/bin/
+
+ENTRYPOINT [ "sh", "/usr/local/bin/entrypoint.sh"]
