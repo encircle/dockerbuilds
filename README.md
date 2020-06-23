@@ -101,7 +101,7 @@ To migrate an existing site:
 
 6. Set environment variables in .env file
 
-**Note, DB_NAME, DB_USER, USER_PASS and TABLE_PREFIX must match existing site**
+    **Note, DB_NAME, DB_USER, USER_PASS and TABLE_PREFIX must match existing site**
 
     ```
     echo 'SITE=www.example.com' > .env
