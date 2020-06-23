@@ -43,3 +43,4 @@ v1.0.15
 - Drupal image added
 - Links replaced by networking added to docker-compose examples
 - Postfix network added to docker-compose examples
+- Wordpress permissions runs on start now
