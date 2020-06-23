@@ -49,7 +49,7 @@ These are the environment variables used across the stack.
     docker-compose -f docker-compose-wp.yml up -d
     ```
     ##### Drupal #####
-    ```console
+    ```
     docker-compose -f docker-compose-dr.yml up -d
     ```
 
