@@ -4,37 +4,37 @@
 
 These are the environment variables used across the stack.
 
-**SITE**
+**SITE**  
 External site hostname (www.example.com)
 
-**LETSENCRYPT**
-YES/NO
-Install LetsEncrypt certificate with automatic renewals
-- (DNS must be configured and firewalls open)
+**LETSENCRYPT**  
+YES/NO  
+Install LetsEncrypt certificate with automatic renewals  
+(DNS must be configured and firewalls open)
 
-**ENV**
-DEV/TEST/UAT/PROD
+**ENV**  
+DEV/TEST/UAT/PROD  
 Basic auth enabled if not PROD
 
-**FPM_HOST**
+**FPM_HOST**  
 Docker network hostname for FPM host (e.g. wordpress)
 
-**ROOT_PASS**
+**ROOT_PASS**  
 Desired MySQL root password
 
-**DB_NAME**
+**DB_NAME**  
 Desired (or existing) MySQL database name
 
-**DB_USER**
+**DB_USER**  
 Desired (or existing) MySQL application user
 
-**USER_PASS**
+**USER_PASS**  
 Desired (or existing) MySQL application user password
 
-**TABLE_PREFIX**
+**TABLE_PREFIX**  
 Desired (or existing) database table prefix
 
-**HTPASS**
+**HTPASS**  
 .htpasswd format credentials (user:hash)
 
 ## Usage ##
