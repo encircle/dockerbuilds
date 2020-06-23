@@ -27,6 +27,9 @@ RUN chmod 755 /usr/local/bin/permissions.sh \
  && crontab /tmp/.cron \
  && rm -rf /tmp/.cron
 
+# Run permissions on start
+RUN /usr/local/bin/permissions.sh || true
+
 COPY entry/wordpress/entrypoint.sh /usr/local/bin/
 
 ENTRYPOINT [ "bash", "entrypoint.sh"]
