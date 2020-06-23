@@ -44,3 +44,5 @@ v1.0.15
 - Links replaced by networking added to docker-compose examples
 - Postfix network added to docker-compose examples
 - Wordpress permissions runs on start now
+- Modsecurity changed from DetectionOnly to On
+- Mosecurity debug log level changed to 0 and output to stderr
