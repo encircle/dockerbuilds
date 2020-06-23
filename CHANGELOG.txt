@@ -36,3 +36,10 @@ v1.0.14
 - External SMTP server configuration added to wordpress image
    -> postfix.ini file added
 - Postfix image added
+
+v1.0.15
+=======
+- MariaDB now built on alpine
+- Drupal image added
+- Links replaced by networking added to docker-compose examples
+- Postfix network added to docker-compose examples
