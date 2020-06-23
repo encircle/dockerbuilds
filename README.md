@@ -2,16 +2,28 @@
 
 ## Environment Variables ##
 
- - SITE -> Site hostname (www.example.com)
- - LETSENCRYPT -> YES/NO -> Whether to install LetsEncrypt certificate with automatic renewals (DNS must be configured and firewalls open for LetsEncrypt verification)
- - ENV -> If not prod, basic auth will be required
- - FPM_HOST -> Docker network hostname for FPM host (e.g. wordpress)
- - ROOT_PASS -> Desired MySQL root password
- - DB_NAME -> Desired (or existing) MySQL database name
- - DB_USER -> Desired (or existing) MySQL Wordpress user
- - USER_PASS -> Desired (or existing) MySQL user password
- - TABLE_PREFIX -> Desired (or existing) database table prefix
- - HTPASS -> .htpasswd format credentials (user:hash)
+These are the environment variables used across the stack.
+
+** SITE ** -> Site hostname (www.example.com)
+
+** LETSENCRYPT ** -> YES/NO -> Install LetsEncrypt certificate with automatic renewals
+(DNS must be configured and firewalls open for LetsEncrypt verification)
+
+** ENV ** -> If not prod, basic auth will be required
+
+** FPM_HOST ** -> Docker network hostname for FPM host (e.g. wordpress)
+
+** ROOT_PASS ** -> Desired MySQL root password
+
+** DB_NAME ** -> Desired (or existing) MySQL database name
+
+** DB_USER ** -> Desired (or existing) MySQL Wordpress user
+
+** USER_PASS ** -> Desired (or existing) MySQL user password
+
+** TABLE_PREFIX ** -> Desired (or existing) database table prefix
+
+** HTPASS ** -> .htpasswd format credentials (user:hash)
 
 ## Usage ##
 
@@ -32,11 +44,11 @@ echo "HTPASS=USER:$(openssl passwd -apr1 PASSWORD)" >> .env
 
 2. Run the stack
 
-- Wordpress
+### Wordpress ###
 ```console
 docker-compose -f docker-compose-wp.yml up -d
 ```
-- Drupal
+### Drupal ###
 ```console
 docker-compose -f docker-compose-dr.yml up -d
 ```
@@ -62,11 +74,11 @@ To migrate an existing site:
 
 1. Create tar archive of site
 
-- Wordpress
+### Wordpress ###
 ```console
 cd /path/to/wordpress && tar -cvzf /tmp/wordpress.tar.gz *
 ```
-- Drupal
+### Drupal ###
 ```console
 cd /path/to/drupal && tar -cvzf /tmp/drupal.tar.gz *
 ```
@@ -87,11 +99,11 @@ mkdir migrations && mv /tmp/dump.sql migrations/ && chown -R 999:999 migrations
 
 5. Create a directory for the site files and decompress the site archive into this directory
 
-- Wordpress
+### Wordpress ###
 ```console
 mkdir wordpress && tar -xvzf /tmp/wordpress.tar.gz -C wordpress
 ```
-- Drupal
+### Drupal ###
 ```console
 mkdir drupal && tar -xvzf /tmp/drupal.tar.gz -C drupal
 ```
@@ -124,11 +136,11 @@ permissions.sh
 
 8. Run the stack
 
-- Wordpress
+### Wordpress ###
 ```console
 docker-compose -f docker-compose-wp.yml up -d
 ```
-- Drupal
+### Drupal ###
 ```console
 docker-compose -f docker-compose-dr.yml up -d
 ```
