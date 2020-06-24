@@ -125,29 +125,6 @@ else
 	fi
 fi
 
-if [ ! -z "$ALLOWED_SENDER_DOMAINS" ]; then
-	echo -en "‣ $info Setting up allowed SENDER domains:"
-	allowed_senders=/etc/postfix/allowed_senders
-	rm -f $allowed_senders $allowed_senders.db > /dev/null
-	touch $allowed_senders
-	for i in $ALLOWED_SENDER_DOMAINS; do
-		echo -ne " ${emphasis}$i${reset}"
-		echo -e "$i\tOK" >> $allowed_senders
-	done
-	echo
-	postmap $allowed_senders
-
-	postconf -e "smtpd_restriction_classes=allowed_domains_only"
-	postconf -e "allowed_domains_only=permit_mynetworks, reject_non_fqdn_sender reject"
-	postconf -e "smtpd_recipient_restrictions=reject_non_fqdn_recipient, reject_unknown_recipient_domain, check_sender_access hash:$allowed_senders, reject"
-
-	# Since we are behind closed doors, let's just permit all relays.
-	postconf -e "smtpd_relay_restrictions=permit"
-elif [ -z "$ALLOW_EMPTY_SENDER_DOMAINS" ]; then
-	echo -e "ERROR: You need to specify ALLOWED_SENDER_DOMAINS otherwise Postfix will not run!"
-	exit 1
-fi
-
 if [ ! -z "$MASQUERADED_DOMAINS" ]; then
 	echo -e "‣ $notice Setting up address masquerading: ${emphasis}$MASQUERADED_DOMAINS${reset}"
 	postconf -e "masquerade_domains = $MASQUERADED_DOMAINS"
@@ -203,18 +180,6 @@ if [ -d /etc/opendkim/keys ] && [ ! -z "$(find /etc/opendkim/keys -type f ! -nam
 	# to assume that *all* hosts are trusted.
 	echo "0.0.0.0/0" > /etc/opendkim/TrustedHosts
 
-	if [ ! -z "$ALLOWED_SENDER_DOMAINS" ]; then
-		for i in $ALLOWED_SENDER_DOMAINS; do
-			private_key=/etc/opendkim/keys/$i.private
-			if [ -f $private_key ]; then
-				echo -e "        ...for domain ${emphasis}$i${reset}"
-				echo "mail._domainkey.$i $i:mail:$private_key" >> /etc/opendkim/KeyTable
-				echo "*@$i mail._domainkey.$i" >> /etc/opendkim/SigningTable
-			else
-				echo "  ...$warn skipping for domain ${emphasis}$i${reset}. File $private_key not found!"
-			fi
-		done
-	fi
 else
 	echo  -e "‣ $info No DKIM keys found, will not use DKIM."
 	postconf -# smtpd_milters
