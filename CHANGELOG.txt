@@ -47,3 +47,4 @@ v1.0.15
 - Modsecurity changed from DetectionOnly to On
 - Mosecurity debug log level changed to 0 and output to stderr
 - Permissions script now runs once a day rather than hourly
+- Domain restrictions removed from postfix configuration
