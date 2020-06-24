@@ -39,7 +39,7 @@ v1.0.14
 
 v1.0.15
 =======
-- MariaDB now built on alpine
+- New alpine MariaDB image added (runs older version of Mariadb 10.4.13)
 - Drupal image added
 - Links replaced by networking added to docker-compose examples
 - Postfix network added to docker-compose examples
