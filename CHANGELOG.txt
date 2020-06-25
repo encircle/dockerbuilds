@@ -48,3 +48,4 @@ v1.0.15
 - Mosecurity debug log level changed to 0 and output to stderr
 - Permissions script now runs once a day rather than hourly
 - Domain restrictions removed from postfix configuration
+- Added option to whitelist IP addresses for basic auth in .env file
