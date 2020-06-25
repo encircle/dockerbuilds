@@ -18,6 +18,8 @@ services:
       - frontend
     environment:
       ENV: ${ENV}
+      IP_WHITELIST_1: ${IP_WHITELIST_1}
+      IP_WHITELIST_2: ${IP_WHITELIST_2}
       FPM_HOST: ${FPM_HOST}
       SITE: ${SITE}
       LETSENCRYPT: ${LETSENCRYPT}
