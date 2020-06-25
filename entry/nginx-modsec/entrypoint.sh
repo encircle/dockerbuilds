@@ -60,13 +60,21 @@ function htpasswd()
   echo "$HTPASS" > /etc/nginx/.htpasswd
 }
 
-function log_acl()
+function log_permissions()
 {
   touch /var/log/nginx/access.log
   touch /var/log/nginx/error.log
   touch /var/log/nginx/modsec_audit.log
-  touch /var/log/nginx/modsec_debug.log
   chmod 600 /var/log/nginx/*.log
+}
+
+function basic_auth_whitelist()
+{
+  whitelist_file=/etc/nginx/conf.d/ip-whitelist.conf.include
+  echo '' > $whitelist_file
+  for ip in $(env | grep IP_WHITELIST | awk -F '=' '{print $2}'); do
+    echo "allow $ip;" >> $whitelist_file
+  done
 }
 
 function main() {
@@ -74,7 +82,8 @@ function main() {
   env_sub
   letsencrypt
   htpasswd
-  log_acl
+  log_permissions
+  basic_auth_whitelist
   nginx -g 'daemon off;'
 }
 
