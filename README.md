@@ -80,6 +80,30 @@ Desired (or existing) database table prefix
     docker ps -a
     ```
 
+## Postfix ##
+
+Postfix is used as the MTA for the containers, to use postfix with the PHP container:
+
+1. Start the postfix service
+
+    ```
+    docker-compose -f docker-compose-pf.yml up -d
+    ```
+
+2. Uncomment the network configuration in the stack compose file
+
+   ```
+   sed -i 's/#//g' docker-compose-wp.yml
+   sed -i 's/#//g' docker-compose-dr.yml
+   ```
+
+3. Start or restart the stack
+
+   ```
+   docker-compose -f docker-compose-wp.yml up -d
+   docker-compose -f docker-compose-dr.yml up -d
+   ```
+
 ## Migration ##
 
 To migrate an existing site:
