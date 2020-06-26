@@ -16,7 +16,7 @@ Install LetsEncrypt certificate with automatic renewals
 DEV/TEST/UAT/PROD  
 Basic auth enabled if not PROD
 
-**IP_WHITELIST_**
+**IP_WHITELIST_**  
 IP addresses exempt from basic auth in the format:  
 IP_WHITELIST_1=192.168.0.0/24  
 IP_WHITELIST_2=5.232.5.77
