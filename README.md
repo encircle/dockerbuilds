@@ -16,6 +16,13 @@ Install LetsEncrypt certificate with automatic renewals
 DEV/TEST/UAT/PROD  
 Basic auth enabled if not PROD
 
+**IP_WHITELIST_**
+IP addresses exempt from basic auth in the format:
+IP_WHITELIST_1=192.168.0.0/24
+IP_WHITELIST_2=5.232.5.77
+
+As many whitelist addresses can be included as required.
+
 **FPM_HOST**  
 Docker network hostname for FPM host (e.g. wordpress)
 
@@ -45,6 +52,8 @@ Desired (or existing) database table prefix
     echo 'SITE=www.example.com' > .env
     echo 'LETSENCRYPT=YES' >> .env
     echo 'ENV=PROD' >> .env
+    echo 'IP_WHITELIST_1=37.128.134.212' >> .env
+    echo 'IP_WHITELIST_2=5.153.250.222' >> .env
     echo 'FPM_HOST=wordpress|drupal' >> .env
     echo 'ROOT_PASS=password' >> .env
     echo 'DB_NAME=wp_db' >> .env
@@ -119,6 +128,8 @@ To migrate an existing site:
     echo 'SITE=www.example.com' > .env
     echo 'LETSENCRYPT=YES' >> .env
     echo 'ENV=PROD' >> .env
+    echo 'IP_WHITELIST_1=37.128.134.212' >> .env
+    echo 'IP_WHITELIST_2=5.153.250.222' >> .env
     echo 'FPM_HOST=wordpress|drupal' >> .env
     echo 'ROOT_PASS=password' >> .env
     echo 'DB_NAME=wp_db' >> .env
