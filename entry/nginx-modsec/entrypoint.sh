@@ -77,6 +77,11 @@ function basic_auth_whitelist()
   done
 }
 
+function modsec()
+{
+  envsubst '${MODSEC_ENGINE_MODE}' < /etc/nginx/modsec/modsecurity.conf > /tmp/modsecurity.conf && mv /tmp/modsecurity.conf /etc/nginx/modsec/modsecurity.conf
+}
+
 function main() {
   set -e
   env_sub
@@ -84,6 +89,7 @@ function main() {
   htpasswd
   log_permissions
   basic_auth_whitelist
+  modsec
   nginx -g 'daemon off;'
 }
 
