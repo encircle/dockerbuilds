@@ -25,6 +25,7 @@ services:
       SITE: ${SITE}
       LETSENCRYPT: ${LETSENCRYPT}
       HTPASS: ${HTPASS}
+      MODSEC_ENGINE_MODE: ${MODSEC_ENGINE_MODE}
 
   database:
     container_name: database
