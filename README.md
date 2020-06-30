@@ -179,3 +179,19 @@ To migrate an existing site:
     ```
     docker-compose -f docker-compose-dr.yml up -d
     ```
+
+## Modsec ##
+
+To whitelist specific rules for modsec, mount a modsec whitelist directory as follows:
+
+    ```
+    - ./modsec:/etc/nginx/modsec/whitelist
+    ```
+
+Add a whitelist.conf file in the modsec directory
+
+    ```
+    touch modsec/whitelist.conf
+    ```
+
+And add any whitelisting rules to the file

@@ -4,7 +4,7 @@ services:
 
   webserver-modsec:
     container_name: webserver-modsec
-    image: encircle/nginx-modsec:latest
+    image: encircle/nginx-modsec:v1.0.15
     build:
       context: ./
       dockerfile: ./images/nginx-modsec/Dockerfile
