@@ -11,6 +11,7 @@ services:
     depends_on:
       - wordpress
     volumes:
+      - ./modsec:/etc/nginx/modsec/whitelist
       - ./logs/nginx/:/var/log/nginx
       - ./wordpress/:/var/www/html
     restart: unless-stopped
