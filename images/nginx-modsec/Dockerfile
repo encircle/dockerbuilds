@@ -106,7 +106,9 @@ RUN cd /tmp \
  && wget https://github.com/SpiderLabs/owasp-modsecurity-crs/archive/v${OWASP_CRS_VERSION}.tar.gz \
  && tar -xvzf /tmp/v${ENV_OWASP_CRS_VERSION}.tar.gz -C /etc/nginx/modsec \
  && mv /etc/nginx/modsec/owasp-modsecurity-crs-${ENV_OWASP_CRS_VERSION}/crs-setup.conf.example /etc/nginx/modsec/owasp-modsecurity-crs-${ENV_OWASP_CRS_VERSION}/crs-setup.conf \
- && rm -rf /tmp/owasp-modsecurity-crs-${ENV_OWASP_CRS_VERSION}.tar.gz
+ && rm -rf /tmp/owasp-modsecurity-crs-${ENV_OWASP_CRS_VERSION}.tar.gz \
+ && mkdir /etc/nginx/modsec/whitelist \
+ && touch /etc/nginx/modsec/whitelist/whitelist.conf
 
 # Users and groups
 RUN apk add shadow \
