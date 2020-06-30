@@ -49,3 +49,8 @@ v1.0.15
 - Permissions script now runs once a day rather than hourly
 - Domain restrictions removed from postfix configuration
 - Added option to whitelist IP addresses for basic auth in .env file
+
+v1.0.16
+=======
+- Added environment variable for modsecurity engine mode
+- Added whitelist file to modsecurity configuration
