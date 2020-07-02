@@ -58,3 +58,18 @@ v1.0.16
 v1.0.17
 =======
 - Changed wp command utility owner from root:root to root:www-data in wordpress image
+- Extra hardening measures added to webserver build
+   -> block_ext.conf
+   -> block_non_english_chars.conf
+   -> block_http_ref.conf
+   -> block_files.txt
+   -> block_req_methods.conf
+   -> block_suspicious_query.conf
+   -> custom_error.conf
+   -> civicrm.conf
+   -> headers.conf
+   -> wordpress.conf
+   -> ssl.conf
+   -> error.html
+   -> block_user_agents.conf
+- Pre-build config reorg for webserver directory
