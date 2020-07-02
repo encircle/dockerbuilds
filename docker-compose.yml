@@ -9,13 +9,6 @@ services:
       context: ./
       dockerfile: ./images/nginx-modsec/Dockerfile
 
-  webserver-modsec-clamav:
-    container_name: webserver-modsec-clamav
-    image: encircle/nginx-modsec-clamav:latest
-    build:
-      context: ./
-      dockerfile: ./images/nginx-modsec-clamav/Dockerfile
-
   database:
     container_name: database
     image: encircle/mariadb:latest
