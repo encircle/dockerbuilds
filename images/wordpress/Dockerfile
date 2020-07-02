@@ -6,7 +6,7 @@ RUN ln -s -f /dev/null /root/.bash_history \
  && cd /tmp && curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
  && mv /tmp/wp-cli.phar /usr/local/bin/wp \
  && chmod 750 /usr/local/bin/wp \
- && chown root:www-data /usr/local/bin/wp
+ && chown root:10013 /usr/local/bin/wp
 
 # Permissions
 RUN apk add shadow \
