@@ -4,8 +4,9 @@ FROM wordpress:5.4.2-php7.3-fpm-alpine
 RUN ln -s -f /dev/null /root/.bash_history \
  && rm /usr/local/etc/php-fpm.d/www.conf \
  && cd /tmp && curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
- && chmod 750 /tmp/wp-cli.phar \
- && mv /tmp/wp-cli.phar /usr/local/bin/wp
+ && mv /tmp/wp-cli.phar /usr/local/bin/wp \
+ && chmod 750 /usr/local/bin/wp \
+ && chown root:www-data /usr/local/bin/wp
 
 # Permissions
 RUN apk add shadow \

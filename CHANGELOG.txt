@@ -52,5 +52,9 @@ v1.0.15
 
 v1.0.16
 =======
-- Added environment variable for modsecurity engine mode
-- Added whitelist file to modsecurity configuration
+- Added environment variable for modsecurity engine mode to webserver
+- Added whitelist file to modsecurity configuration to webserver
+
+v1.0.17
+=======
+- Changed wp command utility owner from root:root to root:www-data
