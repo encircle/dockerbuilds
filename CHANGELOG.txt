@@ -57,4 +57,4 @@ v1.0.16
 
 v1.0.17
 =======
-- Changed wp command utility owner from root:root to root:www-data
+- Changed wp command utility owner from root:root to root:www-data in wordpress image
