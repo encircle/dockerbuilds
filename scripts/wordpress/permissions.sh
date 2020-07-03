@@ -18,6 +18,9 @@ find /var/www/html/.git -type f -exec chmod 640 {} \;
 # /wp-content/uploads
 find /var/www/html/wp-content/uploads -type d -exec chmod 770 {} \;
 find /var/www/html/wp-content/uploads -type f -exec chmod 660 {} \;
+find /var/www/html/wp-content/wflogs -type d -exec chmod 770 {} \;
+find /var/www/html/wp-content/wflogs -type f -exec chmod 660 {} \;
+
 
 # /wp-config.php
 chmod 440 /var/www/html/wp-config.php
