@@ -73,3 +73,8 @@ v1.0.17
    -> error.html
    -> block_user_agents.conf
 - Pre-build config reorg for webserver directory
+
+v1.0.18
+=======
+- Added server_names_hash_bucket_size to nginx.conf
+- Added referer_hash_bucket_size to default.conf
