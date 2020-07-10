@@ -44,9 +44,13 @@ Desired (or existing) database table prefix
 **HTPASS**  
 .htpasswd format credentials (user:hash)
 
-** MODSEC_ENGINE_MODE **
+**MODSEC_ENGINE_MODE**
 On/Off/DetectionOnly
 Mode for modsec engine, check the docs
+
+**DISABLE_CONF**
+Disable hardening config files
+e.g. DISABLE_CONF=custom_error.conf block_files.conf
 
 ## Usage ##
 
@@ -66,6 +70,7 @@ Mode for modsec engine, check the docs
     echo 'TABLE_PREFIX=wp_' >> .env
     echo "HTPASS=USER:$(openssl passwd -apr1 PASSWORD)" >> .env
     echo 'MODSEC_ENGINE_MODE=On' >> .env
+    echo 'DISABLE_CONF=' >> .env
     ```
 
 2. Run the stack
@@ -167,6 +172,7 @@ To migrate an existing site:
     echo 'TABLE_PREFIX=wp_' >> .env
     echo "HTPASS=USER:$(openssl passwd -apr1 PASSWORD)" >> .env
     echo 'MODSEC_ENGINE_MODE=On' >> .env
+    echo 'DISABLE_CONF=' >> .env
     ```
 
 7. Run the stack

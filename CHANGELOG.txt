@@ -83,3 +83,4 @@ v1.0.19
 =======
 - Added Drupal image
 - Added Memcache image (for drupal)
+- Added DISABLE_CONF environment variable to nginx-modsec
