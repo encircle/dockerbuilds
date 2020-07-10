@@ -44,11 +44,11 @@ Desired (or existing) database table prefix
 **HTPASS**  
 .htpasswd format credentials (user:hash)
 
-**MODSEC_ENGINE_MODE**
+**MODSEC_ENGINE_MODE**  
 On/Off/DetectionOnly
 Mode for modsec engine, check the docs
 
-**DISABLE_CONF**
+**DISABLE_CONF**  
 Disable hardening config files
 e.g. DISABLE_CONF=custom_error.conf block_files.conf
 
