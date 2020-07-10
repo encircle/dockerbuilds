@@ -81,6 +81,10 @@ v1.0.18
 
 v1.0.19
 =======
+- changed permissions for wflogs dir - wordfence plugin
+
+v1.0.20
+=======
 - Added Drupal image
 - Added Memcache image (for drupal)
 - Added DISABLE_CONF environment variable to nginx-modsec
