@@ -78,3 +78,8 @@ v1.0.18
 =======
 - Added server_names_hash_bucket_size to nginx.conf
 - Added referer_hash_bucket_size to default.conf
+
+v1.0.19
+=======
+- Added Drupal image
+- Added Memcache image (for drupal)
