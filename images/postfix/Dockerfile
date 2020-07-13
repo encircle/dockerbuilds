@@ -51,5 +51,9 @@ VOLUME     [ "/var/spool/postfix", "/etc/postfix", "/etc/opendkim/keys" ]
 USER       root
 WORKDIR    /tmp
 
+# Upgrade packages
+RUN apk update \
+ && apk upgrade
+
 EXPOSE     587
 CMD        ["/bin/sh", "-c", "/run.sh"]

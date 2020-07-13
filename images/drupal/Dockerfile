@@ -46,4 +46,8 @@ RUN wget https://github.com/drush-ops/drush/releases/download/8.1.17/drush.phar 
  && chmod 750 /usr/local/bin/drush \
  && apk add mysql-client
 
+# Upgrade packages
+RUN apk update \
+ && apk upgrade
+
 ENTRYPOINT ["php-fpm"]

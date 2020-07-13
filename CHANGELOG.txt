@@ -91,4 +91,4 @@ v1.0.20
 
 v1.0.21
 ======
-- Upgraded perl to 5.30.3 to mitigate medium and high vulnerabilities
+- Added upgrade steps to upgrade all packages in images on build (excluding those that must be fixed for a specific image, e.g. mariadb)
