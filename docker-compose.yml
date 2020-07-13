@@ -23,9 +23,23 @@ services:
       context: ./
       dockerfile: ./images/wordpress/Dockerfile
 
+  drupal:
+    container_name: drupal
+    image: encircle/drupal:latest
+    build:
+      context: ./
+      dockerfile: ./images/drupal/Dockerfile
+
   postfix:
     container_name: postfix
     image: encircle/postfix:latest
     build:
       context: ./
       dockerfile: ./images/postfix/Dockerfile
+
+  memcache:
+    container_name: memcache
+    image: encircle/memcache:v1.0.20
+    build:
+      context: ./
+      dockerfile: ./images/memcache/Dockerfile
