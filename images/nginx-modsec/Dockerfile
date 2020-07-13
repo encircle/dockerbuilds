@@ -124,6 +124,9 @@ RUN apk add shadow \
  && usermod -aG www-data nginx \
  && apk del shadow
 
+# Upgrade perl
+RUN apk update && apk upgrade perl
+
 # Entrypoint
 COPY entry/nginx-modsec/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod 755 /usr/local/bin/entrypoint.sh

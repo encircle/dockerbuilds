@@ -88,3 +88,7 @@ v1.0.20
 - Added Drupal image
 - Added Memcache image (for drupal)
 - Added DISABLE_CONF environment variable to nginx-modsec
+
+v1.0.21
+======
+- Upgraded perl to 5.30.3 to mitigate medium and high vulnerabilities
