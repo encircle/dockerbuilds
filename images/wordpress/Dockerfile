@@ -31,6 +31,10 @@ RUN chmod 755 /usr/local/bin/permissions.sh \
 # Run permissions on start
 RUN /usr/local/bin/permissions.sh || true
 
+# Upgrade packages
+RUN apk update \
+ && apk upgrade
+
 COPY entry/wordpress/entrypoint.sh /usr/local/bin/
 
 ENTRYPOINT [ "bash", "entrypoint.sh"]
