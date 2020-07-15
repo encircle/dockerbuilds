@@ -26,6 +26,8 @@ services:
       HTPASS: ${HTPASS}
       MODSEC_ENGINE_MODE: ${MODSEC_ENGINE_MODE}
       DISABLE_CONF: ${DISABLE_CONF}
+      AV_HOST: ${AV_HOST}
+      AV_PORT: ${AV_PORT}
 
   database:
     container_name: database
