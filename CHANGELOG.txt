@@ -92,3 +92,7 @@ v1.0.20
 v1.0.21
 ======
 - Added upgrade steps to upgrade all packages in images on build (excluding those that must be fixed for a specific image, e.g. mariadb)
+
+v1.0.22
+=======
+- ClamAV integration
