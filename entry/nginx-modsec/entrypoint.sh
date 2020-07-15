@@ -79,7 +79,12 @@ function basic_auth_whitelist()
 
 function modsec()
 {
-  envsubst '${MODSEC_ENGINE_MODE}' < /etc/nginx/modsec/modsecurity.conf > /tmp/modsecurity.conf && mv /tmp/modsecurity.conf /etc/nginx/modsec/modsecurity.conf
+  envsubst '${MODSEC_ENGINE_MODE}' < /etc/nginx/modsec/modsecurity.conf > /tmp/modsecurity.conf \
+    && mv /tmp/modsecurity.conf /etc/nginx/modsec/modsecurity.conf
+  envsubst '${AV_HOST},${AV_PORT}' < /usr/local/bin/clamd-hook.sh > /tmp/clamd-hook.sh \
+    && mv /tmp/clamd-hook.sh /usr/local/bin/clamd-hook.sh \
+    && chown root:nginx /usr/local/bin/clamd-hook.sh \
+    && chmod 750 /usr/local/bin/clamd-hook.sh
 }
 
 function custom_errors()

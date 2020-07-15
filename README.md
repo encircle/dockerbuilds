@@ -52,6 +52,12 @@ Mode for modsec engine, check the docs
 Disable hardening config files
 e.g. DISABLE_CONF=custom_error.conf block_files.conf
 
+**AV_HOST**  
+Host on which restingclam is hosted
+
+**AV_PORT**
+Port on which restingclam is listening
+
 ## Usage ##
 
 1. Set environment variables in .env file
@@ -71,6 +77,8 @@ e.g. DISABLE_CONF=custom_error.conf block_files.conf
     echo "HTPASS=USER:$(openssl passwd -apr1 PASSWORD)" >> .env
     echo 'MODSEC_ENGINE_MODE=On' >> .env
     echo 'DISABLE_CONF=' >> .env
+    echo 'AV_HOST=localhost' >> .env
+    echo 'AV_PORT=10101' >> .env
     ```
 
 2. Run the stack
@@ -173,6 +181,8 @@ To migrate an existing site:
     echo "HTPASS=USER:$(openssl passwd -apr1 PASSWORD)" >> .env
     echo 'MODSEC_ENGINE_MODE=On' >> .env
     echo 'DISABLE_CONF=' >> .env
+    echo 'AV_HOST=localhost' >> .env
+    echo 'AV_PORT=10101' >> .env
     ```
 
 7. Run the stack
