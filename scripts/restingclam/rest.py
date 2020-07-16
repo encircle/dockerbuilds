@@ -22,7 +22,7 @@ def get_socket():
         return socket
     except:
         logger.exception('Failed to connect to clamd')
-        return
+        abort(502)
 
 class HeartBeatAPI(Resource):
 
