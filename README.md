@@ -52,6 +52,10 @@ Mode for modsec engine, check the docs
 Disable hardening config files
 e.g. DISABLE_CONF=custom_error.conf block_files.conf
 
+**AV_SCAN**  
+TRUE/FALSE
+Whether to scan file uploads via webserver
+
 **AV_HOST**  
 Host on which restingclam is hosted
 
