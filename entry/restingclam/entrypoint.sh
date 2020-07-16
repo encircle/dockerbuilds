@@ -1,6 +1,8 @@
 echo "Starting freshclam"
 freshclam -d &
+
 echo "Starting clamd"
 clamd &
+
 echo "Starting gunicorn"
-gunicorn --bind=0.0.0.0:10101 rest:app
+gunicorn --bind=unix:/var/run/gunicorn/gunicorn.sock --workers=3 --threads=3 rest:app

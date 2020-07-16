@@ -93,6 +93,8 @@ COPY conf/nginx/certs/site.key     /etc/nginx/certs/site.key
 COPY conf/nginx/certs/site.crt     /etc/nginx/certs/site.crt
 COPY conf/nginx/certs/444.key      /etc/nginx/certs/444.key
 COPY conf/nginx/certs/444.crt      /etc/nginx/certs/444.crt
+COPY conf/nginx/certs/client.crt   /etc/nginx/certs/client.crt
+COPY conf/nginx/certs/client.key   /etc/nginx/certs/client.key
 COPY conf/nginx/dhparam            /etc/nginx/dhparam
 
 # Modsecurity configurations
