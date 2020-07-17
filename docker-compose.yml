@@ -4,42 +4,42 @@ services:
 
   webserver-modsec:
     container_name: webserver-modsec
-    image: encircle/nginx-modsec:latest
+    image: encircle/nginx-modsec:v1.0.22
     build:
       context: ./
       dockerfile: ./images/nginx-modsec/Dockerfile
 
   database:
     container_name: database
-    image: encircle/mariadb:latest
+    image: encircle/mariadb:v1.0.22
     build:
       context: ./
       dockerfile: ./images/mariadb/Dockerfile
 
   wordpress:
     container_name: wordpress
-    image: encircle/wordpress:latest
+    image: encircle/wordpress:v1.0.22
     build:
       context: ./
       dockerfile: ./images/wordpress/Dockerfile
 
   drupal:
     container_name: drupal
-    image: encircle/drupal:latest
+    image: encircle/drupal:v1.0.22
     build:
       context: ./
       dockerfile: ./images/drupal/Dockerfile
 
   postfix:
     container_name: postfix
-    image: encircle/postfix:latest
+    image: encircle/postfix:v1.0.22
     build:
       context: ./
       dockerfile: ./images/postfix/Dockerfile
 
   memcache:
     container_name: memcache
-    image: encircle/memcache:v1.0.20
+    image: encircle/memcache:v1.0.22
     build:
       context: ./
       dockerfile: ./images/memcache/Dockerfile
