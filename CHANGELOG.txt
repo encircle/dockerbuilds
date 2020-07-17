@@ -96,3 +96,9 @@ v1.0.21
 v1.0.22
 =======
 - ClamAV integration
+
+v1.0.23
+=======
+- postfix updated to alpine 3.12
+- memcache updated to alpine 3.12
+- mariadb-alpine updated to alpine 3.12
