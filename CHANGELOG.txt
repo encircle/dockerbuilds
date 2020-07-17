@@ -97,7 +97,7 @@ v1.0.22
 =======
 - ClamAV integration
 
-v1.0.23
+v1.0.23 (latest)
 =======
 - postfix updated to alpine 3.12
 - memcache updated to alpine 3.12
