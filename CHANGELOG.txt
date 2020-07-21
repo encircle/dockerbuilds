@@ -96,9 +96,17 @@ v1.0.21
 v1.0.22
 =======
 - ClamAV integration
+- CVE-2020-10543 resolved in nginx-modsec
+- CVE-2020-12723 resolved in nginx-modsec
+- CVE-2020-13790 resolved in nginx-modsec
 
-v1.0.23 (latest)
+v1.0.23
 =======
 - postfix updated to alpine 3.12
 - memcache updated to alpine 3.12
 - mariadb-alpine updated to alpine 3.12
+
+v1.0.24 (latest)
+=======
+- update script added to Drupal, so Drupal is upgraded at runtime if image is newer version
+- CVE-2020-14422 vulnebility resolved in postfix
