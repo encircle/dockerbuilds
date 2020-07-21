@@ -1,4 +1,9 @@
-FROM drupal:7.67-fpm-alpine
+ARG DRUPAL_VERSION=7.72
+
+FROM drupal:${DRUPAL_VERSION}-fpm-alpine
+
+ARG DRUSH_VERSION=8.3.5
+ENV ENV_DRUSH_VERSION=${DRUPAL_VERSION}
 
 # User accounts
 RUN apk add shadow \
@@ -16,7 +21,7 @@ RUN apk update && apk add \
     zlib-dev \
     curl
 
-RUN curl -L -o /tmp/memcached.tar.gz "https://github.com/php-memcached-dev/php-memcached/archive/php7.tar.gz" \
+RUN curl -L -o /tmp/memcached.tar.gz "https://github.com/php-memcached-dev/php-memcached/archive/v3.1.5.tar.gz" \
     && mkdir -p /usr/src/php/ext/memcached \
     && tar -C /usr/src/php/ext/memcached -zxvf /tmp/memcached.tar.gz --strip 1 \
     && docker-php-ext-configure memcached \
@@ -41,7 +46,7 @@ RUN chmod 755 /usr/local/bin/permissions.sh \
  && rm -rf /tmp/.cron
 
 # Drush
-RUN wget https://github.com/drush-ops/drush/releases/download/8.1.17/drush.phar \
+RUN wget https://github.com/drush-ops/drush/releases/download/${DRUSH_VERSION}/drush.phar \
  && mv drush.phar /usr/local/bin/drush \
  && chmod 750 /usr/local/bin/drush \
  && apk add mysql-client
@@ -50,4 +55,8 @@ RUN wget https://github.com/drush-ops/drush/releases/download/8.1.17/drush.phar 
 RUN apk update \
  && apk upgrade
 
-ENTRYPOINT ["php-fpm"]
+# Put entrypoint in place
+COPY entry/drupal/entrypoint.sh /usr/local/bin/
+RUN chmod 755 /usr/local/bin/entrypoint.sh
+
+ENTRYPOINT [ "sh", "/usr/local/bin/entrypoint.sh" ]
