@@ -61,11 +61,7 @@ services:
       # - mail
     restart: unless-stopped
     environment:
-      WORDPRESS_DB_HOST: database
-      DB_NAME: ${DB_NAME}
-      DB_USER: ${DB_USER}
-      USER_PASS: ${USER_PASS}
-      TABLE_PREFIX: ${TABLE_PREFIX}
+      DB_HOST: database
 
 networks:
   frontend:
