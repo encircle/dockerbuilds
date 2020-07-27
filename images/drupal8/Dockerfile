@@ -1,11 +1,7 @@
 FROM php:7.3-fpm-alpine
 
-ARG DRUPAL_VERSION=7.72
-ARG DRUSH_VERSION=8.3.5
-
-ENV ENV_DRUSH_VERSION=${DRUPAL_VERSION}
-ENV DRUPAL_VERSION 7.72
-ENV DRUPAL_MD5 ed967195ce0e78bf2ab7245aaf0649d6
+ENV DRUPAL_VERSION 8.9.2
+ENV DRUPAL_MD5 c8265f0228ca0306de7b2755e4731a3d
 
 # install the PHP extensions we need
 # postgresql-dev is needed for https://bugs.alpinelinux.org/issues/3642
@@ -104,12 +100,6 @@ RUN chmod 755 /usr/local/bin/permissions.sh \
 
 COPY scripts/drupal/wait-for /usr/local/bin
 RUN chmod 755 /usr/local/bin/wait-for
-
-# Drush
-RUN wget https://github.com/drush-ops/drush/releases/download/${DRUSH_VERSION}/drush.phar \
- && mv drush.phar /usr/local/bin/drush \
- && chmod 750 /usr/local/bin/drush \
- && apk add mysql-client
 
 # Upgrade packages
 RUN apk update \
