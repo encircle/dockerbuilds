@@ -110,3 +110,4 @@ v1.0.23 (latest)
 - Removed letsencrypt from nginx image, better served via a seperate certbot container
 - Renamed Drupal image to drupal7 and added drupal8
 - Removed expose port in restingclam image as comms now via unix socket
+- Removed permissions.sh execution from wordpress image build
