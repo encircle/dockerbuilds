@@ -32,14 +32,14 @@ services:
 
   drupal7:
     container_name: drupal7
-    image: encircle/drupal:latest
+    image: encircle/drupal7:latest
     build:
       context: ./
       dockerfile: ./images/drupal7/Dockerfile
 
   drupal8:
-    container_name: drupal7
-    image: encircle/drupal:latest
+    container_name: drupal8
+    image: encircle/drupal8:latest
     build:
       context: ./
       dockerfile: ./images/drupal8/Dockerfile
@@ -58,7 +58,7 @@ services:
       context: ./
       dockerfile: ./images/memcache/Dockerfile
 
-  restinclam:
+  restingclam:
     container_name: restingclam
     image: encircle/restingclam:latest
     build:
