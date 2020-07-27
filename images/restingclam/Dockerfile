@@ -24,6 +24,5 @@ RUN mkdir /var/run/gunicorn
 
 COPY entry/restingclam/entrypoint.sh /entrypoint.sh
 
-EXPOSE 10101
 WORKDIR '/'
 ENTRYPOINT [ "sh", "entrypoint.sh" ]
