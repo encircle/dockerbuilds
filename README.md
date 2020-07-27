@@ -7,11 +7,6 @@ These are the environment variables used across the stack.
 **SITE**  
 External site hostname (www.example.com)
 
-**LETSENCRYPT**  
-YES/NO  
-Install LetsEncrypt certificate with automatic renewals  
-(DNS must be configured and firewalls open)
-
 **ENV**  
 DEV/TEST/UAT/PROD  
 Basic auth enabled if not PROD
@@ -68,7 +63,6 @@ Port on which restingclam is listening
 
     ```
     echo 'SITE=www.example.com' > .env
-    echo 'LETSENCRYPT=YES' >> .env
     echo 'ENV=PROD' >> .env
     echo 'IP_WHITELIST_1=37.128.134.212' >> .env
     echo 'IP_WHITELIST_2=5.153.250.222' >> .env
@@ -172,7 +166,6 @@ To migrate an existing site:
 
     ```
     echo 'SITE=www.example.com' > .env
-    echo 'LETSENCRYPT=YES' >> .env
     echo 'ENV=PROD' >> .env
     echo 'IP_WHITELIST_1=37.128.134.212' >> .env
     echo 'IP_WHITELIST_2=5.153.250.222' >> .env

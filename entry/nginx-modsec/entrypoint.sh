@@ -3,22 +3,6 @@ function env_sub()
   envsubst '${SITE},${FPM_HOST}' < /etc/nginx/conf.d/default.conf > /tmp/default.conf && mv /tmp/default.conf /etc/nginx/conf.d/default.conf
 }
 
-function letsencrypt()
-{
-  if [[ "$LETSENCRYPT" == "YES" ]]; then
-    if [[ ! -f /tmp/.gotcert ]]; then
-      rm -rf /var/www/.well-known
-      start_nginx
-      install_packages
-      install_client
-      setup
-      get_cert
-      nginx -s stop
-      touch /tmp/.gotcert
-    fi
-  fi
-}
-
 function htpasswd()
 {
   echo "$HTPASS" > /etc/nginx/.htpasswd
