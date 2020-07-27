@@ -4,24 +4,29 @@
 # environment variable within the image, then we will download the new code base and 
 # decompress. This brings the Drupal volume in line with the image version.
 
-set -x
+set -eux
 
-volume_version=$(drush status | grep 'Drupal version' | awk '{print $4}')
-image_version=$DRUPAL_VERSION
+/usr/local/bin/wait-for -t 10 $DB_HOST:3306 &&
 
-if [[ $volume_version != $image_version ]]; then
+(
+  set -eux
 
-  echo "Updating Drupal from $installed_version to $image_version"
+  volume_version=$(drush status | grep 'Drupal version' | awk '{print $4}')
+  image_version=$DRUPAL_VERSION
 
-  # Download process from Drupal official image
-  set -eux; \
-    curl -fSL "https://ftp.drupal.org/files/projects/drupal-${DRUPAL_VERSION}.tar.gz" -o drupal.tar.gz; \
-    echo "${DRUPAL_MD5} *drupal.tar.gz" | md5sum -c -; \
-    tar -xz --strip-components=1 -f drupal.tar.gz; \
-    rm drupal.tar.gz; \
-    chown -R www-data:www-data sites modules themes
+  if [[ $volume_version != $image_version ]]; then
 
-fi 
+    echo "Updating Drupal from $installed_version to $image_version"
+
+    curl -fSL "https://ftp.drupal.org/files/projects/drupal-${DRUPAL_VERSION}.tar.gz" -o drupal.tar.gz
+    echo "${DRUPAL_MD5} *drupal.tar.gz" | md5sum -c -
+    tar -xz --strip-components=1 -f drupal.tar.gz
+    rm drupal.tar.gz
+    
+    /usr/local/bin/permissions.sh
+
+  fi 
+) || echo 'No database connection, cannot determine current Drupal version. Update aborted!'
 
 # Start FPM
 php-fpm

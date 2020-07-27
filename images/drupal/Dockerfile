@@ -45,6 +45,9 @@ RUN chmod 755 /usr/local/bin/permissions.sh \
  && crontab /tmp/.cron \
  && rm -rf /tmp/.cron
 
+COPY scripts/drupal/wait-for /usr/local/bin
+RUN chmod 755 /usr/local/bin/wait-for
+
 # Drush
 RUN wget https://github.com/drush-ops/drush/releases/download/${DRUSH_VERSION}/drush.phar \
  && mv drush.phar /usr/local/bin/drush \
