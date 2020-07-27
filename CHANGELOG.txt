@@ -100,8 +100,8 @@ v1.0.22
 - CVE-2020-12723 resolved in nginx-modsec
 - CVE-2020-13790 resolved in nginx-modsec
 
-v1.0.23 (latest)
-=======
+v1.1.0 (latest)
+======
 - postfix updated to alpine 3.12
 - memcache updated to alpine 3.12
 - mariadb-alpine updated to alpine 3.12
