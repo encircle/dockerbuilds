@@ -2,19 +2,26 @@ version: '3.3'
 
 services:
 
-  webserver-modsec:
-    container_name: webserver-modsec
+  nginx:
+    container_name: nginx
     image: encircle/nginx-modsec:latest
     build:
       context: ./
       dockerfile: ./images/nginx-modsec/Dockerfile
 
-  database:
-    container_name: database
+  mariadb:
+    container_name: mariadb
     image: encircle/mariadb:latest
     build:
       context: ./
       dockerfile: ./images/mariadb/Dockerfile
+
+  mariadb-alpine:
+    container_name: mariadb-alpine
+    image: encircle/mariadb-alpine:latest
+    build:
+      context: ./
+      dockerfile: ./images/mariadb-alpine/Dockerfile
 
   wordpress:
     container_name: wordpress
@@ -23,12 +30,19 @@ services:
       context: ./
       dockerfile: ./images/wordpress/Dockerfile
 
-  drupal:
-    container_name: drupal
+  drupal7:
+    container_name: drupal7
     image: encircle/drupal:latest
     build:
       context: ./
-      dockerfile: ./images/drupal/Dockerfile
+      dockerfile: ./images/drupal7/Dockerfile
+
+  drupal8:
+    container_name: drupal7
+    image: encircle/drupal:latest
+    build:
+      context: ./
+      dockerfile: ./images/drupal8/Dockerfile
 
   postfix:
     container_name: postfix
@@ -43,3 +57,10 @@ services:
     build:
       context: ./
       dockerfile: ./images/memcache/Dockerfile
+
+  restinclam:
+    container_name: restingclam
+    image: encircle/restingclam:latest
+    build:
+      context: ./
+      dockerfile: ./images/restingclam/Dockerfile
