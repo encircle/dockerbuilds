@@ -107,3 +107,5 @@ v1.0.23 (latest)
 - mariadb-alpine updated to alpine 3.12
 - update script added to Drupal, so Drupal is upgraded at runtime if image is newer version
 - CVE-2020-14422 vulnebility resolved in postfix
+- Removed letsencrypt from nginx image, better served via a seperate certbot container
+- Renamed Drupal image to drupal7 and added drupal8
