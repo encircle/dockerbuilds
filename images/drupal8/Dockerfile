@@ -1,7 +1,7 @@
 FROM php:7.3-fpm-alpine
 
-ENV DRUPAL_VERSION 8.8.8
-ENV DRUPAL_MD5 c8265f0228ca0306de7b2755e4731a3d
+ENV DRUPAL_VERSION 8.9.2
+ENV DRUPAL_MD5 f3f64fbef97831efd1c943f392975f45
 ENV COMPOSER_MD5 3441741eab090e1388390796bf4c0dd9
 
 # install the PHP extensions we need
@@ -66,7 +66,7 @@ RUN set -eux; \
     composer install
 
 # Add composer binaries to path
-ENV PATH="/var/www/vendor/bin"
+ENV PATH="/var/www/vendor/bin:${PATH}"
 
 # Drush extensions
 RUN docker-php-ext-install mysqli

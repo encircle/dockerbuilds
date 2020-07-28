@@ -20,6 +20,10 @@ RUN apk add gcc \
 COPY scripts/restingclam/rest.py /rest.py
 # ClamAV Rest Setup #
 
+# Package update
+RUN apk update \
+ && apk upgrade --ignore python
+
 RUN mkdir /var/run/gunicorn
 
 COPY entry/restingclam/entrypoint.sh /entrypoint.sh
