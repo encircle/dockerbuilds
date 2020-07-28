@@ -65,6 +65,9 @@ RUN set -eux; \
       && rm composer-setup.php; \
     composer install
 
+# Add composer binaries to path
+ENV PATH="/var/www/vendor/bin"
+
 # Drush extensions
 RUN docker-php-ext-install mysqli
 
