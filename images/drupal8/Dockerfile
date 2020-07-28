@@ -1,7 +1,8 @@
 FROM php:7.3-fpm-alpine
 
-ENV DRUPAL_VERSION 8.9.2
-ENV DRUPAL_MD5 f3f64fbef97831efd1c943f392975f45
+ENV DRUPAL_VERSION 8.8.8
+ENV DRUPAL_MD5 c8265f0228ca0306de7b2755e4731a3d
+ENV COMPOSER_MD5 3441741eab090e1388390796bf4c0dd9
 
 # install the PHP extensions we need
 # postgresql-dev is needed for https://bugs.alpinelinux.org/issues/3642
@@ -48,24 +49,30 @@ RUN { \
 		echo 'opcache.fast_shutdown=1'; \
 	} > /usr/local/etc/php/conf.d/opcache-recommended.ini
 
-WORKDIR /var/www/html
-
 # Get Drupal source
 RUN set -eux; \
-	curl -fSL "https://ftp.drupal.org/files/projects/drupal-${DRUPAL_VERSION}.tar.gz" -o drupal.tar.gz; \
-	echo "${DRUPAL_MD5} *drupal.tar.gz" | md5sum -c -; \
-	tar -xz --strip-components=1 -f drupal.tar.gz; \
-	rm drupal.tar.gz; \
-	chown -R www-data:www-data sites modules themes
+    curl -fSL "https://ftp.drupal.org/files/projects/drupal-${DRUPAL_VERSION}.tar.gz" -o drupal.tar.gz; \
+    echo "${DRUPAL_MD5} *drupal.tar.gz" | md5sum -c -; \
+    tar -xz --strip-components=1 -f drupal.tar.gz; \
+    rm drupal.tar.gz; \
+    chown -R www-data:www-data sites modules themes
+
+# Install composer
+RUN set -eux; \
+    php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"; \
+    echo "${COMPOSER_MD5} *composer-setup.php" | md5sum -c -; \
+    php composer-setup.php --install-dir=/usr/local/bin --filename=composer --quiet \
+      && rm composer-setup.php; \
+    composer install
+
+# Drush extensions
+RUN docker-php-ext-install mysqli
 
 # User accounts
 RUN apk add shadow \
  && usermod -u 10013 www-data \
  && groupmod -g 10013 www-data \
  && apk del shadow
-
-# Drush extensions
-RUN docker-php-ext-install mysqli
 
 ## Memcache ##
 RUN apk update && apk add \
@@ -80,8 +87,9 @@ RUN curl -L -o /tmp/memcached.tar.gz "https://github.com/php-memcached-dev/php-m
     && docker-php-ext-configure memcached \
     && docker-php-ext-install memcached \
     && rm /tmp/memcached.tar.gz
+## Memcache ##
 
-# Configurations
+# PHP Configurations
 COPY conf/php/max_file_upload.ini /usr/local/etc/php/conf.d/max_file_upload.ini
 COPY conf/php/cookie-security.ini /usr/local/etc/php/conf.d/cookie-security.ini
 COPY conf/php/expose_php.ini /usr/local/etc/php/conf.d/expose_php.ini
@@ -98,6 +106,7 @@ RUN chmod 755 /usr/local/bin/permissions.sh \
  && crontab /tmp/.cron \
  && rm -rf /tmp/.cron
 
+# Wait for used for waiting for database
 COPY scripts/drupal/wait-for /usr/local/bin
 RUN chmod 755 /usr/local/bin/wait-for
 
@@ -105,8 +114,9 @@ RUN chmod 755 /usr/local/bin/wait-for
 RUN apk update \
  && apk upgrade
 
-# Put entrypoint in place
+# Entrypoint
 COPY entry/drupal/entrypoint.sh /usr/local/bin/
 RUN chmod 755 /usr/local/bin/entrypoint.sh
 
+WORKDIR /var/www/html
 ENTRYPOINT [ "sh", "/usr/local/bin/entrypoint.sh" ]
