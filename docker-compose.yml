@@ -2,8 +2,8 @@ version: '3.3'
 
 services:
 
-  nginx:
-    container_name: nginx
+  nginx-modsec:
+    container_name: nginx-modsec
     image: encircle/nginx-modsec:latest
     build:
       context: ./
@@ -64,3 +64,10 @@ services:
     build:
       context: ./
       dockerfile: ./images/restingclam/Dockerfile
+
+  nginx-proxy:
+    container_name: nginx-proxy
+    image: encircle/nginx-proxy:latest
+    build:
+      context: ./
+      dockerfile: ./images/nginx-proxy/Dockerfile

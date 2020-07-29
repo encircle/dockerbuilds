@@ -80,22 +80,22 @@ RUN rm /etc/nginx/nginx.conf \
  && printf "USER:MbMfkhm4azvtI" >> /etc/nginx/.htpasswd
 
 # Copy base config
-COPY conf/nginx/nginx.conf  /etc/nginx/nginx.conf
-COPY conf/nginx/default.conf       /etc/nginx/conf.d/default.conf
-COPY conf/nginx/cloudflare.conf    /etc/nginx/conf.d/cloudflare.conf
+COPY conf/nginx-modsec/nginx.conf  /etc/nginx/nginx.conf
+COPY conf/nginx-modsec/default.conf       /etc/nginx/conf.d/default.conf
+COPY conf/nginx-modsec/cloudflare.conf    /etc/nginx/conf.d/cloudflare.conf
 
 # Copy hardening configs
-COPY conf/nginx/hardening/*.conf   /etc/nginx/hardening.d/
-COPY conf/nginx/hardening/error.html         /var/www/error.html
+COPY conf/nginx-modsec/hardening/*.conf   /etc/nginx/hardening.d/
+COPY conf/nginx-modsec/hardening/error.html         /var/www/error.html
 
 # Copy SSL
-COPY conf/nginx/certs/site.key     /etc/nginx/certs/site.key
-COPY conf/nginx/certs/site.crt     /etc/nginx/certs/site.crt
-COPY conf/nginx/certs/444.key      /etc/nginx/certs/444.key
-COPY conf/nginx/certs/444.crt      /etc/nginx/certs/444.crt
-COPY conf/nginx/certs/client.crt   /etc/nginx/certs/client.crt
-COPY conf/nginx/certs/client.key   /etc/nginx/certs/client.key
-COPY conf/nginx/dhparam            /etc/nginx/dhparam
+COPY conf/nginx-modsec/certs/site.key     /etc/nginx/certs/site.key
+COPY conf/nginx-modsec/certs/site.crt     /etc/nginx/certs/site.crt
+COPY conf/nginx-modsec/certs/444.key      /etc/nginx/certs/444.key
+COPY conf/nginx-modsec/certs/444.crt      /etc/nginx/certs/444.crt
+COPY conf/nginx-modsec/certs/client.crt   /etc/nginx/certs/client.crt
+COPY conf/nginx-modsec/certs/client.key   /etc/nginx/certs/client.key
+COPY conf/nginx-modsec/dhparam            /etc/nginx/dhparam
 
 # Modsecurity configurations
 RUN apk add pcre-dev \
@@ -107,7 +107,7 @@ RUN apk add pcre-dev \
 
 COPY conf/modsecurity/modsecurity.conf /etc/nginx/modsec/modsecurity.conf
 COPY conf/modsecurity/unicode.mapping  /etc/nginx/modsec/unicode.mapping
-COPY conf/nginx/modsecurity.conf       /etc/nginx/conf.d/modsecurity.conf
+COPY conf/nginx-modsec/modsecurity.conf       /etc/nginx/conf.d/modsecurity.conf
 COPY scripts/nginx/clamd-hook.sh /usr/local/bin/clamd-hook.sh
 
 # Users and groups
