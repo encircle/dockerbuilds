@@ -25,7 +25,7 @@ services:
 
   wordpress:
     container_name: wordpress
-    image: encircle/wordpress:v1.1.0
+    image: encircle/wordpress:latest
     build:
       context: ./
       dockerfile: ./images/wordpress/Dockerfile
