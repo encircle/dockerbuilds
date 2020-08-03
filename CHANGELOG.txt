@@ -112,3 +112,5 @@ v1.1.0 (latest)
 - Removed expose port in restingclam image as comms now via unix socket
 - Removed permissions.sh execution from wordpress image build
 - Added NGINX proxy image
+- CVE-2020-14344 resolved in wordpress
+- CVE-2020-13902 resolved in wordpress
