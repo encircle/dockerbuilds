@@ -114,3 +114,5 @@ v1.1.0 (latest)
 - Added NGINX proxy image
 - CVE-2020-14344 resolved in wordpress
 - CVE-2020-13902 resolved in wordpress
+- CVE-2020-3350 resolved in restingclam
+- CVE-2020-3481 resolved in restingclam
