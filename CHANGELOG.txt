@@ -100,7 +100,7 @@ v1.0.22
 - CVE-2020-12723 resolved in nginx-modsec
 - CVE-2020-13790 resolved in nginx-modsec
 
-v1.1.0 (latest)
+v1.1.0
 ======
 - postfix updated to alpine 3.12
 - memcache updated to alpine 3.12
@@ -116,3 +116,7 @@ v1.1.0 (latest)
 - CVE-2020-13902 resolved in wordpress
 - CVE-2020-3350 resolved in restingclam
 - CVE-2020-3481 resolved in restingclam
+
+v1.1.1 (latest)
+======
+= Wordpress updated to v5.5
