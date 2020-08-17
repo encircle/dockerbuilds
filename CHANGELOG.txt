@@ -119,4 +119,5 @@ v1.1.0
 
 v1.1.1 (latest)
 ======
-= Wordpress updated to v5.5
+- Wordpress updated to v5.5
+- CVE-2019-15847 resolved in nginx-modsec and nginx-proxy
