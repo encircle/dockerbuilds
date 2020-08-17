@@ -67,7 +67,7 @@ services:
 
   nginx-proxy:
     container_name: nginx-proxy
-    image: pagey101/nginx-proxy:latest
+    image: encircle/nginx-proxy:latest
     build:
       context: ./
       dockerfile: ./images/nginx-proxy/Dockerfile
