@@ -117,7 +117,12 @@ v1.1.0
 - CVE-2020-3350 resolved in restingclam
 - CVE-2020-3481 resolved in restingclam
 
-v1.1.1 (latest)
+v1.1.1
 ======
 - Wordpress updated to v5.5
 - CVE-2019-15847 resolved in nginx-modsec and nginx-proxy
+
+v1.1.2 (latest)
+======
+- Removed client authentication from nginx proxy, only used internally for antivirus over VLAN
+- CVE-2020-14363 resolved in wordpress
