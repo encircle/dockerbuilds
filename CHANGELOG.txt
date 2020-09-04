@@ -127,3 +127,4 @@ v1.1.2 (latest)
 - Removed client authentication from nginx proxy, only used internally for antivirus over VLAN
 - CVE-2020-14363 resolved in wordpress
 - Updated MD5 hash for composer download
+- Added wkhtmltopdf to wordpress build for civicrm
