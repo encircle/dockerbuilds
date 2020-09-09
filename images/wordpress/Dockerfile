@@ -28,6 +28,10 @@ RUN chmod 755 /usr/local/bin/permissions.sh \
  && crontab /tmp/.cron \
  && rm -rf /tmp/.cron
 
+# Extensions
+RUN apk add --no-cache icu-dev \
+ && docker-php-ext-install intl
+
 # Upgrade packages
 RUN apk update \
  && apk upgrade

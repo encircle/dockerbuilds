@@ -129,3 +129,4 @@ v1.1.2 (latest)
 - Updated MD5 hash for composer download in drupal8
 - Resolved maximum recursion depth issue in mariadb configuration
 - Wordpress upgraded to 5.5.1
+- Added PHP intl extension to wordpress image
