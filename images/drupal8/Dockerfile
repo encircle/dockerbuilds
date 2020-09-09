@@ -113,6 +113,10 @@ RUN chmod 755 /usr/local/bin/permissions.sh \
 COPY scripts/drupal/wait-for /usr/local/bin
 RUN chmod 755 /usr/local/bin/wait-for
 
+# Extra extensions
+RUN apk add --no-cache icu-dev \
+ && docker-php-ext-install intl
+
 # Upgrade packages
 RUN apk update \
  && apk upgrade

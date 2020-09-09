@@ -108,6 +108,10 @@ RUN wget https://github.com/drush-ops/drush/releases/download/${DRUSH_VERSION}/d
  && chmod 750 /usr/local/bin/drush \
  && apk add mysql-client
 
+# Extra extensions
+RUN apk add --no-cache icu-dev \
+ && docker-php-ext-install intl
+
 # Upgrade packages
 RUN apk update \
  && apk upgrade

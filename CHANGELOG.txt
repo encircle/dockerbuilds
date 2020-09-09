@@ -126,6 +126,10 @@ v1.1.2 (latest)
 ======
 - Removed client authentication from nginx proxy, only used internally for antivirus over VLAN
 - CVE-2020-14363 resolved in wordpress
+- CVE-2020-24659 resolved in wordpress
+- CVE-2020-14350 resolved in drupal7 and drupal8
+- CVE-2020-14349 resolved in drupal7 and drupal8
 - Updated MD5 hash for composer download in drupal8
 - Resolved maximum recursion depth issue in mariadb configuration
 - Wordpress upgraded to 5.5.1
+- PHP intl extension added to drupal7, drupal8 and wordpress
