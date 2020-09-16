@@ -139,3 +139,4 @@ v1.1.3 (latest)
 - Rebuilds only, no code changes
 - CVE-2020-8177 resolved in all Alpine based images
 - CVE-2020-8169 resolved in all Alpine based images
+- Restingclam updated to log requesting IP address to identify to which server the virus was uploaded to

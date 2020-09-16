@@ -64,7 +64,7 @@ class ScanFileAPI(Resource):
 
         result = "OK" if result["stream"][0] == "OK" else "NOTOK"
 
-        logger.info("Scan of {} complete. Time: {}. Status: {}".format(filename, elapse, result))
+        logger.info("Scan of {} complete (originating from {}). Time: {}. Status: {}".format(filename, request.remote_addr, elapse, result))
 
         return result
 
