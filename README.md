@@ -208,3 +208,18 @@ Add a whitelist.conf file in the modsec directory
     ```
 
 And add any whitelisting rules to the file
+
+## Letsencrypt ##
+Use the letsencrypt.sh script to add and renew letsencrypt certificates.
+
+    ##### Initial certificate #####
+    ```
+    letsencrypt.sh init test
+    ```
+
+    Test option hits letsencrypt staging API, remove this for Production use.
+
+    ##### Renewals #####
+    ```
+    letsencrypt.sh renew
+    ```
