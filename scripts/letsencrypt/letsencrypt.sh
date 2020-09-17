@@ -1,0 +1,51 @@
+#!/bin/bash
+
+function init() {
+
+  set -e
+
+  domain="www.example.com"
+  webserver_container="example-webserver"
+  containerdir="/var/encircle/docker/example"
+  webroot="${containerdir}/wordpress"
+  email="support@encircle.co.uk"
+
+  docker run -it --rm --name certbot -v "${webroot}:/var/www/certbot" -v "${containerdir}/letsencrypt:/etc/letsencrypt" certbot/certbot certonly $staging \
+         --webroot -w /var/www/certbot \
+         --rsa-key-size 4096 \
+         --agree-tos \
+         --force-renewal \
+         --email ${email} \
+         -d ${domain}
+
+  cer_file=$(readlink -f ${containerdir}/letsencrypt/live/${domain}/cert.pem)
+  key_file=$(readlink -f ${containerdir}/letsencrypt/live/${domain}/privkey.pem)
+
+  docker cp $cer_file ${webserver_container}:/etc/nginx/certs/site.crt
+  docker cp $key_file ${webserver_container}:/etc/nginx/certs/site.key
+  docker restart ${webserver_container}
+
+}
+
+function renew() {
+
+  set -e
+
+  output=$(docker run -it --rm --name certbot -v "${containerdir}/letsencrypt:/etc/letsencrypt" certbot/certbot renew)
+  [[ $output == *"No renewals were attempted"* ]] && echo 'no renewals are due' && exit
+
+  docker cp $cer_file ${webserver_container}:/etc/nginx/certs/site.crt
+  docker cp $key_file ${webserver_container}:/etc/nginx/certs/site.key
+  docker restart ${webserver_container}
+}
+
+function main() {
+
+  [[ $2 == 'test' ]] && staging="--staging --break-my-certs"
+  [[ $1 == 'init' ]] && init && exit
+  [[ $1 == 'renew' ]] && renew && exit
+  echo 'invalid option (init or renew)'
+
+}
+
+main "$@"
