@@ -62,9 +62,15 @@ class ScanFileAPI(Resource):
         end = timeit.default_timer()
         elapse = end - start
 
+        # this is fine because requests only originate from trusted VLAN IPs
+        if request.headers.getlist("X-Forwarded-For"):
+            ip = request.headers.getlist("X-Forwarded-For"):
+        else:
+            ip = request.remote_addr
+
         result = "OK" if result["stream"][0] == "OK" else "NOTOK"
 
-        logger.info("Scan of {} complete (originating from {}). Time: {}. Status: {}".format(filename, request.remote_addr, elapse, result))
+        logger.info("Scan of {} complete (originating from {}). Time: {}. Status: {}".format(filename, ip, elapse, result))
 
         return result
 
