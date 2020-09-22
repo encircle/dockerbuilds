@@ -1,0 +1,19 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: "wordpresscluster-c8f0"
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: "wordpresscluster-c8f0"
+  template:
+    metadata:
+      labels:
+        app: "wordpresscluster-c8f0"
+    spec:
+      containers:
+        - name: "wordpresscluster-c8f0"
+          image: "encirclesolutions.azurecr.io/wordpresscluster"
+          ports:
+          - containerPort: 443
