@@ -134,7 +134,7 @@ v1.1.2
 - Wordpress upgraded to 5.5.1
 - PHP intl extension added to drupal7, drupal8 and wordpress
 
-v1.1.3 (latest)
+v1.1.3
 ======
 - Rebuilds only, no code changes
 - CVE-2020-8177 resolved in all Alpine based images
@@ -142,3 +142,7 @@ v1.1.3 (latest)
 - CVE-2020-24977 resolved in all Alpine based images
 - Restingclam updated to log requesting IP address to identify to which server the virus was uploaded to
 - Added script to add/renew letsencrypt certs via fleeting certbot container
+
+v1.1.4 (latest)
+======
+- NGINX log format brought in line with IICSA
