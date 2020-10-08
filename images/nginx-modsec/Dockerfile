@@ -134,6 +134,9 @@ RUN cd /tmp \
  && mkdir /etc/nginx/modsec/whitelist \
  && touch /etc/nginx/modsec/whitelist/whitelist.conf
 
+# CRS set up
+COPY conf/modsecurity/crs-setup.conf   /etc/nginx/modsec/coreruleset-${OWASP_CRS_VERSION}/crs-setup.conf
+
 # Upgrade packages
 RUN apk update \
  && apk upgrade --ignore nginx

@@ -147,6 +147,7 @@ v1.2.0 (latest)
 ======
 - NGINX log format brought in line with IICSA
 - Modsec OWASP ruleset updated from 3.0.2 to 3.3.0
+- Modsec OWASP rule exclusions enabled for Wordpress, Drupal etc.
 - CVE-2020-8927 resolved in wordpress
 - CVE-2020-8927 resolved in drupal7
 - CVE-2020-24977 resolved in drupal8
