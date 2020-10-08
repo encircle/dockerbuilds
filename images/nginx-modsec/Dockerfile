@@ -1,6 +1,6 @@
 ARG NGINX_VERSION=1.19.0
 ARG MODSEC_VERSION=3
-ARG OWASP_CRS_VERSION=3.0.2
+ARG OWASP_CRS_VERSION=3.2
 
 # Temporary image for Modsecurity compilations
 FROM nginx:${NGINX_VERSION}-alpine-perl as build
@@ -127,10 +127,10 @@ RUN chown root:nginx /usr/local/bin/clamd-hook.sh \
 
 # OWASP ruleset
 RUN cd /tmp \
- && wget https://github.com/SpiderLabs/owasp-modsecurity-crs/archive/v${OWASP_CRS_VERSION}.tar.gz \
- && tar -xvzf /tmp/v${ENV_OWASP_CRS_VERSION}.tar.gz -C /etc/nginx/modsec \
- && mv /etc/nginx/modsec/owasp-modsecurity-crs-${ENV_OWASP_CRS_VERSION}/crs-setup.conf.example /etc/nginx/modsec/owasp-modsecurity-crs-${ENV_OWASP_CRS_VERSION}/crs-setup.conf \
- && rm -rf /tmp/owasp-modsecurity-crs-${ENV_OWASP_CRS_VERSION}.tar.gz \
+ && wget https://github.com/SpiderLabs/owasp-modsecurity-crs/archive/v${OWASP_CRS_VERSION}/master.zip \
+ && unzip -d /etc/nginx/modsec /tmp/master.zip \
+ && mv /etc/nginx/modsec/owasp-modsecurity-crs-${ENV_OWASP_CRS_VERSION}-master/crs-setup.conf.example /etc/nginx/modsec/owasp-modsecurity-crs-${ENV_OWASP_CRS_VERSION}-master/crs-setup.conf \
+ && rm -rf /tmp/master.zip \
  && mkdir /etc/nginx/modsec/whitelist \
  && touch /etc/nginx/modsec/whitelist/whitelist.conf
 
