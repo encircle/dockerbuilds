@@ -158,4 +158,5 @@ v1.2.0
 v1.2.1 (latest)
 ======
 - Readded include directive for /etc/mysql/conf.d for mariadb image
+- Added include directive for /etc/mysql/encircle.d for overrides
 - Added error-logging.ini file to drupal images to replicate wordpress settings

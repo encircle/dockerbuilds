@@ -24,3 +24,5 @@ RUN apt update -y \
 
 COPY conf/mysql/my.cnf /etc/mysql/my.cnf
 COPY conf/mysql/encircle.cnf /etc/mysql/conf.d/encircle.cnf
+RUN mkdir /etc/mysql/encircle.d \
+ && chown mysql:mysql /etc/mysql/encircle.d
