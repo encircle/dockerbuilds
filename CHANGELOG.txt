@@ -162,3 +162,4 @@ v1.2.1 (latest)
 - Added error-logging.ini file to drupal images to replicate wordpress settings
 - Removed settings from my.cnf to be overriden in mariadb image
 - Drupal8 updated from 8.9.2 to 8.9.6 resolving multiple vulnerabilities (CVE-2020-136(66/67/68/69/70))
+- Added drupal.conf hardening to NGINX modsec image
