@@ -113,6 +113,9 @@ RUN wget https://github.com/drush-ops/drush/releases/download/${DRUSH_VERSION}/d
 RUN apk add --no-cache icu-dev \
  && docker-php-ext-install intl
 
+# admin packages
+RUN apk add --no-cache git nano bash
+
 # Upgrade packages
 RUN apk update \
  && apk upgrade

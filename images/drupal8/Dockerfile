@@ -118,6 +118,9 @@ RUN chmod 755 /usr/local/bin/wait-for
 RUN apk add --no-cache icu-dev \
  && docker-php-ext-install intl
 
+# admin packages
+RUN apk add --no-cache git nano bash
+
 # Upgrade packages
 RUN apk update \
  && apk upgrade
