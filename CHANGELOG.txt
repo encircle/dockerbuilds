@@ -155,7 +155,7 @@ v1.2.0
 - CVE-2020-8169 resolved in drupal8
 - CVE-2020-8927 resolved in drupal8
 
-v1.2.1 (latest)
+v1.2.1
 ======
 - Readded include directive for /etc/mysql/conf.d for mariadb image
 - Added include directive for /etc/mysql/encircle.d for overrides
@@ -164,3 +164,8 @@ v1.2.1 (latest)
 - Drupal8 updated from 8.9.2 to 8.9.6 resolving multiple vulnerabilities (CVE-2020-136(66/67/68/69/70))
 - Added drupal.conf hardening to NGINX modsec image
 - Added git, bash, nano to drupal images
+
+v1.2.2 (latest)
+======
+- Rebuild only, no code changes
+- Fixed CVE-2020-15999 in nginx-modsec, wordpress, drupal7, drupal8, nginx-proxy
