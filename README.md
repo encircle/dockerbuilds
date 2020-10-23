@@ -1,5 +1,25 @@
 # dockerbuilds
 
+## Rebuilding Images ##
+
+Images need to be rebuilt when vulnerabilities are discovered, the rebuild.sh script does this automatically.
+
+The script will:
+
+1. Determine the current version
+2. Increment the current version to the next minor version
+3. Update the CHANGELOG
+4. Commit, tag and push to master along with new tag
+5. Dockerhub will then automatically rebuild the latest tag, and build the new minor version tag
+
+To run the script, execute as follows:
+
+```
+./rebuild.sh
+```
+
+You will need to enter Github credentials, if you don't use SSH.
+
 ## Environment Variables ##
 
 These are the environment variables used across the stack.
