@@ -1,4 +1,4 @@
-FROM wordpress:5.5.3-php7.3-fpm-alpine
+FROM wordpress:5.5.3-php7.4-fpm-alpine
 
 # Setup
 RUN ln -s -f /dev/null /root/.bash_history \
