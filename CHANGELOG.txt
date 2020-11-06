@@ -165,7 +165,11 @@ v1.2.1
 - Added drupal.conf hardening to NGINX modsec image
 - Added git, bash, nano to drupal images
 
-v1.2.2 (latest)
+v1.2.2
 ======
 - Rebuild only, no code changes
 - Fixed CVE-2020-15999 in nginx-modsec, wordpress, drupal7, drupal8, nginx-proxy
+
+v1.1.3 (latest)
+======
+- Upgraded Wordpress from 5.5.1 to 5.5.3
