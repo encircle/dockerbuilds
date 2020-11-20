@@ -170,6 +170,10 @@ v1.2.2
 - Rebuild only, no code changes
 - Fixed CVE-2020-15999 in nginx-modsec, wordpress, drupal7, drupal8, nginx-proxy
 
-v1.2.3 (latest)
+v1.2.3
 ======
 - Upgraded Wordpress from 5.5.1 to 5.5.3
+
+v1.2.4 (latest)
+======
+- Upgraded Drupal7 to 7.74
