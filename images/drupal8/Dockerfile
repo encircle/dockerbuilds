@@ -2,7 +2,7 @@ FROM php:7.3-fpm-alpine
 
 ENV DRUPAL_VERSION 8.9.10
 ENV DRUPAL_MD5 ab1b2268b5789d7c4fa1676db0d17b0e
-ENV COMPOSER_MD5 829b2cb7de25c0453d488a9e5212211e
+ENV COMPOSER_MD5 091fbf803063d9e6a05270282f887c10
 
 # install the PHP extensions we need
 # postgresql-dev is needed for https://bugs.alpinelinux.org/issues/3642
