@@ -182,3 +182,8 @@ v1.2.5 (latest)
 ======
 - Upgraded Drupal7 to 7.75
 - Upgraded Drupal8 to 8.9.10
+
+v1.2.6 (latest)
+======
+- Added official nginx-proxy image
+- Added ENDPOINT variable to nginx-modsec entrypoiny envsubst for nginx-proxy endpoint
