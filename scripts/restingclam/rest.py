@@ -64,7 +64,7 @@ class ScanFileAPI(Resource):
 
         # this is fine because requests only originate from trusted VLAN IPs
         if request.headers.getlist("X-Forwarded-For"):
-            ip = request.headers.getlist("X-Forwarded-For"):
+            ip = request.headers.getlist("X-Forwarded-For")
         else:
             ip = request.remote_addr
 
