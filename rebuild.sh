@@ -14,5 +14,5 @@ echo "- Rebuild only, no code changes" >> CHANGELOG.txt
 # update git
 git commit -a -m 'rebuild only, no code changes'
 git tag ${next_version}
-git push origin master
 git push --tags
+git push origin master
