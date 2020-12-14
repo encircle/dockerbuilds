@@ -178,7 +178,7 @@ v1.2.4
 ======
 - Upgraded Drupal7 to 7.74
 
-v1.2.5 (latest)
+v1.2.5
 ======
 - Upgraded Drupal7 to 7.75
 - Upgraded Drupal8 to 8.9.10
