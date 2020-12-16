@@ -195,4 +195,4 @@ v1.2.7
 v1.2.8 (latest)
 ======
 - Wordpress/Drupal postfix.ini modified to send sender address as noreply@${SITE}
-- Change BREAKS email for previous versions, you MUST now add the SITE environment variable to wordpress containers
+- Change BREAKS email for previous versions, you MUST now add the SITE environment variable to wordpress/drupal containers
