@@ -188,6 +188,11 @@ v1.2.6
 - Added official nginx-proxy image
 - Added ENDPOINT variable to nginx-modsec entrypoiny envsubst for nginx-proxy endpoint
 
-v1.2.7 (latest)
+v1.2.7
 ======
 - Rebuild only, no code changes
+
+v1.2.8 (latest)
+======
+- Wordpress/Drupal postfix.ini modified to send sender address as noreply@${SITE}
+- Change BREAKS email for previous versions, you MUST now add the SITE environment variable to wordpress containers

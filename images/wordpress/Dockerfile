@@ -13,6 +13,9 @@ RUN apk add shadow \
  && usermod -u 10013 www-data \
  && groupmod -g 10013 www-data
 
+# Required for envsubst variable substitution
+RUN apk add gettext
+
 # Configurations
 COPY conf/php/max_file_upload.ini /usr/local/etc/php/conf.d/max_file_upload.ini
 COPY conf/php/cookie-security.ini /usr/local/etc/php/conf.d/cookie-security.ini
