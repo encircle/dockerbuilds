@@ -1,6 +1,7 @@
 set -x
 
-envsubst '${SITE}' < /usr/local/etc/php/conf.d/postfix.ini > /tmp/postfix.ini && mv /tmp/postfix.ini /usr/local/etc/php/conf.d/postfix.ini
+DOMAIN=$(echo ${SITE} | awk -F ' ' '{ print $1 }')
+sed -i "s/\${SITE}/${DOMAIN}/g" /usr/local/etc/php/conf.d/postfix.ini
 
 # Only do this is Wordpress is already installed
 if [[ -f /var/www/html/wp-config.php ]]; then
