@@ -61,6 +61,7 @@ services:
       # - mail
     restart: unless-stopped
     environment:
+      SITE: ${SITE}
       DB_HOST: database
 
 networks:
