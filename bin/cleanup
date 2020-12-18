@@ -1,0 +1,18 @@
+cd ../
+for file in $(find * -type f \
+-and -not -name "README.md" \
+-and -not -path "example/*" \
+-and -not -path "bin/*" \
+-and -not -path ".git/*" \
+-and -not -path "images/*" \
+-and -not -path "bin/*")
+do
+  grep -RI $file . 2>&1 >/dev/null || echo "$file does not appear to be used anywhere."
+done
+cd - 2>&1 >/dev/null
+echo
+echo "#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@"
+echo "#@                            #@"
+echo "#@ beware of wildcard copies! #@"
+echo "#@                            #@"
+echo "#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@"
