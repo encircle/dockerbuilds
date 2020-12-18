@@ -18,7 +18,9 @@ You might want to test that images will rebuild, before pushing tags or master c
 
 To build manually, use the docker-compose.yml file as follows.
 
-docker-compose build ${image}
+    ```
+    docker-compose build ${image}
+    ```
 
 Where ${image} is the name of the image to build, omit this variable to build all images locally.
 
@@ -38,9 +40,9 @@ The script will:
 
 To run the script, execute as follows:
 
-```
-cd bin && ./rebuild
-```
+    ```
+    cd bin && ./rebuild
+    ```
 
 You will need to enter Github credentials, if you don't use SSH otherwise your private key password.
 
@@ -52,27 +54,27 @@ For changes over and above package vulnerabilities, i.e. any code changes.
 2. Update the CHANGELOG, incrementing version as required
 3. Commit the changes
 
-```
-git commit -a -m 'changes'
-```
+    ```
+    git commit -a -m 'changes'
+    ```
 
 4. Tag the build
 
-```
-git tag v1.2.3
-```
+    ```
+    git tag v1.2.3
+    ```
 
 5. Push tags
 
-```
-git push --tags
-```
+    ```
+    git push --tags
+    ```
 
 6. Push master
 
-```
-git push origin master
-```
+    ```
+    git push origin master
+    ```
 
 ## Environment Variables ##
 
@@ -271,15 +273,15 @@ To migrate an existing site:
 
 To whitelist specific rules for modsec, mount a modsec whitelist directory as follows:
 
-```
-- ./modsec:/etc/nginx/modsec/whitelist
-```
+    ```
+    - ./modsec:/etc/nginx/modsec/whitelist
+    ```
 
 Add a whitelist.conf file in the modsec directory
 
-```
-touch modsec/whitelist.conf
-```
+    ```
+    touch modsec/whitelist.conf
+    ```
 
 And add any whitelisting rules to the file
 
