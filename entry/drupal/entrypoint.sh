@@ -6,6 +6,9 @@
 
 set -eux
 
+DOMAIN=$(echo ${SITE} | awk -F ' ' '{ print $1 }')
+sed -i "s/\${SITE}/${DOMAIN}/g" /usr/local/etc/php/conf.d/postfix.ini
+
 # Wait for database as drush requires it
 /usr/local/bin/wait-for -t 10 $DB_HOST:3306 &&
 

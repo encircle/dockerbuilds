@@ -195,6 +195,7 @@ v1.2.7
 v1.2.8 (latest)
 ======
 - Wordpress/Drupal postfix.ini modified to send sender address as noreply@${SITE}
+- Wordpress/Drupal entrypoint updated to substitute ${SITE} variable in postfix.ini
 - Change BREAKS email for previous versions, you MUST now add the SITE environment variable to wordpress/drupal containers
 - Wordpress updated to 5.6.0
 - Critical vulnerability CVE-2020-29599 resolved in wordpress

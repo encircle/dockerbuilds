@@ -51,6 +51,9 @@ RUN { \
 
 WORKDIR /var/www/html
 
+# Required for envsubst variable substitution
+RUN apk add gettext
+
 # Get Drupal source
 RUN set -eux; \
 	curl -fSL "https://ftp.drupal.org/files/projects/drupal-${DRUPAL_VERSION}.tar.gz" -o drupal.tar.gz; \
