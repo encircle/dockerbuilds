@@ -1,4 +1,7 @@
 cd ../
+echo
+echo "The following files do not appear to be used anywhere:::"
+echo
 for file in $(find * -type f \
 -and -not -name "README.md" \
 -and -not -path "example/*" \
@@ -7,7 +10,7 @@ for file in $(find * -type f \
 -and -not -path "images/*" \
 -and -not -path "bin/*")
 do
-  grep -RI $file . 2>&1 >/dev/null || echo "$file does not appear to be used anywhere."
+  grep -RI $file . 2>&1 >/dev/null || echo "  $file"
 done
 cd - 2>&1 >/dev/null
 echo
