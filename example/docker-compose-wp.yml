@@ -62,6 +62,7 @@ services:
       # - mail
     restart: unless-stopped
     environment:
+      SITE: ${SITE}
       WORDPRESS_DB_HOST: database
       WORDPRESS_DB_USER: ${DB_USER}
       WORDPRESS_DB_PASSWORD: ${USER_PASS}
