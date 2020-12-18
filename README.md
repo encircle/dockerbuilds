@@ -1,8 +1,10 @@
 # dockerbuilds
 
-## Rebuilding Images ##
+## Contributing ##
 
-Images need to be rebuilt when vulnerabilities are discovered, the rebuild.sh script does this automatically.
+### Quick Image Rebuild ###
+
+Images need to be rebuilt when vulnerabilities are discovered, the rebuild script does this automatically.
 
 The script will:
 
@@ -15,10 +17,40 @@ The script will:
 To run the script, execute as follows:
 
 ```
-./rebuild.sh
+cd bin && ./rebuild
 ```
 
-You will need to enter Github credentials, if you don't use SSH.
+You will need to enter Github credentials, if you don't use SSH otherwise your private key password.
+
+### Manual Image Rebuild ###
+
+For changes over and above package vulnerabilities, i.e. any code changes.
+
+1. Make the changes
+2. Update the CHANGELOG, incrementing version as required
+3. Commit the changes
+
+```
+git commit -a -m 'changes'
+```
+
+4. Tag the build
+
+```
+git tag v1.2.3
+```
+
+5. Push tags
+
+```
+git push --tags
+```
+
+6. Push master
+
+```
+git push origin master
+```
 
 ## Environment Variables ##
 
