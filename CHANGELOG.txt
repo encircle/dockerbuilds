@@ -202,4 +202,7 @@ v1.2.8
 
 v1.3.0 (latest)
 ======
-- General cleanup
+- General file/directory cleanup
+- Readme updates
+- letsencrypt script updated
+- Added cleanup script
