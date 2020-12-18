@@ -2,18 +2,17 @@ FROM alpine:3.12
 
 RUN ln -s -f /dev/null /root/.bash_history
 
-RUN apk add --no-cache \
-   shadow \
-   mariadb \
-   mariadb-client \
-   mariadb-server-utils \
-   pwgen \
+RUN apk add --no-cache shadow \
+                       mariadb \
+                       mariadb-client \
+                       mariadb-server-utils \
+                       pwgen \
  && usermod -u 10012 mysql \
  && groupmod -g 10012 mysql \
  && rm -f /var/cache/apk/* \
  && apk del shadow
 
-ADD entry/mariadb/entrypoint.sh /scripts/run.sh
+ADD entry/mariadb-alpine/entrypoint.sh /usr/local/bin/entrypoint.sh
 
 RUN mkdir /docker-entrypoint-initdb.d \
  && mkdir -p /scripts/pre-exec.d \
@@ -27,4 +26,4 @@ EXPOSE 3306
 
 VOLUME ["/var/lib/mysql"]
 
-ENTRYPOINT ["/scripts/run.sh"]
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
