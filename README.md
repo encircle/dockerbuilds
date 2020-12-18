@@ -286,7 +286,17 @@ Add a whitelist.conf file in the modsec directory
 And add any whitelisting rules to the file
 
 ## Letsencrypt ##
-Use the letsencrypt.sh script to add and renew letsencrypt certificates.
+
+Use the letsencrypt script to add and renew letsencrypt certificates.
+
+Make sure to update the variables within the script to match domains and containers etc.
+
+Variables:
+
+  - domain - Domain for which certificate is required
+  - webserver_container - Name of the webserver container for the site
+  - containerdir - Directory for the stack
+  - email - Email for letsencrypt notifications
 
 ##### Initial certificate #####
 
