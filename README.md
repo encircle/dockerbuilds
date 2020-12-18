@@ -4,13 +4,13 @@
 
 ### Directory Structure ###
 
-bin                - handy scripts for repo management and more
-conf               - configuration used by images
-entry              - entrypoint scripts for images
-scripts            - scripts used by images
-images             - the actual Dockerfiles
-example            - example docker-compose stacks
-docker-compose.yml - docker-compose for building image locally
+  - bin                - handy scripts for repo management and more
+  - conf               - configuration used by images
+  - entry              - entrypoint scripts for images
+  - scripts            - scripts used by images
+  - images             - the actual Dockerfiles
+  - example            - example docker-compose stacks
+  - docker-compose.yml - docker-compose for building image locally
 
 ### Local Image Rebuild ###
 
