@@ -1,13 +1,14 @@
 FROM python:3.7.7-alpine3.12
 
 # Clamd setup #
-RUN apk add clamav clamav-libunrar
-RUN mkdir /run/clamav
-RUN chown clamav:clamav /run/clamav
-RUN chmod 750 /run/clamav
+RUN apk add clamav clamav-libunrar \
+ && mkdir /run/clamav \
+ && chown clamav:clamav /run/clamav \
+ && chmod 750 /run/clamav \
+ && freshclam
+
 COPY conf/restingclam/clamd.conf /etc/clamav/clamd.conf
 COPY conf/restingclam/freshclam.conf /etc/clamav/freshclam.conf
-RUN freshclam
 # Clamd Setup
 
 # ClamAV Rest setup #
