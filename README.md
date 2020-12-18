@@ -2,7 +2,29 @@
 
 ## Contributing ##
 
-### Quick Image Rebuild ###
+### Directory Structure ###
+
+bin                - handy scripts for repo management and more
+conf               - configuration used by images
+entry              - entrypoint scripts for images
+scripts            - scripts used by images
+images             - the actual Dockerfiles
+example            - example docker-compose stacks
+docker-compose.yml - docker-compose for building image locally
+
+### Local Image Rebuild ###
+
+You might want to test that images will rebuild, before pushing tags or master changes and waiting for Dockerhub automated builds.
+
+To build manually, use the docker-compose.yml file as follows.
+
+docker-compose build ${image}
+
+Where ${image} is the name of the image to build, omit this variable to build all images locally.
+
+All images will be built with the encircle repository and latest tag (encircle/theimage:latest).
+
+### Quick Remote Image Rebuild ###
 
 Images need to be rebuilt when vulnerabilities are discovered, the rebuild script does this automatically.
 
@@ -22,7 +44,7 @@ cd bin && ./rebuild
 
 You will need to enter Github credentials, if you don't use SSH otherwise your private key password.
 
-### Manual Image Rebuild ###
+### Manual Remote Image Rebuild ###
 
 For changes over and above package vulnerabilities, i.e. any code changes.
 
@@ -89,14 +111,14 @@ Desired (or existing) MySQL application user password
 Desired (or existing) database table prefix
 
 **HTPASS**  
-.htpasswd format credentials (user:hash)
+.htpasswd format credentials (user:hash). This is the HASHED password, not plaintext.
 
 **MODSEC_ENGINE_MODE**  
 On/Off/DetectionOnly
 Mode for modsec engine, check the docs
 
 **DISABLE_CONF**  
-Disable hardening config files
+Disable hardening config files, some rules may be too restrictive for a given scenario or website.
 e.g. DISABLE_CONF=custom_error.conf block_files.conf
 
 **AV_SCAN**  
@@ -249,29 +271,31 @@ To migrate an existing site:
 
 To whitelist specific rules for modsec, mount a modsec whitelist directory as follows:
 
-    ```
-    - ./modsec:/etc/nginx/modsec/whitelist
-    ```
+```
+- ./modsec:/etc/nginx/modsec/whitelist
+```
 
 Add a whitelist.conf file in the modsec directory
 
-    ```
-    touch modsec/whitelist.conf
-    ```
+```
+touch modsec/whitelist.conf
+```
 
 And add any whitelisting rules to the file
 
 ## Letsencrypt ##
 Use the letsencrypt.sh script to add and renew letsencrypt certificates.
 
-    ##### Initial certificate #####
-    ```
-    letsencrypt.sh init test
-    ```
+##### Initial certificate #####
 
-    Test option hits letsencrypt staging API, remove this for Production use.
+```
+letsencrypt.sh init test
+```
 
-    ##### Renewals #####
-    ```
-    letsencrypt.sh renew
-    ```
+The test option hits letsencrypt staging API, remove this for Production use.
+
+##### Renewals #####
+
+```
+letsencrypt.sh renew
+```
