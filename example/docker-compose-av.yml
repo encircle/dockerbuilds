@@ -1,0 +1,33 @@
+version: '3.4'
+
+services:
+
+  proxy:
+    container_name: proxy
+    image: encircle/nginx-proxy:v1.2.7
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - ./gunicorn:/var/run/gunicorn
+    restart: unless-stopped
+    networks:
+      - proxy
+    environment:
+      SITE: ${SITE}
+      MODSEC_ENGINE_MODE: ${MODSEC_ENGINE_MODE}
+      ENDPOINT: ${ENDPOINT}
+
+  clamd:
+    container_name: clamd
+    image: encircle/restingclam:v1.2.7
+    volumes:
+      - ./gunicorn:/var/run/gunicorn
+      - ./logs:/var/log/clamav
+    networks:
+      - av
+    restart: unless-stopped
+
+networks:
+  proxy:
+  av:
