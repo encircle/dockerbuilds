@@ -48,7 +48,7 @@ services:
       
   wordpress:
     container_name: wordpress
-    image: encircle/wordpress:latest
+    image: encircle/wordpress-civicrm:latest
     expose:
       - '9000'
     depends_on:

@@ -206,3 +206,5 @@ v1.3.0 (latest)
 - Readme updates
 - letsencrypt script updated
 - Added cleanup script
+- Wordpress now comes pre-installed (for new installations)
+- Added image for Wordpress with CiviCRM
