@@ -24,7 +24,13 @@ COPY conf/php/postfix.ini /usr/local/etc/php/conf.d/postfix.ini
 COPY conf/php/www.conf /usr/local/etc/php-fpm.d/www.conf
 
 # Scripts
+RUN mkdir /entrypoint.d
 COPY scripts/wordpress/permissions.sh /usr/local/bin
+COPY scripts/wordpress/wait-for /usr/local/bin
+COPY scripts/wordpress/init.sh /entrypoint.d
+
+RUN chmod 755 /entrypoint.d/init.sh
+RUN chmod 755 /usr/local/bin/wait-for
 RUN chmod 755 /usr/local/bin/permissions.sh \
  && crontab -l > /tmp/.cron \
  && echo "0 3 * * * /usr/local/bin/permissions.sh" >> /tmp/.cron \
@@ -41,4 +47,4 @@ RUN apk update \
 
 COPY entry/wordpress/entrypoint.sh /usr/local/bin/
 
-ENTRYPOINT [ "bash", "entrypoint.sh"]
+ENTRYPOINT [ "bash", "entrypoint.sh", "php-fpm"]

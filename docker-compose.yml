@@ -71,3 +71,10 @@ services:
     build:
       context: ./
       dockerfile: ./images/nginx-proxy/Dockerfile
+
+  wordpress-civicrm:
+    container_name: wordpress-civi
+    image: encircle/wordpress-civicrm:latest
+    build:
+      context: ./
+      dockerfile: ./images/wordpress-civicrm/Dockerfile
