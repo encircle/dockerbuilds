@@ -8,11 +8,11 @@ wordpress_installed() {
 install_wordpress() {
   cd /var/www/html && \
   wp --allow-root core install --path=/var/www/html \
-     --url=${DOMAIN} \
-     --title=${TITLE} \
-     --admin_user=${ADMIN_USER} \
-     --admin_password=${ADMIN_PASSWORD} \
-     --admin_email=${ADMIN_EMAIL}
+     --url="${DOMAIN}" \
+     --title="${TITLE}" \
+     --admin_user="${ADMIN_USER}" \
+     --admin_password="${ADMIN_PASSWORD}" \
+     --admin_email="${ADMIN_EMAIL}"
 }
 
 upgrade_wordpress() {
