@@ -294,7 +294,7 @@ EOPHP
 
 	# now that we're definitely done writing configuration, let's clear out the relevant envrionment variables (so that stray "phpinfo()" calls don't leak secrets from our code)
 	for e in "${envs[@]}"; do
-  	  [[ $e != "WORDPRESS_DB_HOST" ]] && unset "$e"
+  	  [[ $e != "WORDPRESS_DB_HOST" ]] && [[ $e != "WORDPRESS_VERSION" ]] && unset "$e"
 	done
 fi
 
