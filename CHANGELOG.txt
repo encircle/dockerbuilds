@@ -209,3 +209,4 @@ v1.3.0 (latest)
 - Wordpress now comes pre-installed (for new installations)
 - Added image for Wordpress with CiviCRM
 - Drupal7 upgraded to 7.78
+- Drupal8 upgraded to 8.9.13
