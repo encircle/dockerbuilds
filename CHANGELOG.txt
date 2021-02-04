@@ -214,3 +214,4 @@ v1.3.0
 v1.3.1 (latest)
 ======
 - Disabled SQL strict mode in MariaDB
+- Added Sendgrid support to Potfix image
