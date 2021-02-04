@@ -46,7 +46,7 @@ services:
 
   postfix:
     container_name: postfix
-    image: encircle/postfix:v1.3.1
+    image: encircle/postfix:latest
     build:
       context: ./
       dockerfile: ./images/postfix/Dockerfile
