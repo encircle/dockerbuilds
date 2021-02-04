@@ -44,6 +44,10 @@ COPY	   scripts/postfix/run.sh /
 COPY	   scripts/postfix/opendkim.sh /
 RUN        chmod +x /run.sh /opendkim.sh
 
+# Custom scripts
+RUN  mkdir /docker-init.db/
+COPY scripts/postfix/sendgrid.sh /docker-init.db/
+
 # Set up volumes
 VOLUME     [ "/var/spool/postfix", "/etc/postfix", "/etc/opendkim/keys" ]
 
