@@ -102,11 +102,13 @@ These are the environment variables used across the stack. In the example docker
 
 **AV_PORT**: Port on which restingclam is listening
 
+
 ### NGINX Proxy ###
 
 All those available with NGINX modsec and...
 
 **ENDPOINT**: Proxy endpoint (e.g. myapp.example.com:4444)
+
 
 ### MariaDB ###
 
@@ -118,6 +120,7 @@ All those available with NGINX modsec and...
 
 **MYSQL_PASSWORD**: Desired MySQL database user password
 
+
 ### Wordpress ###
 
 **SITE**: Domain, used for sendmail From address (see NGINX variables)
@@ -128,11 +131,13 @@ All those available with NGINX modsec and...
 
 **WORDPRESS_DB_USER**: Database user
 
+
 ### Drupal ###
 
 **SITE**: Domain, used for sendmail From address (see NGINX variables)
 
 **DB_HOST**: Database host for Drupal
+
 
 ### Postfix ###
 
