@@ -82,13 +82,13 @@ These are the environment variables used across the stack. In the example docker
 
 ### NGINX Modsec ###
 
-**SITE**: Domain name for site (www.example.com), can be a space seperated list. First domain in list is used as PHP sendmail from address\
+**SITE**: Space seperated list of domain names for site. First domain used as PHP sendmail From address\
 **ENV**: Basic auth enabled if not PROD\
-**IP_WHITELIST_***: IP addresses exempt from basic authentication. As many whitelist addresses can be included as required.\
+**IP_WHITELIST_***: IP addresses exempt from basic authentication. As many as needed.\
 **FPM_HOST**: FPM host for proxied requests\
 **HTPASS**: .htpasswd format credentials (user:hash). This is the HASHED password, not plaintext.\
 **MODSEC_ENGINE_MODE**: (On/Off/DetectionOnly) Mode for modsec engine, check the docs\
-**DISABLE_CONF**: Disable hardening config files, some rules may be too restrictive for a given scenario or website. e.g.   DISABLE_CONF=custom_error.conf block_files.conf\
+**DISABLE_CONF**: Disable hardening config files. e.g.   DISABLE_CONF=custom_error.conf block_files.conf\
 **AV_SCAN**: (TRUE/FALSE) Whether to scan file uploads via webserver\
 **AV_HOST**: Host on which restingclam is hosted\
 **AV_PORT**: Port on which restingclam is listening
