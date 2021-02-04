@@ -83,14 +83,23 @@ These are the environment variables used across the stack. In the example docker
 ### NGINX Modsec ###
 
 **SITE**: Space seperated list of domain names for site. First domain used as PHP sendmail From address\
+
 **ENV**: Basic auth enabled if not PROD\
+
 **IP_WHITELIST_***: IP addresses exempt from basic authentication. As many as needed.\
+
 **FPM_HOST**: FPM host for proxied requests\
+
 **HTPASS**: .htpasswd format credentials (user:hash). This is the HASHED password, not plaintext.\
+
 **MODSEC_ENGINE_MODE**: (On/Off/DetectionOnly) Mode for modsec engine, check the docs\
+
 **DISABLE_CONF**: Disable hardening config files. e.g.   DISABLE_CONF=custom_error.conf block_files.conf\
+
 **AV_SCAN**: (TRUE/FALSE) Whether to scan file uploads via webserver\
+
 **AV_HOST**: Host on which restingclam is hosted\
+
 **AV_PORT**: Port on which restingclam is listening
 
 ### NGINX Proxy ###
@@ -102,26 +111,35 @@ All those available with NGINX modsec and...
 ### MariaDB ###
 
 **MYSQL_ROOT_PASS**: Desired MySQL root password
+
 **MYSQL_DATABASE**: Desired MySQL database name
+
 **MYSQL_USER**: Desired MySQL database user
+
 **MYSQL_PASSWORD**: Desired MySQL database user password
 
 ### Wordpress ###
 
 **SITE**: Domain, used for sendmail From address (see NGINX variables)
+
 **WORDPRESS_DB_HOST**: Database hostname
+
 **WORDPRESS_DB_NAME**: Database name
+
 **WORDPRESS_DB_USER**: Database user
 
 ### Drupal ###
 
 **SITE**: Domain, used for sendmail From address (see NGINX variables)
+
 **DB_HOST**: Database host for Drupal
 
 ### Postfix ###
 
 **HOSTNAME**: Postfix myhostname hostname
+
 **SENDGRID**: (TRUE/FALSE) Whether to use SendGrid as relay host or not
+
 **SENDGRID_API_KEY**: API key for SendGrid (required if using SendGrid)
 
 ## Usage ##
