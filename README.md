@@ -78,60 +78,51 @@ For changes over and above package vulnerabilities, i.e. any code changes.
 
 ## Environment Variables ##
 
-These are the environment variables used across the stack.
+These are the environment variables used across the stack. In the example docker-compose files, variables are set in .env, and then environment variables are mapped in the docker-compose files to the variables set in .env. This is so that we can have a single variable set in .env and reference multiple times in docker-compose (e.g. using a single variable from .env to set the environment variables for database name in both MySQL and Wordpress containers).
 
-**SITE**  
-External site hostname (www.example.com)
+### NGINX Modsec ###
 
-**ENV**  
-DEV/TEST/UAT/PROD  
-Basic auth enabled if not PROD
+SITE: Domain name for site (www.example.com), can be a space seperated list. First domain in list is used as PHP sendmail from address
+ENV: Basic auth enabled if not PROD
+IP_WHITELIST_*: IP addresses exempt from basic authentication. As many whitelist addresses can be included as required.
+FPM_HOST: FPM host for proxied requests
+HTPASS: .htpasswd format credentials (user:hash). This is the HASHED password, not plaintext.
+MODSEC_ENGINE_MODE: (On/Off/DetectionOnly) Mode for modsec engine, check the docs
+DISABLE_CONF: Disable hardening config files, some rules may be too restrictive for a given scenario or website. e.g. DISABLE_CONF=custom_error.conf block_files.conf
+AV_SCAN: (TRUE/FALSE) Whether to scan file uploads via webserver
+AV_HOST: Host on which restingclam is hosted
+AV_PORT: Port on which restingclam is listening
 
-**IP_WHITELIST_**  
-IP addresses exempt from basic auth in the format:  
-IP_WHITELIST_1=192.168.0.0/24  
-IP_WHITELIST_2=5.232.5.77
+### NGINX Proxy ###
 
-As many whitelist addresses can be included as required.
+All those available with NGINX modsec and...
 
-**FPM_HOST**  
-Docker network hostname for FPM host (e.g. wordpress)
+ENDPOINT: Proxy endpoint (e.g. myapp.example.com:4444)
 
-**ROOT_PASS**  
-Desired MySQL root password
+### MariaDB ###
 
-**DB_NAME**  
-Desired (or existing) MySQL database name
+MYSQL_ROOT_PASS: Desired MySQL root password
+MYSQL_DATABASE: Desired MySQL database name
+MYSQL_USER: Desired MySQL database user
+MYSQL_PASSWORD: Desired MySQL database user password
 
-**DB_USER**  
-Desired (or existing) MySQL application user
+### Wordpress ###
 
-**USER_PASS**  
-Desired (or existing) MySQL application user password
+SITE: Domain, used for sendmail From address (see NGINX variables)
+WORDPRESS_DB_HOST: Database hostname
+WORDPRESS_DB_NAME: Database name
+WORDPRESS_DB_USER: Database user
 
-**TABLE_PREFIX**  
-Desired (or existing) database table prefix
+### Drupal ###
 
-**HTPASS**  
-.htpasswd format credentials (user:hash). This is the HASHED password, not plaintext.
+SITE: Domain, used for sendmail From address (see NGINX variables)
+DB_HOST: Database host for Drupal
 
-**MODSEC_ENGINE_MODE**  
-On/Off/DetectionOnly
-Mode for modsec engine, check the docs
+### Postfix ###
 
-**DISABLE_CONF**  
-Disable hardening config files, some rules may be too restrictive for a given scenario or website.
-e.g. DISABLE_CONF=custom_error.conf block_files.conf
-
-**AV_SCAN**  
-TRUE/FALSE
-Whether to scan file uploads via webserver
-
-**AV_HOST**  
-Host on which restingclam is hosted
-
-**AV_PORT**
-Port on which restingclam is listening
+HOSTNAME: Postfix myhostname hostname
+SENDGRID: (TRUE/FALSE) Whether to use SendGrid as relay host or not
+SENDGRID_API_KEY: API key for SendGrid (required if using SendGrid)
 
 ## Usage ##
 
