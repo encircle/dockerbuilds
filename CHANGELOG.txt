@@ -215,3 +215,4 @@ v1.3.1 (latest)
 ======
 - Disabled SQL strict mode in MariaDB
 - Added Sendgrid support to Potfix image
+- Fixed bug where .well-known is blocked, but .well-known/acme-challenge is explicitly allowed
