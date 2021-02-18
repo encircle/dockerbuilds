@@ -211,8 +211,12 @@ v1.3.0
 - Drupal7 upgraded to 7.78
 - Drupal8 upgraded to 8.9.13
 
-v1.3.1 (latest)
+v1.3.1
 ======
 - Disabled SQL strict mode in MariaDB
 - Added Sendgrid support to Potfix image
 - Fixed bug where .well-known is blocked, but .well-known/acme-challenge is explicitly allowed
+
+v1.3.2 (latest)
+======
+- Rebuild only, no code changes
