@@ -78,3 +78,10 @@ services:
     build:
       context: ./
       dockerfile: ./images/wordpress-civicrm/Dockerfile
+
+  redmine:
+    container_name: redmine
+    image: encircle/redmine:latest
+    build:
+      context: ./
+      dockerfile: ./images/redmine/Dockerfile
