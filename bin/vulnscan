@@ -1,0 +1,12 @@
+#!/bin/bash
+
+trivy 2>&1 >/dev/null || echo 'You need to install Trivy'
+
+for image in $(grep 'image:' ../docker-compose.yml | awk -F ':' '{print $2}'); do
+  [[ $image == 'encircle/mariadb-alpine' ]] && continue
+  echo '================================'
+  echo $image
+  trivy --clear-cache
+  trivy "$image:latest"
+  echo '================================'
+done
