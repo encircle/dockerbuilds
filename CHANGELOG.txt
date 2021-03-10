@@ -217,8 +217,13 @@ v1.3.1
 - Added Sendgrid support to Potfix image
 - Fixed bug where .well-known is blocked, but .well-known/acme-challenge is explicitly allowed
 
-v1.3.2 (latest)
+v1.3.2
 ======
 - Added script for local vulnerability scanning
 - Added custom redmine image
 - Changed drush permissions to root:10013 (www-data) with 750 permissions in drupal7
+
+v1.3.3 (latest)
+======
+- Removed sql_mode= from mariadb config
+- Added innodb_strict_mode=0 to mariadb config
