@@ -110,6 +110,7 @@ RUN chmod 755 /usr/local/bin/wait-for
 RUN wget https://github.com/drush-ops/drush/releases/download/${DRUSH_VERSION}/drush.phar \
  && mv drush.phar /usr/local/bin/drush \
  && chmod 750 /usr/local/bin/drush \
+ && chown root:10013 /usr/local/bin/drush \
  && apk add mysql-client
 
 # Extra extensions
