@@ -221,3 +221,4 @@ v1.3.2 (latest)
 ======
 - Added script for local vulnerability scanning
 - Added custom redmine image
+- Changed drush permissions to root:10013 (www-data) with 750 permissions in drupal7
