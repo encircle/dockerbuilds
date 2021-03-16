@@ -1,5 +1,7 @@
 FROM wordpress:5.7.0-php7.3-fpm-alpine
 
+ENV WORDPRESS_VERSION 5.7
+
 # Setup
 RUN ln -s -f /dev/null /root/.bash_history \
  && rm /usr/local/etc/php-fpm.d/www.conf \
