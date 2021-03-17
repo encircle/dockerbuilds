@@ -223,8 +223,12 @@ v1.3.2
 - Added custom redmine image
 - Changed drush permissions to root:10013 (www-data) with 750 permissions in drupal7
 
-v1.3.3 (latest)
+v1.3.3
 ======
 - Removed sql_mode= from mariadb config
 - Added innodb_strict_mode=0 to mariadb config
 - Major Wordpress release to 5.7
+
+v1.3.4 (latest)
+======
+- Added gnu-libiconv library for Azure single sign-on
