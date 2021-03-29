@@ -45,7 +45,7 @@ RUN apk add --no-cache icu-dev \
 
 # libiconv library for azure single sign-on
 # https://github.com/oidc-wp/openid-connect-generic/issues/214
-RUN apk add gnu-libiconv --update-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/community/ --allow-untrusted
+RUN apk add --upgrade gnu-libiconv
 ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so php
 
 # Upgrade packages
