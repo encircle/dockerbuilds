@@ -115,7 +115,8 @@ RUN wget https://github.com/drush-ops/drush/releases/download/${DRUSH_VERSION}/d
 
 # Extra extensions
 RUN apk add --no-cache icu-dev \
- && docker-php-ext-install intl
+ && docker-php-ext-install intl \
+ && docker-php-ext-install bcmath
 
 # admin packages
 RUN apk add --no-cache git nano bash
