@@ -119,7 +119,8 @@ RUN chmod 755 /usr/local/bin/wait-for
 
 # Extra extensions
 RUN apk add --no-cache icu-dev \
- && docker-php-ext-install intl
+ && docker-php-ext-install intl \
+ && docker-php-ext-install bcmath
 
 # admin packages
 RUN apk add --no-cache git nano bash

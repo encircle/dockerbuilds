@@ -41,7 +41,8 @@ RUN chmod 755 /usr/local/bin/permissions.sh \
 
 # Extra extensions
 RUN apk add --no-cache icu-dev \
- && docker-php-ext-install intl
+ && docker-php-ext-install intl \
+ && docker-php-ext-install bcmath
 
 # libiconv library for azure single sign-on
 # https://github.com/oidc-wp/openid-connect-generic/issues/214

@@ -232,4 +232,4 @@ v1.3.3
 v1.3.4 (latest)
 ======
 - Added gnu-libiconv library for Azure single sign-on
-- Added bcmath to drupal7 build for permaculture
+- Added bcmath to drupal7, drupal8 and wordpress builds
