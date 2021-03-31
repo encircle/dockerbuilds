@@ -18,6 +18,9 @@ RUN apk add shadow \
 # Required for envsubst variable substitution
 RUN apk add gettext
 
+# required for php soap extension
+RUN apk add libxml2-dev
+
 # Configurations
 COPY conf/php/max_file_upload.ini /usr/local/etc/php/conf.d/max_file_upload.ini
 COPY conf/php/cookie-security.ini /usr/local/etc/php/conf.d/cookie-security.ini
@@ -41,8 +44,8 @@ RUN chmod 755 /usr/local/bin/permissions.sh \
 
 # Extra extensions
 RUN apk add --no-cache icu-dev \
- && docker-php-ext-install intl \
- && docker-php-ext-install bcmath
+                       libxml2-dev \
+ && docker-php-ext-install intl bcmath soap
 
 # libiconv library for azure single sign-on
 # https://github.com/oidc-wp/openid-connect-generic/issues/214
