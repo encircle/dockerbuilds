@@ -115,7 +115,7 @@ RUN wget https://github.com/drush-ops/drush/releases/download/${DRUSH_VERSION}/d
 
 # Extra extensions
 RUN apk add --no-cache icu-dev \
-                       libxml-dev \
+                       libxml2-dev \
  && docker-php-ext-install intl bcmath soap
 
 # admin packages
