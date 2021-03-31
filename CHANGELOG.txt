@@ -229,7 +229,11 @@ v1.3.3
 - Added innodb_strict_mode=0 to mariadb config
 - Major Wordpress release to 5.7
 
-v1.3.4 (latest)
+v1.3.4
 ======
 - Added gnu-libiconv library for Azure single sign-on
 - Added bcmath to drupal7, drupal8 and wordpress builds
+
+v1.3.5 (latest)
+======
+- Added PHP soap extension to wordpress and drupal images
