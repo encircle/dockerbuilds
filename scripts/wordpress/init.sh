@@ -1,8 +1,7 @@
 set -x
 
 wordpress_installed() {
-  [[ -f /var/www/html/wp-config.php ]] && return 0
-  return 1
+  [[ -f /var/www/html/wp-config.php ]]
 }
 
 install_wordpress() {
@@ -21,12 +20,20 @@ upgrade_wordpress() {
   echo "Volume version : $VOLUME_VERSION"
   echo "WordPress version : $WORDPRESS_VERSION"
 
-  if [ $VOLUME_VERSION != $WORDPRESS_VERSION ]; then
+  if [ "$VOLUME_VERSION" != "$WORDPRESS_VERSION" ]; then
     echo "Forcing WordPress code update..."
-    rm -f /var/www/html/index.php
-    rm -rf /var/www/html/wp-includes/version.php
+    wp --allow-root core update --version="$WORDPRESS_VERSION"
   fi
 
+}
+
+set_config() {
+  [[ -f /var/www/html/wp-config.php ]] || return 1
+  sed -i -E s/\(\'DB_NAME\'.*\)/define\(\'DB_NAME\'\,\ \"$WORDPRESS_DB_NAME\"\)/ /var/www/hmtl/wp-config.php
+  sed -i -E s/\(\'DB_USER\'.*\)/define\(\'DB_USER\'\,\ \"$WORDPRESS_DB_USER\"\)/ /var/www/hmtl/wp-config.php
+  sed -i -E s/\(\'DB_PASSWORD\'.*\)/define\(\'USER_PASS\'\,\ \"$WORDPRESS_DB_PASSWORD\"\)/ /var/www/hmtl/wp-config.php
+  sed -i -E s/\(\'DB_HOST\'.*\)/define\(\'DB_HOST\'\,\ \"$WORDPRESS_DB_HOST\"\)/ /var/www/hmtl/wp-config.php
+  sed -E s/$table_prefix\ =\ .*\;/$table_prefix=$WORDPRESS_TABLE_PREFIX/
 }
 
 configure_postfix() {
@@ -48,6 +55,9 @@ wordpress_installed && upgrade_wordpress
 
 # Configure postfix
 configure_postfix
+
+# Configure Wordpress
+set_config || 'wp config is missing'
 
 # permissions
 /usr/local/bin/permissions.sh
