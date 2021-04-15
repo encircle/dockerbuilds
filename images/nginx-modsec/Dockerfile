@@ -82,7 +82,6 @@ RUN rm /etc/nginx/nginx.conf \
 # Copy base config
 COPY conf/nginx-modsec/nginx.conf  /etc/nginx/nginx.conf
 COPY conf/nginx-modsec/default.conf       /etc/nginx/conf.d/default.conf
-COPY conf/nginx-modsec/cloudflare.conf    /etc/nginx/conf.d/cloudflare.conf
 
 # Copy hardening configs
 COPY conf/nginx-modsec/hardening/*.conf   /etc/nginx/hardening.d/
