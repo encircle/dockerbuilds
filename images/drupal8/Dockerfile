@@ -3,6 +3,7 @@ FROM php:7.3-fpm-alpine
 ENV DRUPAL_VERSION 8.9.13
 ENV DRUPAL_MD5 75f7a83b14a1e4ec13ca9827f71ccd1c
 ENV COMPOSER_MD5 091fbf803063d9e6a05270282f887c10
+ENV DRUSH_VERSION 8.3.5
 
 # install the PHP extensions we need
 # postgresql-dev is needed for https://bugs.alpinelinux.org/issues/3642
@@ -48,9 +49,6 @@ RUN { \
 		echo 'opcache.revalidate_freq=60'; \
 		echo 'opcache.fast_shutdown=1'; \
 	} > /usr/local/etc/php/conf.d/opcache-recommended.ini
-
-# Required for envsubst variable substitution
-RUN apk add gettext
 
 # Get Drupal source
 RUN set -eux; \
@@ -113,9 +111,13 @@ RUN chmod 755 /usr/local/bin/permissions.sh \
  && crontab /tmp/.cron \
  && rm -rf /tmp/.cron
 
-# Wait for used for waiting for database
-COPY scripts/drupal/wait-for /usr/local/bin
-RUN chmod 755 /usr/local/bin/wait-for
+# Drush
+RUN wget https://github.com/drush-ops/drush/releases/download/${DRUSH_VERSION}/drush.phar \
+ && docker-php-ext-install mysqli \
+ && mv drush.phar /usr/local/bin/drush \
+ && chmod 750 /usr/local/bin/drush \
+ && chown root:10013 /usr/local/bin/drush \
+ && apk add mysql-client
 
 # Extra extensions
 RUN apk add --no-cache icu-dev \
@@ -134,4 +136,4 @@ COPY entry/drupal/entrypoint.sh /usr/local/bin/
 RUN chmod 755 /usr/local/bin/entrypoint.sh
 
 WORKDIR /var/www/html
-ENTRYPOINT [ "sh", "/usr/local/bin/entrypoint.sh" ]
+ENTRYPOINT [ "bash", "/usr/local/bin/entrypoint.sh" ]
