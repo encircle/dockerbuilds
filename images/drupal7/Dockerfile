@@ -51,9 +51,6 @@ RUN { \
 
 WORKDIR /var/www/html
 
-# Required for envsubst variable substitution
-RUN apk add gettext
-
 # Get Drupal source
 RUN set -eux; \
 	curl -fSL "https://ftp.drupal.org/files/projects/drupal-${DRUPAL_VERSION}.tar.gz" -o drupal.tar.gz; \
@@ -62,14 +59,11 @@ RUN set -eux; \
 	rm drupal.tar.gz; \
 	chown -R www-data:www-data sites modules themes
 
-# User accounts
+# Users and groups
 RUN apk add shadow \
  && usermod -u 10013 www-data \
  && groupmod -g 10013 www-data \
  && apk del shadow
-
-# Drush extensions
-RUN docker-php-ext-install mysqli
 
 ## Memcache ##
 RUN apk update && apk add \
@@ -103,11 +97,9 @@ RUN chmod 755 /usr/local/bin/permissions.sh \
  && crontab /tmp/.cron \
  && rm -rf /tmp/.cron
 
-COPY scripts/drupal/wait-for /usr/local/bin
-RUN chmod 755 /usr/local/bin/wait-for
-
 # Drush
 RUN wget https://github.com/drush-ops/drush/releases/download/${DRUSH_VERSION}/drush.phar \
+ && docker-php-ext-install mysqli \
  && mv drush.phar /usr/local/bin/drush \
  && chmod 750 /usr/local/bin/drush \
  && chown root:10013 /usr/local/bin/drush \
@@ -129,4 +121,4 @@ RUN apk update \
 COPY entry/drupal/entrypoint.sh /usr/local/bin/
 RUN chmod 755 /usr/local/bin/entrypoint.sh
 
-ENTRYPOINT [ "sh", "/usr/local/bin/entrypoint.sh" ]
+ENTRYPOINT [ "bash", "/usr/local/bin/entrypoint.sh" ]
