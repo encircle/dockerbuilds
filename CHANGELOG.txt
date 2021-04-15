@@ -234,6 +234,14 @@ v1.3.4
 - Added gnu-libiconv library for Azure single sign-on
 - Added bcmath to drupal7, drupal8 and wordpress builds
 
-v1.3.5 (latest)
+v1.3.5
 ======
 - Added PHP soap extension to wordpress and drupal images
+
+v1.4.0 (latest)
+======
+- Removed dependency on official Wordpress image (which was over-complex)
+- General cleanup of images and entrypoints
+- Drupal7 and Drupal8 now self-install on start
+- Wordpress minor version update to 5.7.1
+- NGINX cloudflare IPV4 addresses now self-update on build
