@@ -58,6 +58,29 @@ function custom_errors()
   done
 }
 
+function get_cloudflare_ips() {
+  conf_file=/etc/nginx/conf.d/cloudflare.conf
+
+  ipv4=$(curl -s https://www.cloudflare.com/ips-v4)
+  ipv6=$(curl -s https://www.cloudflare.com/ips-v6)
+
+  echo '# Cloudflare IP addresses' > $conf_file
+
+  for ip in $ipv4; do
+    echo "set_real_ip_from $ip;" >> $conf_file
+  done
+
+  echo ''
+
+  for ip in $ipv6; do
+    echo "set_real_ip_from $ip;" >> $conf_file
+  done
+
+  echo '' >> $conf_file
+ 
+  echo "real_ip_header CF-Connecting-IP;" >> $conf_file
+}
+
 function main() {
   set -e
   env_sub
