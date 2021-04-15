@@ -1,4 +1,4 @@
-FROM wordpress:5.7.0-php7.3-fpm-alpine
+FROM php:7.3-fpm-alpine
 
 ENV WORDPRESS_VERSION 5.7
 
@@ -10,42 +10,88 @@ RUN ln -s -f /dev/null /root/.bash_history \
  && chmod 750 /usr/local/bin/wp \
  && chown root:10013 /usr/local/bin/wp
 
-# Permissions
-RUN apk add shadow \
- && usermod -u 10013 www-data \
- && groupmod -g 10013 www-data
+# wordpress package dependencies
+RUN set -eux; \
+	apk add --no-cache \
+        # PDF previews
+        ghostscript \
+        imagemagick \
+        # PHP SOAP ext
+        libxml2-dev \
+        icu-dev \
+        git \
+        nano \
+        bash
 
-# Required for envsubst variable substitution
-RUN apk add gettext
+# install the PHP extensions we need (https://make.wordpress.org/hosting/handbook/handbook/server-environment/#php-extensions)
+RUN set -ex; \
+	\
+	apk add --no-cache --virtual .build-deps \
+		$PHPIZE_DEPS \
+		freetype-dev \
+		imagemagick-dev \
+		libjpeg-turbo-dev \
+		libpng-dev \
+		libzip-dev \
+	; \
+	\
+	docker-php-ext-configure gd \
+		--with-freetype-dir=/usr \
+		--with-jpeg-dir=/usr \
+		--with-png-dir=/usr \
+	; \
+	docker-php-ext-install -j "$(nproc)" \
+		bcmath \
+		exif \
+		gd \
+		mysqli \
+		zip \
+	; \
+	pecl install imagick-3.4.4; \
+	docker-php-ext-enable imagick; \
+        docker-php-ext-install intl bcmath soap; \
+	rm -r /tmp/pear; \
+	\
+	runDeps="$( \
+		scanelf --needed --nobanner --format '%n#p' --recursive /usr/local/lib/php/extensions \
+			| tr ',' '\n' \
+			| sort -u \
+			| awk 'system("[ -e /usr/local/lib/" $1 " ]") == 0 { next } { print "so:" $1 }' \
+	)"; \
+	apk add --no-network --virtual .wordpress-phpexts-rundeps $runDeps; \
+	apk del --no-network .build-deps
 
-# required for php soap extension
-RUN apk add libxml2-dev
+# Set recommended PHP opcache settings
+RUN set -eux; \
+	docker-php-ext-enable opcache; \
+	{ \
+		echo 'opcache.memory_consumption=128'; \
+		echo 'opcache.interned_strings_buffer=8'; \
+		echo 'opcache.max_accelerated_files=4000'; \
+		echo 'opcache.revalidate_freq=2'; \
+		echo 'opcache.fast_shutdown=1'; \
+	} > /usr/local/etc/php/conf.d/opcache-recommended.ini
 
-# Configurations
+# Other PHP configurations
 COPY conf/php/max_file_upload.ini /usr/local/etc/php/conf.d/max_file_upload.ini
 COPY conf/php/cookie-security.ini /usr/local/etc/php/conf.d/cookie-security.ini
 COPY conf/php/expose_php.ini /usr/local/etc/php/conf.d/expose_php.ini
 COPY conf/php/postfix.ini /usr/local/etc/php/conf.d/postfix.ini
 COPY conf/php/www.conf /usr/local/etc/php-fpm.d/www.conf
 
-# Scripts
-RUN mkdir /entrypoint.d
-COPY scripts/wordpress/permissions.sh /usr/local/bin
-COPY scripts/wordpress/wait-for /usr/local/bin
-COPY scripts/wordpress/init.sh /entrypoint.d
+# users and groups
+RUN apk add shadow \
+ && usermod -u 10013 www-data \
+ && groupmod -g 10013 www-data
 
-RUN chmod 755 /entrypoint.d/init.sh
-RUN chmod 755 /usr/local/bin/wait-for
+# Permissions script
+COPY scripts/wordpress/permissions.sh /usr/local/bin
+
 RUN chmod 755 /usr/local/bin/permissions.sh \
  && crontab -l > /tmp/.cron \
  && echo "0 3 * * * /usr/local/bin/permissions.sh" >> /tmp/.cron \
  && crontab /tmp/.cron \
  && rm -rf /tmp/.cron
-
-# Extra extensions
-RUN apk add --no-cache icu-dev \
-                       libxml2-dev \
- && docker-php-ext-install intl bcmath soap
 
 # libiconv library for azure single sign-on
 # https://github.com/oidc-wp/openid-connect-generic/issues/214
@@ -58,4 +104,4 @@ RUN apk update \
 
 COPY entry/wordpress/entrypoint.sh /usr/local/bin/
 
-ENTRYPOINT [ "bash", "entrypoint.sh", "php-fpm"]
+ENTRYPOINT [ "bash", "entrypoint.sh" ]
