@@ -89,6 +89,7 @@ function main() {
   basic_auth_whitelist
   modsec
   custom_errors
+  get_cloudflare_ips
   nginx -g 'daemon off;'
 }
 
