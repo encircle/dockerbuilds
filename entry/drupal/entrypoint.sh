@@ -65,6 +65,7 @@ function main() {
 
   # wait for the database connection
   db_status=1
+  echo 'Waiting for DB to be available'
   while [[ $db_status != 0 ]]; do
     $(nc -z "$DB_HOST" 3306 > /dev/null 2>&1)
     db_status=$?

@@ -50,6 +50,7 @@ configure_postfix() {
 # wait for the database connection
 db_status=1
 while [[ $db_status != 0 ]]; do
+  echo 'Waiting for DB to be available'
   $(nc -z "$WORDPRESS_DB_HOST" 3306 > /dev/null 2>&1)
   db_status=$?
   sleep 3
