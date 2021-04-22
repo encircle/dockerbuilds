@@ -238,7 +238,7 @@ v1.3.5
 ======
 - Added PHP soap extension to wordpress and drupal images
 
-v1.4.0 (latest)
+v1.4.0
 ======
 - Removed dependency on official Wordpress image (which was over-complex)
 - General cleanup of images and entrypoints
@@ -246,3 +246,9 @@ v1.4.0 (latest)
 - Wordpress minor version update to 5.7.1
 - NGINX cloudflare IPV4 addresses now self-update on build
 - NGINX logs access/error to stdout now too
+
+v1.4.1 (latest)
+=====
+- Updated drupal 7 to 7.80
+- Updated drupal 8 to 8.9.14
+
