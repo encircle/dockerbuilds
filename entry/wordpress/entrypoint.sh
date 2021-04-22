@@ -77,7 +77,7 @@ wp --allow-root config create \
    --dbprefix="${WORDPRESS_TABLE_PREFIX}"
 
 # permissions
-/usr/local/bin/permissions.sh 2>/dev/null
+/usr/local/bin/permissions.sh 2>/dev/null &
 
 # Start crontab
 /usr/sbin/crond -f -l 8 &

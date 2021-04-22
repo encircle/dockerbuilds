@@ -247,8 +247,11 @@ v1.4.0
 - NGINX cloudflare IPV4 addresses now self-update on build
 - NGINX logs access/error to stdout now too
 
-v1.4.1 (latest)
-=====
+v1.4.1
+======
 - Updated drupal 7 to 7.80
 - Updated drupal 8 to 8.9.14
 
+v1.4.2 (latest)
+======
+- Permissions now set in background in Wordpress/Drupal

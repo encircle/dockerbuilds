@@ -79,7 +79,7 @@ function main() {
   drupal_installed && drupal_update
 
   # enforce permissions
-  /usr/local/bin/permissions.sh 2>/dev/null
+  /usr/local/bin/permissions.sh 2>/dev/null &
 
   # start the daemon
   php-fpm
