@@ -44,6 +44,13 @@ services:
       context: ./
       dockerfile: ./images/drupal8/Dockerfile
 
+  drupal9:
+    container_name: drupal9
+    image: encircle/drupal9:latest
+    build:
+      context: ./
+      dockerfile: ./images/drupal9/Dockerfile
+
   postfix:
     container_name: postfix
     image: encircle/postfix:latest
