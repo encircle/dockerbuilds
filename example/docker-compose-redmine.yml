@@ -1,0 +1,82 @@
+version: '3.3'
+
+services:
+
+  webserver:
+    container_name: webserver
+    image: encircle/nginx-proxy:latest
+    ports:
+      - '77.73.3.136:80:80'
+      - '77.73.3.136:443:443'
+    volumes:
+      - ./logs/nginx/:/var/log/nginx
+      - /var/run/thin/redmine.0.sock:/var/run/redmine.sock
+      - /home/ssl/encircle.technology/encircle.technology.crt:/etc/nginx/certs/site.crt
+      - /home/ssl/encircle.technology/encircle.technology.key:/etc/nginx/certs/site.key
+    restart: unless-stopped
+    networks:
+      - frontend
+    depends_on:
+      - redmine
+    environment:
+      ENV: PROD
+      IP_WHITELIST_1: 37.128.134.212
+      IP_WHITELIST_2: 5.153.250.222
+      SITE: localhost
+      HTPASS: 'TEST:$$apr1$$LhQTAPRP$$Gkrctq0MhCinvh45a9Qr6/'
+      MODSEC_ENGINE_MODE: 'On'
+      ENDPOINT: https://redmine
+
+  database:
+    container_name: database
+    image: encircle/mariadb:latest
+    expose:
+      - '3306'
+    volumes:
+      - ./database/data:/var/lib/mysql
+      - ./migrations/:/docker-entrypoint-initdb.d
+      - ./logs/mysql/:/var/log/mysql
+    networks:
+      - backend
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: database
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+
+  redmine:
+    container_name: redmine
+    image: redmine:4.1.1-alpine
+    restart: always
+    depends_on:
+      - database
+    expose:
+      - 3000
+    volumes:
+      - ./conf/redmine/configuration.yml:/usr/src/redmine/config/configuration.yml
+      - ./files/:/usr/src/redmine/files
+      - ./plugins/:/usr/src/redmine/plugins
+      - ./themes/:/usr/src/redmine/public/themes
+    networks:
+      - frontend
+      - backend
+    environment:
+      REDMINE_DB_MYSQL: database
+      REDMINE_DB_DATABASE: database
+      REDMINE_DB_USERNAME: user
+      REDMINE_DB_PASSWORD: password
+      REDMINE_SECRET_KEY_BASE: secret
+
+  postfix:
+    container_name: postfix
+    image: encircle/postfix:latest
+    restart: unless-stopped
+    networks:
+      - backend
+    environment:
+      HOSTNAME: postfix
+
+networks:
+  frontend:
+  backend:

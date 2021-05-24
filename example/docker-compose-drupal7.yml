@@ -1,0 +1,78 @@
+version: '3.4'
+
+services:
+
+  webserver:
+    container_name: webserver
+    image: encircle/nginx-modsec:latest
+    ports:
+      - '80:80'
+      - '443:443'
+    depends_on:
+      - drupal
+    volumes:
+      - ./logs/nginx/:/var/log/nginx
+      - ./drupal/:/var/www/html
+    restart: unless-stopped
+    networks:
+      - frontend
+    environment:
+      ENV: PROD
+      IP_WHITELIST_1: 37.128.134.212
+      IP_WHITELIST_2: 5.153.250.222
+      FPM_HOST: drupal
+      SITE: localhost
+      HTPASS: 'TEST:$$apr1$$LhQTAPRP$$Gkrctq0MhCinvh45a9Qr6/'
+      MODSEC_ENGINE_MODE: 'On'
+      DISABLE_CONF: null
+      AV_SCAN: null
+      AV_HOST: null
+      AV_PORT: null
+
+  database:
+    container_name: database
+    image: encircle/mariadb:latest
+    expose:
+      - '3306'
+    volumes:
+      - ./database/data:/var/lib/mysql
+      - ./migrations/:/docker-entrypoint-initdb.d
+    networks:
+      - backend
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: database
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      
+  drupal:
+    container_name: drupal
+    image: encircle/drupal7:latest
+    expose:
+      - '9000'
+    depends_on:
+      - database
+    volumes:
+      - ./drupal:/var/www/html
+    networks:
+      - frontend
+      - backend
+      # - mail
+    restart: unless-stopped
+    environment:
+      SITE: localhost
+      TITLE: Drupal Site
+      DB_HOST: database
+      MYSQL_DATABASE: database
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      ADMIN_USER: admin
+      ADMIN_PASSWORD: admin
+
+networks:
+  frontend:
+  backend:
+#    mail:
+#      external:
+#        name: postfix
