@@ -1,15 +1,15 @@
-# Drupal 8
+# Drupal 9
 
-This readme is for the encircle Drupal 8 image.
+This readme is for the encircle Drupal 9 image.
 
 ## Upgrade Drupal Version
 
-To upgrade the Drupal version to a later Drupal 8 release, follow the below steps:
+To upgrade the Drupal version to a later Drupal 9 release, follow the below steps:
 
 1. Download the Drupal tar archive
 
 ```
-DRUPAL_VERSION=8.19
+DRUPAL_VERSION=9.19
 curl -fSL "https://ftp.drupal.org/files/projects/drupal-${DRUPAL_VERSION}.tar.gz" -o drupal.tar.gz
 ```
 
@@ -28,7 +28,7 @@ vi Dockerfile
 Change:
 
 ```
-ENV DRUPAL_VERSION 8.19
+ENV DRUPAL_VERSION 9.19
 ```
 
 4. Update the Drupal MD5 hash in the Dockerfile
@@ -40,7 +40,7 @@ vi Dockerfile
 Change:
 
 ```
-ENV DRUPAL_MD5 67c8e2974421e8d549ad705169977498
+ENV DRUPAL_MD5 67c9e2974421e9d549ad705169977499
 ```
 
 5. Build the image locally and ensure it completes successfully
@@ -48,7 +48,7 @@ ENV DRUPAL_MD5 67c8e2974421e8d549ad705169977498
 ** Run this command from the repository root **
 
 ```
-docker-compose build drupal8
+docker-compose build drupal9
 ```
 
 6. Scan the image for vulnerabilities
@@ -64,7 +64,7 @@ trivy --clear-cache
 Then scan:
 
 ```
-trivy encircle/drupal8:latest
+trivy encircle/drupal9:latest
 ```
 
 7. Update the CHANGELOG

@@ -92,3 +92,10 @@ services:
     build:
       context: ./
       dockerfile: ./images/redmine/Dockerfile
+
+  ssh:
+    container_name: ssh
+    image: encircle/ssh:latest
+    build:
+      context: ./
+      dockerfile: ./images/ssh/Dockerfile

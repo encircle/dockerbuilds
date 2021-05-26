@@ -252,7 +252,13 @@ v1.4.1
 - Updated drupal 7 to 7.80
 - Updated drupal 8 to 8.9.14
 
-v1.4.2 (latest)
+v1.4.2
 ======
 - Permissions now set in background in Wordpress/Drupal
 - Rebuild only, no code changes
+
+v1.4.3
+======
+- Added Drupal9 image
+- Added SSH image
+- Cleaned up examples
