@@ -262,3 +262,5 @@ v1.4.3 (latest)
 - Added Drupal9 image
 - Added SSH image
 - Cleaned up examples
+- Updated virus scanning script in NGINX
+- Removed restingclam image, now in seperate repo
