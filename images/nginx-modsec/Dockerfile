@@ -122,7 +122,8 @@ RUN chown root:nginx /usr/local/bin/clamd-hook.sh \
  && chmod 750 /usr/local/bin/clamd-hook.sh \
  && mkdir /tmp/modsec \
  && chown nginx:nginx /tmp/modsec \
- && chmod 700 /tmp/modsec
+ && chmod 700 /tmp/modsec \
+ && apk add jq
 
 # OWASP ruleset
 RUN cd /tmp \
