@@ -1,26 +1,65 @@
 #!/bin/sh
 
-exec 1> /tmp/antivirus.log 2>&1
 set -x
 
-[[ -z $1 ]] && echo 0 && exit
+# redirect out to log
+exec 1>> /var/log/nginx/antivirus.log 2>&1
+
+echo '------------------'
+echo "SCAN: $(date "+%Y%m%d_%H%M%S")"
+
+AV_HOST=localhost
+AV_PORT=8433
+
+# required variables
+[ -z $1 ] && echo 'no file provided' && echo 0 && exit 1
+[ -z ${AV_HOST} ] && echo 'no AV host provided' && exit 1
+[ -z ${AV_PORT} ] && echo 'no AV port provided' && exit 1
 
 file=$1
 
-response=$(echo $(curl --cert /etc/nginx/certs/client.crt \
+# send file for scanning
+response=$(echo $(curl \
+              -H 'X-API-Key: helloworld' \
 	      --silent \
-     	      --key /etc/nginx/certs/client.key \
               --write-out %{http_code} \
               --insecure \
               --form "data=@$file" \
-              "https://$AV_HOST:$AV_PORT/scan"
+              "https://${AV_HOST}:${AV_PORT}/scan"
 	  ))
 
 # AV server is down
-[[ "$response" == '000' ]] && echo 0 && exit
+[ "$response" -eq 000 ] && echo 0 && exit
 
-return_text=$( echo $response | awk '{print $1}')
+# get response JSON and code
+return_json=$( echo $response | awk '{print $1}')
 return_code=$( echo $response | awk '{print $2}')
+
+# antivirus is unavailable, exit bad status
+[ $return_code != 200 ] && echo 0 && exit
+
+# get task id from response
+task_id=$(echo $return_json | jq -r '.task_id')
+
+# loop until task is finished
+attempts=0
+while true; do
+    [ $attempts -eq 11 ] && result='NOTOK'
+    response=$(echo $(curl \
+                  -H 'X-API-Key: helloworld' \
+                  --silent \
+                  --write-out %{http_code} \
+                  --insecure \
+                  "https://${AV_HOST}:${AV_PORT}/task?id=${task_id}"
+             ))
+    return_json=$( echo $response | awk '{print $1}')
+    status=$(echo $return_json | jq -r '.task_status')
+    [ "$status" = 'PENDING' ] && continue
+    result=$(echo $return_json | jq -r '.task_result')
+    [ $status = 'SUCCESS' ] && break
+    attempts=$((attempts+1))
+    sleep 5
+done
 
 ###
 # Modsec codes
@@ -28,8 +67,8 @@ return_code=$( echo $response | awk '{print $2}')
 # 0 -> failure
 ###
 
-# AV server is unavailable or virus detected
-[[ $return_code != 200 ]] || [[ $return_text == '"NOTOK"' ]] && echo 0 && exit
+# virus detected, exit bad status
+[ "$result" = 'NOTOK' ] && echo 0 && exit
 
 # File is clear
-[[ $return_text == '"OK"' ]] && echo 1 && exit
+[ "$result" = 'OK' ] && echo 1 && exit
