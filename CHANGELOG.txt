@@ -257,10 +257,14 @@ v1.4.2
 - Permissions now set in background in Wordpress/Drupal
 - Rebuild only, no code changes
 
-v1.4.3 (latest)
+v1.4.3 
 ======
 - Added Drupal9 image
 - Added SSH image
 - Cleaned up examples
 - Updated virus scanning script in NGINX
 - Removed restingclam image, now in seperate repo
+
+v1.4.4
+======
+- Updated Drupal to 8.9.16
