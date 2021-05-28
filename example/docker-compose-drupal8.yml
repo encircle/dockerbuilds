@@ -28,6 +28,7 @@ services:
       AV_SCAN: null
       AV_HOST: null
       AV_PORT: null
+      AV_APIKEY: null
 
   database:
     container_name: database

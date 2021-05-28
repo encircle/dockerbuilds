@@ -26,6 +26,10 @@ services:
       HTPASS: 'TEST:$$apr1$$LhQTAPRP$$Gkrctq0MhCinvh45a9Qr6/'
       MODSEC_ENGINE_MODE: 'On'
       ENDPOINT: https://redmine
+      AV_SCAN: null
+      AV_HOST: null
+      AV_PORT: null
+      AV_APIKEY: null
 
   database:
     container_name: database

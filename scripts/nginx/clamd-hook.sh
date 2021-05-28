@@ -15,12 +15,13 @@ AV_PORT=8433
 [ -z $1 ] && echo 'no file provided' && echo 0 && exit 1
 [ -z ${AV_HOST} ] && echo 'no AV host provided' && exit 1
 [ -z ${AV_PORT} ] && echo 'no AV port provided' && exit 1
+[ -z ${AV_APIKEY} ] && echo 'no AV API key provided' && exit 1
 
 file=$1
 
 # send file for scanning
 response=$(echo $(curl \
-              -H 'X-API-Key: helloworld' \
+              -H "X-API-Key: ${AV_APIKEY}" \
 	      --silent \
               --write-out %{http_code} \
               --insecure \
@@ -46,7 +47,7 @@ attempts=0
 while true; do
     [ $attempts -eq 11 ] && result='NOTOK'
     response=$(echo $(curl \
-                  -H 'X-API-Key: helloworld' \
+                  -H "X-API-Key: ${AV_APIKEY}" \
                   --silent \
                   --write-out %{http_code} \
                   --insecure \
