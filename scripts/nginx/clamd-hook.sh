@@ -3,13 +3,10 @@
 set -x
 
 # redirect out to log
-exec 1>> /var/log/nginx/antivirus.log 2>&1
+exec 1> /tmp/antivirus.log 2>&1
 
 echo '------------------'
 echo "SCAN: $(date "+%Y%m%d_%H%M%S")"
-
-AV_HOST=localhost
-AV_PORT=8433
 
 # required variables
 [ -z $1 ] && echo 'no file provided' && echo 0 && exit 1
