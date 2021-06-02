@@ -1,13 +1,5 @@
 #!/bin/sh
 
-set -x
-
-# redirect out to log
-exec 1> /tmp/antivirus.log 2>&1
-
-echo '------------------'
-echo "SCAN: $(date "+%Y%m%d_%H%M%S")"
-
 # required variables
 [ -z $1 ] && echo 'no file provided' && echo 0 && exit 1
 [ -z ${AV_HOST} ] && echo 'no AV host provided' && exit 1
