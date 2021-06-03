@@ -257,11 +257,7 @@ v1.4.2
 - Permissions now set in background in Wordpress/Drupal
 - Rebuild only, no code changes
 
-v1.4.3 
-======
-- This tag was missed
-
-v1.4.4
+v1.4.3
 ======
 - Added Drupal9 image
 - Added SSH image
