@@ -34,7 +34,7 @@ task_id=$(echo $return_json | jq -r '.task_id')
 # loop until task is finished
 attempts=0
 while true; do
-    [ $attempts -eq 11 ] && result='NOTOK'
+    [ $attempts -eq 11 ] && result='NOTOK' && break
     response=$(echo $(curl \
                   -H "X-API-Key: ${AV_APIKEY}" \
                   --silent \
