@@ -30,6 +30,11 @@ function modsec()
   envsubst '${MODSEC_ENGINE_MODE}' < /etc/nginx/modsec/modsecurity.conf > /tmp/modsecurity.conf \
     && mv /tmp/modsecurity.conf /etc/nginx/modsec/modsecurity.conf
 
+  envsubst '${AV_HOST},${AV_PORT},${AV_APIKEY}' < /usr/local/bin/clamd-hook.sh > /tmp/clamd-hook.sh \
+    && mv /tmp/clamd-hook.sh /usr/local/bin/clamd-hook.sh \
+    && chown root:nginx /usr/local/bin/clamd-hook.sh \
+    && chmod 750 /usr/local/bin/clamd-hook.sh
+
   [[ $AV_SCAN == 'TRUE' ]] \
     && sed -i 's/SecRuleRemoveById 666666//g' /etc/nginx/modsec/modsecurity.conf \
     || (grep -qxF 'SecRuleRemoveById 666666' /etc/nginx/modsec/modsecurity.conf || echo 'SecRuleRemoveById 666666' >> /etc/nginx/modsec/modsecurity.conf)
