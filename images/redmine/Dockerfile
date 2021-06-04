@@ -1,4 +1,4 @@
-FROM redmine:4.2-alpine
+FROM redmine:4.1.1-alpine
 
 # build libraries for patron gem (required by redmine_bots plugin)
 RUN apk add gcc \
@@ -16,10 +16,3 @@ RUN apk add jq curl \
 # Upgrade packages
 RUN apk update \
  && apk upgrade --ignore ruby
-
-# Upgrade GEMs
-RUN bundle update
-
-# Upgrade Javascripts
-RUN apk add yarn \
- && yarn upgrade
