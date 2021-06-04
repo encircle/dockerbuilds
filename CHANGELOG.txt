@@ -266,3 +266,4 @@ v1.4.3
 - Removed restingclam image, now in seperate repo
 - Added patch for Redmine attachment model to enable virus scanning
 - Updated Drupal to 8.9.16
+- Removed additional permissions script run (on upgrade) from Drupals

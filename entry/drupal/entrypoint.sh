@@ -51,9 +51,6 @@ function drupal_update() {
     tar -xz --strip-components=1 -f drupal.tar.gz
     rm drupal.tar.gz
     
-    # Set permissions
-    /usr/local/bin/permissions.sh
-
     # Update DB
     yes | drush updatedb
   fi 
