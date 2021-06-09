@@ -267,3 +267,8 @@ v1.4.3
 - Added patch for Redmine attachment model to enable virus scanning
 - Updated Drupal to 8.9.16
 - Removed additional permissions script run (on upgrade) from Drupals
+
+v1.4.4 (latest)
+======
+- Increased max_input_vars for Drupals
+- Added memory_limit and error_logging config to wordpress

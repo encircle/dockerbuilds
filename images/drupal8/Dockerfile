@@ -102,6 +102,7 @@ COPY conf/php/memory_limit.ini /usr/local/etc/php/conf.d/memory_limit.ini
 COPY conf/php/memcache.ini /usr/local/etc/php/conf.d/memcache.ini
 COPY conf/php/error-logging.ini /usr/local/etc/php/conf.d/error-logging.ini
 COPY conf/php/www.conf /usr/local/etc/php-fpm.d/www.conf
+COPY conf/php/drupal.ini /usr/local/etc/php-fpm.d/drupal.ini
 
 # Scripts
 COPY scripts/drupal/permissions.sh /usr/local/bin
