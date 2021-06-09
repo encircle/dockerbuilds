@@ -27,16 +27,18 @@ RUN addgroup -g 10013 www-data \
  && usermod -aG 10013 "${USER}" \
  && apk del shadow
 
+RUN apk add sudo \
+ && echo "${USER} ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/$USER \
+ && chmod 0440 /etc/sudoers.d/$USER
+
 RUN rm -f /sbin/apk; \
     rm -rf /etc/apk; \
     rm -rf /lib/apk; \
     rm -rf /usr/share/apk; \
     rm -rf /var/lib/apk;
 
-USER 10022
-RUN ssh-keygen -t rsa -f /home/${USER}/.ssh/id_rsa -q -P ""
-RUN cat /home/${USER}/.ssh/id_rsa.pub > /home/${USER}/.ssh/authorized_keys
-
-USER 0
 EXPOSE 10022
-CMD ["/usr/sbin/sshd", "-D"]
+
+COPY entry/ssh/entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod 750 /usr/local/bin/entrypoint.sh
+CMD ["/usr/local/bin/entrypoint.sh"]

@@ -272,3 +272,5 @@ v1.4.4 (latest)
 ======
 - Increased max_input_vars for Drupals
 - Added memory_limit and error_logging config to wordpress
+- Updated SSH container so that user can sudo
+- Upgraded Wordpress from 5.7.1 to 5.7.2
