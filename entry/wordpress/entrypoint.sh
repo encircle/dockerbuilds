@@ -74,7 +74,8 @@ wp --allow-root config create \
    --dbuser="${WORDPRESS_DB_USER}" \
    --dbpass="${WORDPRESS_DB_PASSWORD}" \
    --dbhost="${WORDPRESS_DB_HOST}" \
-   --dbprefix="${WORDPRESS_TABLE_PREFIX}"
+   --dbprefix="${WORDPRESS_TABLE_PREFIX}" \
+   --extra-php="${WORDPRESS_CONFIG_EXTRA}"
 
 # permissions
 /usr/local/bin/permissions.sh 2>/dev/null &

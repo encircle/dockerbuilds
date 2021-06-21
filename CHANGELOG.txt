@@ -268,9 +268,13 @@ v1.4.3
 - Updated Drupal to 8.9.16
 - Removed additional permissions script run (on upgrade) from Drupals
 
-v1.4.4 (latest)
+v1.4.4
 ======
 - Increased max_input_vars for Drupals
 - Added memory_limit and error_logging config to wordpress
 - Updated SSH container so that user can sudo
 - Upgraded Wordpress from 5.7.1 to 5.7.2
+
+v1.4.5 (latest)
+======
+- Added WORDPRESS_CONFIG_EXTRA environment variable for extra wp-config config
