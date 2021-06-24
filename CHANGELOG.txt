@@ -278,3 +278,4 @@ v1.4.4
 v1.4.5 (latest)
 ======
 - Added WORDPRESS_CONFIG_EXTRA environment variable for extra wp-config config
+- Change body limit to 100mb in nginx, php and modsecurity
