@@ -25,6 +25,7 @@ RUN apk --update add --no-cache \
     php-iconv \
     php-pdo \
     php-pdo_mysql \
+    php-session \
     php-tokenizer \
     mysql-client \
     curl \
