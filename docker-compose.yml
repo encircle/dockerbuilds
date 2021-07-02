@@ -79,6 +79,13 @@ services:
       context: ./
       dockerfile: ./images/nginx-proxy/Dockerfile
 
+  nginx-static:
+    container_name: nginx-static
+    image: encircle/nginx-static:latest
+    build:
+      context: ./
+      dockerfile: ./images/nginx-static/Dockerfile
+
   wordpress-civicrm:
     container_name: wordpress-civi
     image: encircle/wordpress-civicrm:latest
