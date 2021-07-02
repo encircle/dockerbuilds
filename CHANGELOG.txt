@@ -275,7 +275,12 @@ v1.4.4
 - Updated SSH container so that user can sudo
 - Upgraded Wordpress from 5.7.1 to 5.7.2
 
-v1.4.5 (latest)
+v1.4.5
 ======
 - Added WORDPRESS_CONFIG_EXTRA environment variable for extra wp-config config
 - Change body limit to 100mb in nginx, php and modsecurity
+
+v1.4.6 (latest)
+======
+- Various SSH image developments
+- Upgraded Drupal 9 to 9.2.0
