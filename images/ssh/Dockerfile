@@ -24,6 +24,8 @@ RUN apk --update add --no-cache \
     php-phar \
     php-iconv \
     php-pdo \
+    php-pdo_mysql \
+    php-tokenizer \
     mysql-client \
     curl \
  && rm -rf /var/cache/apk/*
