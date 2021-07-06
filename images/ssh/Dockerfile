@@ -78,6 +78,11 @@ RUN cd /tmp && curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/
  && chmod 750 /usr/local/bin/wp \
  && chown root:"${UID}" /usr/local/bin/wp
 
+# permissions scripts
+COPY scripts/drupal/permissions.sh /usr/local/bin/permissions-drupal.sh
+COPY scripts/wordpress/permissions.sh /usr/local/bin/permissions-wordpress.sh
+RUN chmod 750 /usr/local/bin/permissions*.sh
+
 EXPOSE 10022
 
 COPY entry/ssh/entrypoint.sh /usr/local/bin/entrypoint.sh
