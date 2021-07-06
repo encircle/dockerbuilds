@@ -280,8 +280,11 @@ v1.4.5
 - Added WORDPRESS_CONFIG_EXTRA environment variable for extra wp-config config
 - Change body limit to 100mb in nginx, php and modsecurity
 
-v1.4.6 (latest)
+v1.4.6
 ======
 - Various SSH image developments
 - Upgraded Drupal 9 to 9.2.0
 - CVE-2021-33560 found in NGINX by Trivy
+
+v1.4.7 (latest)
+======
