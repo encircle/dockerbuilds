@@ -288,3 +288,4 @@ v1.4.6
 
 v1.4.7 (latest)
 ======
+- Added permissions scripts to SSH image
