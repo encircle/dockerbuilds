@@ -12,19 +12,55 @@
   - example            - example docker-compose stacks
   - docker-compose.yml - docker-compose for building image locally
 
-### Local Image Rebuild ###
+### Manual Image Build ###
 
 You might want to test that images will rebuild, before pushing tags or master changes and waiting for Dockerhub automated builds.
 
-To build manually, use the docker-compose.yml file as follows.
+... Or maybe the automated Dockerhub builds are failing.
+
+## Building ##
+
+To build manually, use the docker-compose.yml file (which has the build details) as follows.
 
 ```
 docker-compose build ${image}
 ```
 
-Where ${image} is the name of the image to build, omit this variable to build all images locally.
+Where ${image} is the name of the image to build, omit this variable to build all images locally. You can also specify more than one ${image} at once.
 
-All images will be built with the encircle repository and latest tag (encircle/theimage:latest).
+All images will be built with the encircle repository and latest tag (encircle/${image}:latest).
+
+## Tagging ##
+
+As the images are built as the 'latest' tag now we need to tag the images to the version we want.
+
+For example:
+
+```
+image=wordpress
+version=v1.4.6
+docker tag encircle/${image}:latest encircle/${image}:${version}
+```
+
+This will result in a tag of ${version} that is exactly the same as the 'latest' image.
+
+## Pushing ##
+
+Finally you can push the image to Dockerhub, as follows:
+
+Push the latest image:
+
+```
+docker push enicrcle/${image}:latest
+```
+
+Push the tagged image:
+
+```
+docker push enicrcle/${image}:${version}
+```
+
+Unfortunately you can only push one image at a time.
 
 ### Quick Remote Image Rebuild ###
 
