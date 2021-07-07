@@ -4,21 +4,21 @@
 
 ### Directory Structure ###
 
-  - bin                - handy scripts for repo management and more
+  - bin                - handy scripts for repo management etc.
   - conf               - configuration used by images
   - entry              - entrypoint scripts for images
   - scripts            - scripts used by images
   - images             - the actual Dockerfiles
   - example            - example docker-compose stacks
-  - docker-compose.yml - docker-compose for building image locally
+  - docker-compose.yml - contains built parameters for building image locally (such as build context)
 
-### Manual Image Build ###
+### Manual Local Image Build (built on local machine) ###
 
 You might want to test that images will rebuild, before pushing tags or master changes and waiting for Dockerhub automated builds.
 
 ... Or maybe the automated Dockerhub builds are failing.
 
-## Building ##
+#### Building ####
 
 To build manually, use the docker-compose.yml file (which has the build details) as follows.
 
@@ -30,7 +30,7 @@ Where ${image} is the name of the image to build, omit this variable to build al
 
 All images will be built with the encircle repository and latest tag (encircle/${image}:latest).
 
-## Tagging ##
+#### Tagging ####
 
 As the images are built as the 'latest' tag now we need to tag the images to the version we want.
 
@@ -44,7 +44,7 @@ docker tag encircle/${image}:latest encircle/${image}:${version}
 
 This will result in a tag of ${version} that is exactly the same as the 'latest' image.
 
-## Pushing ##
+#### Pushing ####
 
 Finally you can push the image to Dockerhub, as follows:
 
@@ -62,7 +62,7 @@ docker push enicrcle/${image}:${version}
 
 Unfortunately you can only push one image at a time.
 
-### Quick Remote Image Rebuild ###
+### Quick Remote Image Rebuild (built on Dockerhub) ###
 
 Images need to be rebuilt when vulnerabilities are discovered, the rebuild script does this automatically.
 
@@ -82,7 +82,7 @@ cd bin && ./rebuild
 
 You will need to enter Github credentials, if you don't use SSH otherwise your private key password.
 
-### Manual Remote Image Rebuild ###
+### Manual Remote Image Rebuild (built on Dockerhub) ###
 
 For changes over and above package vulnerabilities, i.e. any code changes.
 
