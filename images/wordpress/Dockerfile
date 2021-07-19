@@ -106,4 +106,4 @@ RUN apk update \
 
 COPY entry/wordpress/entrypoint.sh /usr/local/bin/
 
-ENTRYPOINT [ "bash", "entrypoint.sh" ]
+ENTRYPOINT [ "bash", "/usr/local/bin/entrypoint.sh" ]
