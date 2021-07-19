@@ -286,3 +286,4 @@ v1.4.6
 - Upgraded Drupal 9 to 9.2.0
 - CVE-2021-33560 found in NGINX by Trivy
 - Added permissions scripts to SSH image
+- Reference full qualified path to entrypoint in wordpress
