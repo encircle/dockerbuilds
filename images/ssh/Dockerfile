@@ -6,6 +6,7 @@ ENV GID=10022
 
 # package dependencies
 RUN apk --update add --no-cache \
+    nano \
     openssh \
     git \
     bash \

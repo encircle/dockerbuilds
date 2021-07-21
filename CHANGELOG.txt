@@ -287,3 +287,7 @@ v1.4.6
 - CVE-2021-33560 found in NGINX by Trivy
 - Added permissions scripts to SSH image
 - Reference full qualified path to entrypoint in wordpress
+
+v1.4.7
+======
+- Added nano to SSH image
