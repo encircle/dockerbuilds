@@ -291,3 +291,4 @@ v1.4.6
 v1.4.7
 ======
 - Added nano to SSH image
+- Fixed SFTP access to SSH image
