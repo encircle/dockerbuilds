@@ -8,7 +8,7 @@ ClientAliveInterval 3600
 ClientAliveCountMax 0
 Banner=/etc/issue.net
 AcceptEnv LANG LC_*
-Subsystem sftp /usr/lib/openssh/sftp-server -u 002
+Subsystem sftp /usr/lib/ssh/sftp-server -u 002
 UsePAM yes
 UseDNS no
 Ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr

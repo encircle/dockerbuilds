@@ -11,6 +11,7 @@ RUN apk --update add --no-cache \
     git \
     bash \
     openssh-server-pam \
+    openssh-sftp-server \
     shadow \
     php \
     php-cli \
