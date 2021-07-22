@@ -292,3 +292,6 @@ v1.4.7
 ======
 - Added nano to SSH image
 - Fixed SFTP access to SSH image
+- Updated Drupal from 7.80 to 7.82
+- Updated Drupal from 9.20 to 9.2.2
+- Updated Drupal 8 to 8.9.17
