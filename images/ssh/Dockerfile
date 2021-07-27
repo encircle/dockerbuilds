@@ -3,6 +3,7 @@ FROM alpine:3.12
 ENV USER=encirsh
 ENV UID=10022
 ENV GID=10022
+ENV COMPOSER_MD5 091fbf803063d9e6a05270282f887c10
 
 # package dependencies
 RUN apk --update add --no-cache \
@@ -66,6 +67,13 @@ RUN rm -f /sbin/apk; \
     rm -rf /lib/apk; \
     rm -rf /usr/share/apk; \
     rm -rf /var/lib/apk;
+
+# composer
+RUN set -eux; \
+  php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"; \
+  echo "${COMPOSER_MD5} *composer-setup.php" | md5sum -c -; \
+  php composer-setup.php --install-dir=/usr/local/bin --filename=composer --quiet \
+    && rm composer-setup.php;
 
 # drush
 ENV DRUSH_VERSION 8.3.5
