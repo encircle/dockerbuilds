@@ -30,6 +30,7 @@ RUN apk --update add --no-cache \
     php-pdo_mysql \
     php-session \
     php-tokenizer \
+    php-xml \
     mysql-client \
     curl \
  && rm -rf /var/cache/apk/*
