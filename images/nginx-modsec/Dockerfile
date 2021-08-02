@@ -10,6 +10,7 @@ ARG MODSEC_VERSION
 
 ENV ENV_MODSEC_VERSION=${MODSEC_VERSION}
 ENV ENV_NGINX_VERSION=${NGINX_VERSION}
+ENV WEBROOT /var/www/html
 
 # Dependencies
 RUN apk add --no-cache --virtual general-dependencies \
@@ -60,6 +61,7 @@ FROM nginx:${NGINX_VERSION}-alpine-perl
 
 ARG OWASP_CRS_VERSION
 ENV ENV_OWASP_CRS_VERSION=${OWASP_CRS_VERSION}
+ENV WEBROOT /var/www/html
 
 # Dependencies
 RUN apk add --no-cache \
@@ -74,6 +76,14 @@ RUN apk add --no-cache \
 COPY --from=build /tmp/nginx-${NGINX_VERSION}/objs/ngx_http_modsecurity_module.so /usr/lib/nginx/modules/
 COPY --from=build /usr/local/modsecurity/ /usr/local/modsecurity/
 
+# Users and groups
+RUN apk add shadow \
+ && usermod -u 10014 nginx \
+ && groupmod -g 10014 nginx \
+ && groupmod -g 10013 www-data \
+ && usermod -aG www-data nginx \
+ && apk del shadow
+
 # NGINX configurations
 RUN rm /etc/nginx/nginx.conf \
  && rm /etc/nginx/conf.d/default.conf \
@@ -84,8 +94,10 @@ COPY conf/nginx-modsec/nginx.conf  /etc/nginx/nginx.conf
 COPY conf/nginx-modsec/default.conf       /etc/nginx/conf.d/default.conf
 
 # Copy hardening configs
-COPY conf/nginx-modsec/hardening/*.conf   /etc/nginx/hardening.d/
-COPY conf/nginx-modsec/hardening/error.html         /var/www/error.html
+COPY conf/nginx-modsec/hardening/*.conf /etc/nginx/hardening.d/
+COPY conf/nginx-modsec/hardening/error.html /var/www/error.html
+RUN chown root:www-data /var/www/error.html \
+ && chmod 640 /var/www/error.html
 
 # Copy SSL
 COPY conf/nginx-modsec/certs/site.key     /etc/nginx/certs/site.key
@@ -108,14 +120,6 @@ COPY conf/modsecurity/modsecurity.conf /etc/nginx/modsec/modsecurity.conf
 COPY conf/modsecurity/unicode.mapping  /etc/nginx/modsec/unicode.mapping
 COPY conf/nginx-modsec/modsecurity.conf       /etc/nginx/conf.d/modsecurity.conf
 COPY scripts/nginx/clamd-hook.sh /usr/local/bin/clamd-hook.sh
-
-# Users and groups
-RUN apk add shadow \
- && usermod -u 10014 nginx \
- && groupmod -g 10014 nginx \
- && groupmod -g 10013 www-data \
- && usermod -aG www-data nginx \
- && apk del shadow
 
 # ClamAV configurations
 RUN chown root:nginx /usr/local/bin/clamd-hook.sh \
