@@ -300,3 +300,6 @@ v1.4.8 (latest)
 ======
 - Added composer to SSH image
 - Added php xml extension to SSH image
+- Variablized webroot in nginx-modsec so that it can be customized
+- Set error.html permissions explicitly in nginx-modsec image
+- Drupal9 now proper composer install
