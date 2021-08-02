@@ -11,15 +11,25 @@ RUN apk --update add --no-cache \
     openssh \
     git \
     bash \
+    icu-dev \
+    libxml2-dev \
+    coreutils \
+    freetype-dev \
+    libjpeg-turbo-dev \
+    libpng-dev \
+    libzip-dev \
     openssh-server-pam \
     openssh-sftp-server \
     shadow \
     php \
+    php-bcmath \
+    php-soap \
     php-cli \
     php-common \
     php-mysqli \
     php-curl \
     php-gd \
+    php-intl \
     php-bz2 \
     php-json \
     php-tidy \
@@ -28,9 +38,12 @@ RUN apk --update add --no-cache \
     php-iconv \
     php-pdo \
     php-pdo_mysql \
+    php-opcache \
     php-session \
     php-tokenizer \
     php-xml \
+    php-zip \
+    postgresql-dev \
     mysql-client \
     curl \
  && rm -rf /var/cache/apk/*
