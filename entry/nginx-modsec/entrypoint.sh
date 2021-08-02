@@ -1,6 +1,6 @@
 function env_sub()
 {
-  envsubst '${SITE},${FPM_HOST},${ENDPOINT}' < /etc/nginx/conf.d/default.conf > /tmp/default.conf && mv /tmp/default.conf /etc/nginx/conf.d/default.conf
+  envsubst '${SITE},${WEBROOT},${FPM_HOST},${ENDPOINT}' < /etc/nginx/conf.d/default.conf > /tmp/default.conf && mv /tmp/default.conf /etc/nginx/conf.d/default.conf
 }
 
 function htpasswd()
