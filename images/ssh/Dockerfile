@@ -76,13 +76,6 @@ RUN set -eux; \
   php composer-setup.php --install-dir=/usr/local/bin --filename=composer --quiet \
     && rm composer-setup.php;
 
-# drush
-ENV DRUSH_VERSION 8.3.5
-RUN wget https://github.com/drush-ops/drush/releases/download/${DRUSH_VERSION}/drush.phar \
- && mv drush.phar /usr/local/bin/drush \
- && chmod 750 /usr/local/bin/drush \
- && chown root:"${UID}" /usr/local/bin/drush
-
 # wp cli
 RUN cd /tmp && curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
  && mv /tmp/wp-cli.phar /usr/local/bin/wp \
