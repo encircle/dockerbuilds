@@ -43,6 +43,7 @@ RUN apk --update add --no-cache \
     php-tokenizer \
     php-xml \
     php-zip \
+    php7-dom \
     postgresql-dev \
     mysql-client \
     curl \
@@ -88,6 +89,9 @@ RUN set -eux; \
   echo "${COMPOSER_MD5} *composer-setup.php" | md5sum -c -; \
   php composer-setup.php --install-dir=/usr/local/bin --filename=composer --quiet \
     && rm composer-setup.php;
+
+# drush
+RUN composer global require drush/drush:~10
 
 # wp cli
 RUN cd /tmp && curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
