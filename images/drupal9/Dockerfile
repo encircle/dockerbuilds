@@ -57,14 +57,6 @@ RUN set -eux; \
   php composer-setup.php --install-dir=/usr/local/bin --filename=composer --quiet \
     && rm composer-setup.php;
 
-# Drush
-RUN wget https://github.com/drush-ops/drush/releases/download/${DRUSH_VERSION}/drush.phar \
- && docker-php-ext-install mysqli \
- && mv drush.phar /usr/local/bin/drush \
- && chmod 750 /usr/local/bin/drush \
- && chown root:10013 /usr/local/bin/drush \
- && apk add mysql-client
-
 # User accounts
 RUN apk add shadow \
  && usermod -u 10013 www-data \
@@ -97,8 +89,12 @@ COPY conf/php/error-logging.ini /usr/local/etc/php/conf.d/error-logging.ini
 COPY conf/php/drupal.ini /usr/local/etc/php/conf.d/drupal.ini
 COPY conf/php/www.conf /usr/local/etc/php-fpm.d/www.conf
 
+# Directory for composer drupal project
+RUN mkdir -p /var/src/drupal \
+ && chmod -R 755 /var/src
+
 # Scripts
-COPY scripts/drupal/permissions.sh /usr/local/bin
+COPY scripts/drupal9/permissions.sh /usr/local/bin
 RUN chmod 755 /usr/local/bin/permissions.sh \
  && crontab -l > /tmp/.cron \
  && echo "0 3 * * * /usr/local/bin/permissions.sh" >> /tmp/.cron \
@@ -110,6 +106,9 @@ RUN apk add --no-cache icu-dev \
                        libxml2-dev \
  && docker-php-ext-install intl bcmath soap
 
+# mysql package for drush
+RUN apk add --no-cache mariadb-client
+
 # admin packages
 RUN apk add --no-cache git nano bash
 
@@ -118,8 +117,8 @@ RUN apk update \
  && apk upgrade
 
 # Entrypoint
-COPY entry/drupal/entrypoint.sh /usr/local/bin/
+COPY entry/drupal9/entrypoint.sh /usr/local/bin/
 RUN chmod 755 /usr/local/bin/entrypoint.sh
 
-WORKDIR /var/www/html
+WORKDIR /var/src/drupal/site
 ENTRYPOINT [ "bash", "/usr/local/bin/entrypoint.sh" ]
