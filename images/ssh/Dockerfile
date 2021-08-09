@@ -4,6 +4,7 @@ ENV USER=encirsh
 ENV UID=10022
 ENV GID=10022
 ENV COMPOSER_MD5 091fbf803063d9e6a05270282f887c10
+ENV PATH=$PATH:/root/.composer/vendor/bin
 
 # package dependencies
 RUN apk --update add --no-cache \
@@ -92,6 +93,9 @@ RUN set -eux; \
 
 # drush
 RUN composer global require drush/drush:~10
+USER encirsh
+RUN composer global require drush/drush:~10
+USER root
 
 # wp cli
 RUN cd /tmp && curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
