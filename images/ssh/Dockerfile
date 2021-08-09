@@ -105,6 +105,7 @@ RUN cd /tmp && curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/
 
 # permissions scripts
 COPY scripts/drupal/permissions.sh /usr/local/bin/permissions-drupal.sh
+COPY scripts/drupal9/permissions.sh /usr/local/bin/permissions-drupal9.sh
 COPY scripts/wordpress/permissions.sh /usr/local/bin/permissions-wordpress.sh
 RUN chmod 750 /usr/local/bin/permissions*.sh
 
