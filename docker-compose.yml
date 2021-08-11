@@ -100,9 +100,29 @@ services:
       context: ./
       dockerfile: ./images/redmine/Dockerfile
 
-  ssh:
-    container_name: ssh
-    image: encircle/ssh:latest
+  ssh-wordpress:
+    container_name: ssh-wordpress
+    image: encircle/ssh-wordpress:latest
     build:
       context: ./
       dockerfile: ./images/ssh/Dockerfile
+      args:
+        - BOOTSTRAP=encircle/wordpress:latest
+
+  ssh-drupal:
+    container_name: ssh-drupal
+    image: encircle/ssh-drupal:latest
+    build:
+      context: ./
+      dockerfile: ./images/ssh/Dockerfile
+      args:
+        - BOOTSTRAP=encircle/drupal7:latest
+
+  ssh-drupal9:
+    container_name: ssh-drupal9
+    image: encircle/ssh-drupal9:latest
+    build:
+      context: ./
+      dockerfile: ./images/ssh/Dockerfile
+      args:
+        - BOOTSTRAP=encircle/drupal9:latest
