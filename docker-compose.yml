@@ -79,6 +79,15 @@ services:
       context: ./images/redmine
       dockerfile: Dockerfile
 
+  ssh:
+    container_name: ssh
+    image: encircle/ssh:latest
+    build:
+      context: ./images/ssh
+      dockerfile: Dockerfile
+      args:
+        - BOOTSTRAP=alpine:3.12
+
   ssh-wordpress:
     container_name: ssh-wordpress
     image: encircle/ssh-wordpress:latest
