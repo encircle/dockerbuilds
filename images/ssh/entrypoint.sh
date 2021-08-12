@@ -12,7 +12,7 @@ function main() {
 
     fi
 
-    strace /usr/sbin/sshd -ddd -D
+    /usr/sbin/sshd -D
 
 }
 

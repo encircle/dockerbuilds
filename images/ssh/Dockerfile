@@ -21,8 +21,6 @@ RUN apk --update add --no-cache \
     curl \
  && rm -rf /var/cache/apk/*
 
-RUN apk add strace
-
 # ssh
 COPY sshd_config /etc/ssh/sshd_config
 RUN chmod 644 /etc/ssh/sshd_config
