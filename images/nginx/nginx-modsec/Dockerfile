@@ -116,10 +116,10 @@ RUN apk add pcre-dev \
     yajl-dev \
  && mkdir /etc/nginx/modsec
 
-COPY modsecurity.conf /etc/nginx/modsec/modsecurity.conf
-COPY unicode.mapping  /etc/nginx/modsec/unicode.mapping
-COPY modsecurity.conf       /etc/nginx/conf.d/modsecurity.conf
-COPY clamd-hook.sh /usr/local/bin/clamd-hook.sh
+COPY modsecurity.conf       /etc/nginx/modsec/modsecurity.conf
+COPY unicode.mapping        /etc/nginx/modsec/unicode.mapping
+COPY nginx-modsecurity.conf /etc/nginx/conf.d/modsecurity.conf
+COPY clamd-hook.sh          /usr/local/bin/clamd-hook.sh
 
 # ClamAV configurations
 RUN chown root:nginx /usr/local/bin/clamd-hook.sh \
