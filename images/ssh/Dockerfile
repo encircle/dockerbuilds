@@ -21,15 +21,17 @@ RUN apk --update add --no-cache \
     curl \
  && rm -rf /var/cache/apk/*
 
+RUN apk add strace
+
 # ssh
 COPY sshd_config /etc/ssh/sshd_config
 RUN chmod 644 /etc/ssh/sshd_config
 
-RUN /usr/bin/ssh-keygen -A
-RUN ssh-keygen -t rsa -b 4096 -f  /etc/ssh/ssh_host_key
+RUN ssh-keygen -t rsa -b 4096 -f /etc/ssh/ssh_host_rsa_key
 
 # user and group
-RUN addgroup -g 10022 ${USER}
+RUN addgroup -g 10022 ${USER} \
+ && groupadd -f -g 10013 www-data
 
 RUN adduser \
     --disabled-password \
@@ -37,8 +39,9 @@ RUN adduser \
     --home "/home/${USER}" \
     --ingroup "${USER}" \
     --uid "${UID}" \
-    ${USER}
+    "${USER}"
 
+# Add user to www-data
 RUN usermod -aG 10013 "${USER}" \
  && apk del shadow
 
