@@ -1,6 +1,6 @@
 FROM alpine:3.12.0
 
-COPY entry/memcache/entrypoint.sh /usr/local/bin
+COPY entrypoint.sh /usr/local/bin
 RUN apk --no-cache add memcached && chmod +x /usr/local/bin/entrypoint.sh
 
 # Upgrade packages

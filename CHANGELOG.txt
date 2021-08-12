@@ -296,7 +296,7 @@ v1.4.7
 - Updated Drupal from 9.20 to 9.2.2
 - Updated Drupal 8 to 8.9.17
 
-v1.4.8 (latest)
+v1.5.0 (latest)
 ======
 - Added composer to SSH image
 - Added php xml extension to SSH image
@@ -304,3 +304,5 @@ v1.4.8 (latest)
 - Set error.html permissions explicitly in nginx-modsec image
 - Drupal9 now proper composer install
 - Bootstrap SSH to existing image to bring across all tooling
+- Added hook for bootstrapping of SSH to images
+- Major repository layout reorganization

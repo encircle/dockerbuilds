@@ -1,24 +1,19 @@
 # dockerbuilds
 
-## Contributing ##
+## Directory Structure
 
-### Directory Structure ###
-
-  - bin                - handy scripts for repo management etc.
-  - conf               - configuration used by images
-  - entry              - entrypoint scripts for images
-  - scripts            - scripts used by images
-  - images             - the actual Dockerfiles
+  - bin                - handy scripts for repo management
+  - images             - self contained image directories, consisting of scripts, configuration and Dockerfiles
   - example            - example docker-compose stacks
-  - docker-compose.yml - contains built parameters for building image locally (such as build context)
+  - docker-compose.yml - contains build parameters for building images locally (such as build context)
 
-### Manual Local Image Build (built on local machine) ###
+## Manual Local Image Build (built on local machine)
 
 You might want to test that images will rebuild, before pushing tags or master changes and waiting for Dockerhub automated builds.
 
 ... Or maybe the automated Dockerhub builds are failing.
 
-#### Building ####
+### Build
 
 To build manually, use the docker-compose.yml file (which has the build details) as follows.
 
@@ -28,9 +23,15 @@ docker-compose build ${image}
 
 Where ${image} is the name of the image to build, omit this variable to build all images locally. You can also specify more than one ${image} at once.
 
+You can build all the images locally at once, by simply running:
+
+```
+docker-compose build
+```
+
 All images will be built with the encircle repository and latest tag (encircle/${image}:latest).
 
-#### Tagging ####
+### Tag
 
 As the images are built as the 'latest' tag now we need to tag the images to the version we want.
 
@@ -44,14 +45,14 @@ docker tag encircle/${image}:latest encircle/${image}:${version}
 
 This will result in a tag of ${version} that is exactly the same as the 'latest' image.
 
-#### Pushing ####
+### Push to Dockerhub
 
 Finally you can push the image to Dockerhub, as follows:
 
 Push the latest image:
 
 ```
-docker push enicrcle/${image}:latest
+docker push encircle/${image}:latest
 ```
 
 Push the tagged image:
@@ -60,19 +61,25 @@ Push the tagged image:
 docker push enicrcle/${image}:${version}
 ```
 
-Unfortunately you can only push one image at a time.
+Unfortunately you can only push the images one at a time.
 
-### Quick Remote Image Rebuild (built on Dockerhub) ###
+## Quick Automated Remote Rebuild
 
-Images need to be rebuilt when vulnerabilities are discovered, the rebuild script does this automatically.
+Images need to be rebuilt when vulnerabilities are discovered.
+
+Technically no changes are actually required to the Dockerfiles, but the packages are upgraded as part of the build process.
+
+The quick way to do this is to just update the changelog and push to github which will trigger Dockerhub to rebuild them.
+
+The 'rebuild' script will do this for you.
 
 The script will:
 
-1. Determine the current version
+1. Determine the current version from the changelog
 2. Increment the current version to the next minor version
-3. Update the CHANGELOG
+3. Update the changelog
 4. Commit, tag and push to master along with new tag
-5. Dockerhub will then automatically rebuild the latest tag, and build the new minor version tag
+5. Dockerhub will then be triggered to rebuild the latest tag, and build the new minor version tag
 
 To run the script, execute as follows:
 
@@ -82,7 +89,7 @@ cd bin && ./rebuild
 
 You will need to enter Github credentials, if you don't use SSH otherwise your private key password.
 
-### Manual Remote Image Rebuild (built on Dockerhub) ###
+## Manual Remote Image Rebuild
 
 For changes over and above package vulnerabilities, i.e. any code changes.
 
@@ -112,78 +119,21 @@ For changes over and above package vulnerabilities, i.e. any code changes.
     git push origin master
     ```
 
-## Environment Variables ##
+## Vulnerability Scanning
 
-These are the environment variables used across the stack. In the example docker-compose files, variables are set in .env, and then environment variables are mapped in the docker-compose files to the variables set in .env. This is so that we can have a single variable set in .env and reference multiple times in docker-compose (e.g. using a single variable from .env to set the environment variables for database name in both MySQL and Wordpress containers).
+Vulnerability scanning is enabled for all images on Dockerhub.
 
-### NGINX Modsec ###
+This means that whenever an image is rebuilt, Dockerhub scans the image using Synk and reports any vulnerabilities present.
 
-**SITE**: Space seperated list of domain names for site. First domain used as PHP sendmail From address\
+Do not use any images that contain serious vulnerabilities.
 
-**ENV**: Basic auth enabled if not PROD\
+## Build Caching
 
-**IP_WHITELIST_***: IP addresses exempt from basic authentication. As many as needed.\
+Docker and Dockerhub provides build caching, which will read from the cache if a Dockerfile doesn't change.
 
-**FPM_HOST**: FPM host for proxied requests\
+As package upgrades do not actuall modify the Dockerfile, build caching is disabled on Dockerhub automatic builds to ensure packages are upgraded.
 
-**HTPASS**: .htpasswd format credentials (user:hash). This is the HASHED password, not plaintext.\
-
-**MODSEC_ENGINE_MODE**: (On/Off/DetectionOnly) Mode for modsec engine, check the docs\
-
-**DISABLE_CONF**: Disable hardening config files. e.g.   DISABLE_CONF=custom_error.conf block_files.conf\
-
-**AV_SCAN**: (TRUE/FALSE) Whether to scan file uploads via webserver\
-
-**AV_HOST**: Host on which restingclam is hosted\
-
-**AV_PORT**: Port on which restingclam is listening
-
-
-### NGINX Proxy ###
-
-All those available with NGINX modsec and...
-
-**ENDPOINT**: Proxy endpoint (e.g. myapp.example.com:4444)
-
-
-### MariaDB ###
-
-**MYSQL_ROOT_PASS**: Desired MySQL root password
-
-**MYSQL_DATABASE**: Desired MySQL database name
-
-**MYSQL_USER**: Desired MySQL database user
-
-**MYSQL_PASSWORD**: Desired MySQL database user password
-
-
-### Wordpress ###
-
-**SITE**: Domain, used for sendmail From address (see NGINX variables)
-
-**WORDPRESS_DB_HOST**: Database hostname
-
-**WORDPRESS_DB_NAME**: Database name
-
-**WORDPRESS_DB_USER**: Database user
-
-
-### Drupal ###
-
-**SITE**: Domain, used for sendmail From address (see NGINX variables)
-
-**DB_HOST**: Database host for Drupal
-
-
-### Postfix ###
-
-**HOSTNAME**: Postfix myhostname hostname
-
-**SENDGRID**: (TRUE/FALSE) Whether to use SendGrid as relay host or not
-
-**SENDGRID_API_KEY**: API key for SendGrid (required if using SendGrid)
-
-## Usage ##
+## Example Usage
 
 1. Set environment variables in .env file
 
@@ -207,11 +157,11 @@ All those available with NGINX modsec and...
 
 2. Run the stack
 
-    ##### Wordpress #####
+    ##### Wordpress
     ```
     docker-compose -f docker-compose-wp.yml up -d
     ```
-    ##### Drupal #####
+    ##### Drupal
     ```
     docker-compose -f docker-compose-dr.yml up -d
     ```
@@ -219,10 +169,10 @@ All those available with NGINX modsec and...
 3. Check status of stack components
 
     ```
-    docker ps -a
+    docker-compose ps
     ```
 
-## Postfix ##
+## Postfix
 
 Postfix is used as the MTA for the containers, to use postfix with the PHP container:
 
@@ -246,7 +196,7 @@ Postfix is used as the MTA for the containers, to use postfix with the PHP conta
    docker-compose -f docker-compose-dr.yml up -d
    ```
 
-## Migration ##
+## Migration
 
 To migrate an existing site:
 
@@ -310,54 +260,11 @@ To migrate an existing site:
 
 7. Run the stack
 
-    ##### Wordpress #####
+    ##### Wordpress
     ```
     docker-compose -f docker-compose-wp.yml up -d
     ```
-    ##### Drupal #####
+    ##### Drupal
     ```
     docker-compose -f docker-compose-dr.yml up -d
     ```
-
-## Modsec ##
-
-To whitelist specific rules for modsec, mount a modsec whitelist directory as follows:
-
-```
-- ./modsec:/etc/nginx/modsec/whitelist
-```
-
-Add a whitelist.conf file in the modsec directory
-
-```
-touch modsec/whitelist.conf
-```
-
-And add any whitelisting rules to the file
-
-## Letsencrypt ##
-
-Use the letsencrypt script to add and renew letsencrypt certificates.
-
-Make sure to update the variables within the script to match domains and containers etc.
-
-Variables:
-
-  - domain - Domain for which certificate is required
-  - webserver_container - Name of the webserver container for the site
-  - containerdir - Directory for the stack
-  - email - Email for letsencrypt notifications
-
-##### Initial certificate #####
-
-```
-letsencrypt.sh init test
-```
-
-The test option hits letsencrypt staging API, remove this for Production use.
-
-##### Renewals #####
-
-```
-letsencrypt.sh renew
-```

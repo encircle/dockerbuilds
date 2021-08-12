@@ -21,8 +21,8 @@ RUN apt update -y \
  && apt upgrade -y
 
 # configs
-COPY conf/mysql/my.cnf /etc/mysql/my.cnf
-COPY conf/mysql/encircle.cnf /etc/mysql/conf.d/encircle.cnf
+COPY my.cnf /etc/mysql/my.cnf
+COPY encircle.cnf /etc/mysql/conf.d/encircle.cnf
 
 # encircle overrides dir
 RUN mkdir /etc/mysql/encircle.d \

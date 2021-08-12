@@ -22,7 +22,7 @@ RUN apk --update add --no-cache \
  && rm -rf /var/cache/apk/*
 
 # ssh
-COPY conf/ssh/sshd_config /etc/ssh/sshd_config
+COPY sshd_config /etc/ssh/sshd_config
 RUN chmod 644 /etc/ssh/sshd_config
 
 RUN /usr/bin/ssh-keygen -A
@@ -56,6 +56,6 @@ RUN rm -f /sbin/apk; \
 
 EXPOSE 10022
 
-COPY entry/ssh/entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod 750 /usr/local/bin/entrypoint.sh
 CMD ["/usr/local/bin/entrypoint.sh"]

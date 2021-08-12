@@ -6,106 +6,85 @@ services:
     container_name: nginx-modsec
     image: encircle/nginx-modsec:latest
     build:
-      context: ./
-      dockerfile: ./images/nginx-modsec/Dockerfile
+      context: ./images/nginx/nginx-modsec
+      dockerfile: Dockerfile
 
   mariadb:
     container_name: mariadb
     image: encircle/mariadb:latest
     build:
-      context: ./
-      dockerfile: ./images/mariadb/Dockerfile
-
-  mariadb-alpine:
-    container_name: mariadb-alpine
-    image: encircle/mariadb-alpine:latest
-    build:
-      context: ./
-      dockerfile: ./images/mariadb-alpine/Dockerfile
+      context: ./images/mariadb
+      dockerfile: Dockerfile
 
   wordpress:
     container_name: wordpress
     image: encircle/wordpress:latest
     build:
-      context: ./
-      dockerfile: ./images/wordpress/Dockerfile
+      context: ./images/php
+      dockerfile: wordpress/Dockerfile
 
   drupal7:
     container_name: drupal7
     image: encircle/drupal7:latest
     build:
-      context: ./
-      dockerfile: ./images/drupal7/Dockerfile
+      context: ./images/php
+      dockerfile: drupal7/Dockerfile
 
   drupal8:
     container_name: drupal8
     image: encircle/drupal8:latest
     build:
-      context: ./
-      dockerfile: ./images/drupal8/Dockerfile
+      context: ./images/php
+      dockerfile: drupal8/Dockerfile
 
   drupal9:
     container_name: drupal9
     image: encircle/drupal9:latest
     build:
-      context: ./
-      dockerfile: ./images/drupal9/Dockerfile
+      context: ./images/php
+      dockerfile: drupal9/Dockerfile
 
   postfix:
     container_name: postfix
     image: encircle/postfix:latest
     build:
-      context: ./
-      dockerfile: ./images/postfix/Dockerfile
+      context: ./images/postfix
+      dockerfile: Dockerfile
 
   memcache:
     container_name: memcache
     image: encircle/memcache:latest
     build:
-      context: ./
-      dockerfile: ./images/memcache/Dockerfile
-
-  restingclam:
-    container_name: restingclam
-    image: encircle/restingclam:latest
-    build:
-      context: ./
-      dockerfile: ./images/restingclam/Dockerfile
+      context: ./images/memcache
+      dockerfile: Dockerfile
 
   nginx-proxy:
     container_name: nginx-proxy
     image: encircle/nginx-proxy:latest
     build:
-      context: ./
-      dockerfile: ./images/nginx-proxy/Dockerfile
+      context: ./images/nginx/nginx-proxy
+      dockerfile: Dockerfile
 
   nginx-static:
     container_name: nginx-static
     image: encircle/nginx-static:latest
     build:
-      context: ./
-      dockerfile: ./images/nginx-static/Dockerfile
-
-  wordpress-civicrm:
-    container_name: wordpress-civi
-    image: encircle/wordpress-civicrm:latest
-    build:
-      context: ./
-      dockerfile: ./images/wordpress-civicrm/Dockerfile
+      context: ./images/nginx/nginx-static
+      dockerfile: Dockerfile
 
   redmine:
     container_name: redmine
     image: encircle/redmine:latest
     build:
-      context: ./
-      dockerfile: ./images/redmine/Dockerfile
+      context: ./images/redmine
+      dockerfile: Dockerfile
 
   ssh-wordpress:
     container_name: ssh-wordpress
     image: encircle/ssh-wordpress:latest
     build:
-      context: ./
-      dockerfile: ./images/ssh/Dockerfile
+      context: ./images/ssh
+      dockerfile: Dockerfile
       args:
         - BOOTSTRAP=encircle/wordpress:latest
 
@@ -113,8 +92,8 @@ services:
     container_name: ssh-drupal
     image: encircle/ssh-drupal:latest
     build:
-      context: ./
-      dockerfile: ./images/ssh/Dockerfile
+      context: ./images/ssh
+      dockerfile: Dockerfile
       args:
         - BOOTSTRAP=encircle/drupal7:latest
 
@@ -122,7 +101,7 @@ services:
     container_name: ssh-drupal9
     image: encircle/ssh-drupal9:latest
     build:
-      context: ./
-      dockerfile: ./images/ssh/Dockerfile
+      context: ./images/ssh
+      dockerfile: Dockerfile
       args:
         - BOOTSTRAP=encircle/drupal9:latest

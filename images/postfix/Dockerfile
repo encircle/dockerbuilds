@@ -35,18 +35,18 @@ RUN        true && \
            (rm "/tmp/"* 2>/dev/null || true) && (rm -rf /var/cache/apk/* 2>/dev/null || true)
 
 # Set up configuration
-COPY       conf/postfix/supervisord.conf /etc/supervisord.conf
-COPY       conf/postfix/rsyslog.conf /etc/rsyslog.conf
-COPY       conf/postfix/opendkim.conf /etc/opendkim/opendkim.conf
-COPY       conf/postfix/smtp_header_checks /etc/postfix/smtp_header_checks
-COPY       scripts/postfix/commons.sh /
-COPY	   scripts/postfix/run.sh /
-COPY	   scripts/postfix/opendkim.sh /
+COPY       supervisord.conf /etc/supervisord.conf
+COPY       rsyslog.conf /etc/rsyslog.conf
+COPY       opendkim.conf /etc/opendkim/opendkim.conf
+COPY       smtp_header_checks /etc/postfix/smtp_header_checks
+COPY       commons.sh /
+COPY	   run.sh /
+COPY	   opendkim.sh /
 RUN        chmod +x /run.sh /opendkim.sh
 
 # Custom scripts
 RUN  mkdir /docker-init.db/
-COPY scripts/postfix/sendgrid.sh /docker-init.db/
+COPY sendgrid.sh /docker-init.db/
 
 # Set up volumes
 VOLUME     [ "/var/spool/postfix", "/etc/postfix", "/etc/opendkim/keys" ]
