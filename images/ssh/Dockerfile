@@ -31,6 +31,7 @@ RUN ssh-keygen -t rsa -b 4096 -f /etc/ssh/ssh_host_rsa_key
 RUN addgroup -g 10022 ${USER} \
  && groupadd -f -g 10013 www-data
 
+# create user
 RUN adduser \
     --disabled-password \
     --gecos "" \
@@ -38,6 +39,9 @@ RUN adduser \
     --ingroup "${USER}" \
     --uid "${UID}" \
     "${USER}"
+
+# assign password to user
+RUN echo "${USER}:$(head -c12 /dev/urandom | base64)" | chpasswd
 
 # Add user to www-data
 RUN usermod -aG 10013 "${USER}" \

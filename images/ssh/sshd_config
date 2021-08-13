@@ -1,7 +1,8 @@
 Port 10022
 ChallengeResponseAuthentication no
-PermitRootLogin without-password
+PermitEmptyPasswords no
 PasswordAuthentication no
+PermitRootLogin without-password
 X11Forwarding no
 PrintMotd no
 ClientAliveInterval 3600
@@ -9,7 +10,7 @@ ClientAliveCountMax 0
 Banner=/etc/issue.net
 AcceptEnv LANG LC_*
 Subsystem sftp /usr/lib/ssh/sftp-server -u 002
-UsePAM yes
+UsePAM no
 UseDNS no
 Ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr
 MACs hmac-sha2-256,hmac-sha2-512
