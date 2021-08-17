@@ -306,3 +306,6 @@ v1.5.0 (latest)
 - Bootstrap SSH to existing image to bring across all tooling
 - Added hook for bootstrapping of SSH to images
 - Major repository layout reorganization
+- Wordpress 5.7.2 to 5.8.0
+- Druapal 9.2.2 to 9.2.4
+- Drupal 8.9.17 to 8.9.18
