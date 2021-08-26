@@ -296,7 +296,7 @@ v1.4.7
 - Updated Drupal from 9.20 to 9.2.2
 - Updated Drupal 8 to 8.9.17
 
-v1.5.0 (latest)
+v1.5.0
 ======
 - Added composer to SSH image
 - Added php xml extension to SSH image
@@ -309,3 +309,7 @@ v1.5.0 (latest)
 - Wordpress 5.7.2 to 5.8.0
 - Druapal 9.2.2 to 9.2.4
 - Drupal 8.9.17 to 8.9.18
+
+v1.5.1 (latest)
+======
+- Added basic auth to NGINX proxy default.conf
