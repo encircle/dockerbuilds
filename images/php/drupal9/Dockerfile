@@ -40,6 +40,13 @@ RUN set -eux; \
 	apk add --no-network --virtual .drupal-phpexts-rundeps $runDeps; \
 	apk del --no-network .build-deps
 
+# PHP redis
+RUN apk add autoconf g++ make \
+ && pecl install -o -f redis \
+ && rm -rf /tmp/pear \
+ && docker-php-ext-enable redis \
+ && apk del autoconf g++
+
 # set recommended PHP.ini settings
 # see https://secure.php.net/manual/en/opcache.installation.php
 RUN { \
