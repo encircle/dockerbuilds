@@ -41,9 +41,11 @@ function drupal_update() {
   image_version=$DRUPAL_VERSION
 
   if [[ $volume_version != $image_version ]]; then
-    composer update drupal/core "drupal/core-*" --with-all-dependencies
+    composer update drupal/core "drupal/core-composer-scaffold:^${DRUPAL_VERSION}" --with-all-dependencies
+    composer update drupal/core "drupal/core-project-message:^${DRUPAL_VERSION}" --with-all-dependencies
+    composer update drupal/core "drupal/core-recommended:^${DRUPAL_VERSION}" --with-all-dependencies
     yes | $INSTALL_DIR/site/vendor/bin/drush updatedb
-    drush cache:rebuild
+    ${INSTALL_DIR}/site/vendor/bin/drush cache:rebuild
   fi 
 
 }
