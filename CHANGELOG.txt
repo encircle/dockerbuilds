@@ -313,3 +313,9 @@ v1.5.0
 v1.5.1 (latest)
 ======
 - Added basic auth to NGINX proxy default.conf
+=======
+
+v1.5.1 (latest)
+======
+- Added Redis PHP extension to Drupal 9 image
+- Update to specific Drupal core version using composer in Drupal 9
