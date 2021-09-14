@@ -306,3 +306,8 @@ v1.5.0 (latest)
 - Bootstrap SSH to existing image to bring across all tooling
 - Added hook for bootstrapping of SSH to images
 - Major repository layout reorganization
+
+v1.5.1 (latest)
+======
+- Added Redis PHP extension to Drupal 9 image
+- Update to specific Drupal core version using composer in Drupal 9
