@@ -319,3 +319,4 @@ v1.5.1 (latest)
 ======
 - Added Redis PHP extension to Drupal 9 image
 - Update to specific Drupal core version using composer in Drupal 9
+- Drupal 9.2.4 to 9.2.6 - security update
