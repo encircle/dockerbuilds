@@ -310,13 +310,17 @@ v1.5.0
 - Druapal 9.2.2 to 9.2.4
 - Drupal 8.9.17 to 8.9.18
 
-v1.5.1 (latest)
+v1.5.1
 ======
 - Added basic auth to NGINX proxy default.conf
 =======
 
-v1.5.2 (latest)
+v1.5.2
 ======
 - Added Redis PHP extension to Drupal 9 image
 - Update to specific Drupal core version using composer in Drupal 9
 - Drupal 9.2.4 to 9.2.6 - security update
+
+v1.5.3
+======
+WP 5.8.0 to 5.8.1
