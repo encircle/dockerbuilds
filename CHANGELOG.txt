@@ -328,3 +328,4 @@ WP 5.8.0 to 5.8.1
 v1.5.4
 ======
 - Added basic auth directive to php location block
+- Only present NGINX custom errors for 5xx codes
