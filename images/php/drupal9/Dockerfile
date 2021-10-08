@@ -1,6 +1,6 @@
 FROM php:7.3-fpm-alpine
 
-ENV COMPOSER_MD5 091fbf803063d9e6a05270282f887c10
+ENV COMPOSER_MD5 91978b7cfb39fe24aabc6a176ff8835a
 ENV DRUPAL_VERSION 9.2.6
 ENV DRUPAL_MD5 80b74a545702ec3f539f6c3b47d85f99
 ENV DRUSH_VERSION 8.3.5
@@ -40,52 +40,59 @@ RUN set -eux; \
 	apk add --no-network --virtual .drupal-phpexts-rundeps $runDeps; \
 	apk del --no-network .build-deps
 
-# PHP redis
-RUN apk add autoconf g++ make \
- && pecl install -o -f redis \
- && rm -rf /tmp/pear \
- && docker-php-ext-enable redis \
- && apk del autoconf g++
+RUN set -eux;\
+# build tools
+apk add --no-cache --virtual .build-deps \
+            autoconf g++ make; \
+# redis
+ pecl install -o -f redis;\
+ docker-php-ext-enable redis;\
+# xdebug
+ pecl install -o -f xdebug;\
+ docker-php-ext-enable xdebug;\
+# memcache
+apk add --no-cache \
+        libpq \
+        libmemcached-dev \
+        zlib-dev \
+        curl;\
+curl -L -o /tmp/memcached.tar.gz "https://github.com/php-memcached-dev/php-memcached/archive/v3.1.5.tar.gz";\
+mkdir -p /usr/src/php/ext/memcached;\
+tar -C /usr/src/php/ext/memcached -zxvf /tmp/memcached.tar.gz --strip 1;\
+docker-php-ext-configure memcached;\
+docker-php-ext-install memcached;\
+rm /tmp/memcached.tar.gz;\
+# intl, bcmap, soap
+apk add --no-cache\
+        icu-dev\
+        libxml2-dev;\
+docker-php-ext-install intl bcmath soap;\
 
-# set recommended PHP.ini settings
+# remove cache
+apk del --no-network .build-deps;\
+# clear cache
+rm -rf /tmp/pear
+
+# set recommended opcache settings
 # see https://secure.php.net/manual/en/opcache.installation.php
 RUN { \
-		echo 'opcache.memory_consumption=128'; \
-		echo 'opcache.interned_strings_buffer=8'; \
-		echo 'opcache.max_accelerated_files=4000'; \
-		echo 'opcache.revalidate_freq=60'; \
-		echo 'opcache.fast_shutdown=1'; \
-	} > /usr/local/etc/php/conf.d/opcache-recommended.ini
+	echo 'opcache.memory_consumption=128'; \
+	echo 'opcache.interned_strings_buffer=8'; \
+	echo 'opcache.max_accelerated_files=4000'; \
+	echo 'opcache.revalidate_freq=60'; \
+	echo 'opcache.fast_shutdown=1'; \
+} > /usr/local/etc/php/conf.d/opcache-recommended.ini
 
-# Install composer
-RUN set -eux; \
-  php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"; \
-  echo "${COMPOSER_MD5} *composer-setup.php" | md5sum -c -; \
-  php composer-setup.php --install-dir=/usr/local/bin --filename=composer --quiet \
-    && rm composer-setup.php;
+# add xdebug settings
+RUN { \
+        echo 'xdebug.remote_enable=1';\
+        echo 'xdebug.remote_connect_back=0';\
+        echo 'xdebug.remote_host=localhost';\
+        echo 'xdebug.remote_port=9000';\
+        echo 'xdebug.remote_log=/var/log/apache2/xdebug.log';\
+} > /usr/local/etc/php/conf.d/xdebug.ini
 
-# User accounts
-RUN apk add shadow \
- && usermod -u 10013 www-data \
- && groupmod -g 10013 www-data \
- && apk del shadow
-
-## Memcache ##
-RUN apk update && apk add \
-    libpq \
-    libmemcached-dev \
-    zlib-dev \
-    curl
-
-RUN curl -L -o /tmp/memcached.tar.gz "https://github.com/php-memcached-dev/php-memcached/archive/v3.1.5.tar.gz" \
-    && mkdir -p /usr/src/php/ext/memcached \
-    && tar -C /usr/src/php/ext/memcached -zxvf /tmp/memcached.tar.gz --strip 1 \
-    && docker-php-ext-configure memcached \
-    && docker-php-ext-install memcached \
-    && rm /tmp/memcached.tar.gz
-## Memcache ##
-
-# PHP Configurations
+# additional php configurations
 COPY conf/max_file_upload.ini /usr/local/etc/php/conf.d/max_file_upload.ini
 COPY conf/cookie-security.ini /usr/local/etc/php/conf.d/cookie-security.ini
 COPY conf/expose_php.ini /usr/local/etc/php/conf.d/expose_php.ini
@@ -96,11 +103,24 @@ COPY conf/error-logging.ini /usr/local/etc/php/conf.d/error-logging.ini
 COPY conf/drupal.ini /usr/local/etc/php/conf.d/drupal.ini
 COPY conf/www.conf /usr/local/etc/php-fpm.d/www.conf
 
-# Directory for composer drupal project
+# composer
+RUN set -eux;\
+  php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');";\
+  echo "${COMPOSER_MD5} *composer-setup.php" | md5sum -c -;\
+  php composer-setup.php --install-dir=/usr/local/bin --filename=composer --quiet;\
+  rm composer-setup.php
+
+# user accounts
+RUN apk add --no-cache --virtual .build-deps shadow;\
+            usermod -u 10013 www-data;\
+            groupmod -g 10013 www-data;\
+            apk del shadow
+
+# directory for composer drupal project
 RUN mkdir -p /var/src/drupal \
  && chmod -R 755 /var/src
 
-# Scripts
+# scripts
 COPY drupal9/permissions.sh /usr/local/bin
 RUN chmod 755 /usr/local/bin/permissions.sh \
  && crontab -l > /tmp/.cron \
@@ -108,22 +128,17 @@ RUN chmod 755 /usr/local/bin/permissions.sh \
  && crontab /tmp/.cron \
  && rm -rf /tmp/.cron
 
-# Extra PHP extensions
-RUN apk add --no-cache icu-dev \
-                       libxml2-dev \
- && docker-php-ext-install intl bcmath soap
-
 # mysql package for drush
-RUN apk add --no-cache mariadb-client
+RUN apk add --no-cache --virtual .build-deps mariadb-client
 
 # admin packages
-RUN apk add --no-cache git nano bash
+RUN apk add --no-cache --virtual .build-deps git nano bash
 
-# Upgrade packages
+# upgrade packages
 RUN apk update \
  && apk upgrade
 
-# Entrypoint
+# entrypoint
 COPY drupal9/entrypoint.sh /usr/local/bin/
 RUN chmod 755 /usr/local/bin/entrypoint.sh
 

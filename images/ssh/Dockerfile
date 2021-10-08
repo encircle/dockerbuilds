@@ -17,6 +17,7 @@ RUN apk --update add --no-cache \
     openssh-sftp-server \
     shadow \
     curl \
+    vim \
  && rm -rf /var/cache/apk/*
 
 # ssh
