@@ -2,7 +2,7 @@ FROM php:7.3-fpm-alpine
 
 ENV DRUPAL_VERSION 8.9.18
 ENV DRUPAL_MD5 4a4a79691a98d4b6c86275331827c931
-ENV COMPOSER_MD5 091fbf803063d9e6a05270282f887c10
+ENV COMPOSER_MD5 91978b7cfb39fe24aabc6a176ff8835a
 ENV DRUSH_VERSION 8.3.5
 
 # install the PHP extensions we need
@@ -121,8 +121,9 @@ RUN wget https://github.com/drush-ops/drush/releases/download/${DRUSH_VERSION}/d
  && apk add mysql-client
 
 # Extra extensions
-RUN apk add --no-cache icu-dev \
-                       libxml2-dev \
+RUN apk add --no-cache \
+            icu-dev \
+            libxml2-dev \
  && docker-php-ext-install intl bcmath soap
 
 # admin packages
