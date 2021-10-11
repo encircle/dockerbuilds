@@ -335,3 +335,4 @@ v1.5.5 (latest)
 - Added vim to ssh image/s
 - Drupal9 image cleanup
 - Updated composer md5 in drupal8/9
+- Added patch to Drupal9 image

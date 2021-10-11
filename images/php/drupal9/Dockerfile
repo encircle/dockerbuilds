@@ -67,7 +67,8 @@ apk add --no-cache\
         icu-dev\
         libxml2-dev;\
 docker-php-ext-install intl bcmath soap;\
-
+# patch
+apk add --no-cache patch;\
 # remove cache
 apk del --no-network .build-deps;\
 # clear cache
