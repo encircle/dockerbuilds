@@ -336,3 +336,4 @@ v1.5.5 (latest)
 - Drupal9 image cleanup
 - Updated composer md5 in drupal8/9
 - Added patch to Drupal9 image
+- Updated Drupal9 from 9.2.6 to 9.2.7
