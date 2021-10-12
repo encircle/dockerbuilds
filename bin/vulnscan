@@ -7,6 +7,6 @@ for image in $(grep 'image:' ../docker-compose.yml | awk -F ':' '{print $2}'); d
   echo '================================'
   echo $image
   trivy --clear-cache
-  trivy "$image:latest"
+  trivy --ignore-unfixed "$image:latest"
   echo '================================'
 done
