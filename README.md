@@ -211,7 +211,7 @@ To migrate an existing site:
     cd /path/to/drupal && tar -cvzf /tmp/drupal.tar.gz *
     ```
 
-2. Dump site database
+2. Dump the sites database
 
     ```
     mysqldump --defaults-file=/etc/mysql/debian.cnf db_name > /tmp/dump.sql
