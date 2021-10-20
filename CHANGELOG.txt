@@ -330,7 +330,7 @@ v1.5.4
 - Added basic auth directive to php location block
 - Only present NGINX custom errors for 5xx codes
 
-v1.6.0 (latest)
+v1.6.0
 ======
 - Added vim to ssh image/s
 - Drupal9 image cleanup
@@ -340,3 +340,6 @@ v1.6.0 (latest)
 - Updated vuln scan script so that it only scans for unfixed vulns
 - Changed NGINX fastcgi pass so full address can be specified (tcp or unix)
 - Removed superfluous environment variables from Drupal 9 image
+
+v1.6.1 (latest)
+======
