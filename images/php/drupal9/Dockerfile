@@ -60,6 +60,8 @@ tar -C /usr/src/php/ext/memcached -zxvf /tmp/memcached.tar.gz --strip 1;\
 docker-php-ext-configure memcached;\
 docker-php-ext-install memcached;\
 rm /tmp/memcached.tar.gz;\
+# mysqli
+docker-php-ext-install mysqli && docker-php-ext-enable mysqli ;\
 # intl, bcmap, soap
 apk add --no-cache\
         icu-dev\
@@ -81,15 +83,6 @@ RUN { \
 	echo 'opcache.revalidate_freq=60'; \
 	echo 'opcache.fast_shutdown=1'; \
 } > /usr/local/etc/php/conf.d/opcache-recommended.ini
-
-# add xdebug settings
-RUN { \
-        echo 'xdebug.remote_enable=1';\
-        echo 'xdebug.remote_connect_back=0';\
-        echo 'xdebug.remote_host=localhost';\
-        echo 'xdebug.remote_port=9000';\
-        echo 'xdebug.remote_log=/var/log/apache2/xdebug.log';\
-} > /usr/local/etc/php/conf.d/xdebug.ini
 
 # additional php configurations
 COPY conf/max_file_upload.ini /usr/local/etc/php/conf.d/max_file_upload.ini
@@ -128,10 +121,10 @@ RUN chmod 755 /usr/local/bin/permissions.sh \
  && rm -rf /tmp/.cron
 
 # mysql package for drush
-RUN apk add --no-cache --virtual .build-deps mariadb-client
+RUN apk add --no-cache mariadb-client
 
 # admin packages
-RUN apk add --no-cache --virtual .build-deps git nano bash
+RUN apk add --no-cache git nano bash
 
 # upgrade packages
 RUN apk update \

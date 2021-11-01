@@ -343,3 +343,6 @@ v1.6.0
 
 v1.6.1 (latest)
 ======
+- Removed XDEBUG from Drupal 9
+- Added php_mysqli to Drupal 9
+- Made packages persistent again in Drupal 9
