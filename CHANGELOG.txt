@@ -347,7 +347,11 @@ v1.6.1 (latest)
 - Added php_mysqli to Drupal 9
 - Made packages persistent again in Drupal 9
 
-v1.6.2 (latest)
+v1.6.2
 ======
 - Drupal 8 upgraded to 8.9.20
 - Drupal 9 upgraded to 9.2.9
+
+v1.6.3 (latest)
+======
+- Updated example php docker-compose files to add port to FPM_HOST (as required since v1.6.0)
