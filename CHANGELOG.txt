@@ -346,3 +346,8 @@ v1.6.1 (latest)
 - Removed XDEBUG from Drupal 9
 - Added php_mysqli to Drupal 9
 - Made packages persistent again in Drupal 9
+
+v1.6.2 (latest)
+======
+- Drupal 8 upgraded to 8.9.20
+- Drupal 9 upgraded to 9.2.9
