@@ -355,3 +355,8 @@ v1.6.2
 v1.6.3 (latest)
 ======
 - Updated example php docker-compose files to add port to FPM_HOST (as required since v1.6.0)
+
+v1.6.4(latest)
+======
+-updated wordpress from v5.8.2 to v5.8.3 
+
