@@ -29,7 +29,7 @@ DETAILS
 
 v1.0.13
 =======
-- Wordpress version updated to 5.8.3
+- Wordpress version updated to 5.4.2
 
 v1.0.14
 =======
@@ -341,7 +341,7 @@ v1.6.0
 - Changed NGINX fastcgi pass so full address can be specified (tcp or unix)
 - Removed superfluous environment variables from Drupal 9 image
 
-v1.6.1 (latest)
+v1.6.1
 ======
 - Removed XDEBUG from Drupal 9
 - Added php_mysqli to Drupal 9
