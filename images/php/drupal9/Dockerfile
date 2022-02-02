@@ -1,4 +1,4 @@
-FROM php:7.3-fpm-alpine
+FROM php:7.4-fpm-alpine
 
 ENV COMPOSER_MD5 bd4a8b2a42bbfe4a01ea5a740310a1dd
 ENV DRUPAL_VERSION 9.3.3
