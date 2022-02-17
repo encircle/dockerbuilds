@@ -1,7 +1,7 @@
 FROM php:7.4-fpm-alpine
 
-ENV COMPOSER_MD5 bd4a8b2a42bbfe4a01ea5a740310a1dd
-ENV DRUPAL_VERSION 9.3.3
+ENV COMPOSER_MD5 91978b7cfb39fe24aabc6a176ff8835a
+ENV DRUPAL_VERSION 9.3.6
 
 # install the PHP extensions we need
 RUN set -eux; \
@@ -17,8 +17,6 @@ RUN set -eux; \
 	; \
 	\
 	docker-php-ext-configure gd \
-		--with-freetype-dir \
-		--with-jpeg-dir=/usr/include \
 	; \
 	\
 	docker-php-ext-install -j "$(nproc)" \
@@ -43,11 +41,15 @@ RUN set -eux;\
 apk add --no-cache --virtual .build-deps \
             autoconf g++ make; \
 # redis
- pecl install -o -f redis;\
- docker-php-ext-enable redis;\
+ curl 'https://pecl.php.net/get/redis-5.3.7.tgz' -o redis-5.3.7.tgz; \
+ pecl install -o -f redis-5.3.7.tgz; \
+ docker-php-ext-enable redis; \
+ rm -rf redis-5.3.7.tgz; \  
 # xdebug
- pecl install -o -f xdebug;\
- docker-php-ext-enable xdebug;\
+ curl 'https://pecl.php.net/get/xdebug-3.1.3.tgz' -o xdebug-3.1.3.tgz;\
+ pecl install -o -f xdebug-3.1.3.tgz; \
+ docker-php-ext-enable xdebug; \
+ rm -rf xdebug-3.1.3.tgz; \
 # memcache
 apk add --no-cache \
         libpq \
