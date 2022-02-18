@@ -1,4 +1,4 @@
-FROM php:7.3-fpm-alpine
+FROM php:7.4-fpm-alpine
 
 ENV DRUPAL_VERSION 8.9.20
 ENV DRUPAL_MD5 03c77251b7332bf7e194b9702b077dd2
@@ -18,10 +18,7 @@ RUN set -eux; \
 		postgresql-dev \
 	; \
 	\
-	docker-php-ext-configure gd \
-		--with-freetype-dir=/usr/include \
-		--with-jpeg-dir=/usr/include \
-	; \
+	docker-php-ext-configure gd; \
 	\
 	docker-php-ext-install -j "$(nproc)" \
 		gd \

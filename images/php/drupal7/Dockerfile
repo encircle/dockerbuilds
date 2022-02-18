@@ -1,8 +1,8 @@
-FROM php:7.3-fpm-alpine
+FROM php:7.4-fpm-alpine
 
 ENV DRUSH_VERSION 8.3.5
-ENV DRUPAL_VERSION 7.87
-ENV DRUPAL_MD5 75200b0b3f00140f25a990cb1ef35789
+ENV DRUPAL_VERSION 7.88
+ENV DRUPAL_MD5 ff1a687492ea18e22cfb009198a7dafc
 
 # install the PHP extensions we need
 # postgresql-dev is needed for https://bugs.alpinelinux.org/issues/3642
@@ -17,10 +17,7 @@ RUN set -eux; \
 		postgresql-dev \
 	; \
 	\
-	docker-php-ext-configure gd \
-		--with-freetype-dir=/usr/include \
-		--with-jpeg-dir=/usr/include \
-	; \
+	docker-php-ext-configure gd; \
 	\
 	docker-php-ext-install -j "$(nproc)" \
 		gd \
