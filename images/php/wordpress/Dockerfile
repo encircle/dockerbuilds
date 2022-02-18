@@ -43,9 +43,11 @@ RUN set -ex; \
 		mysqli \
 		zip \
 	; \
-	pecl install imagick-3.4.4; \
-	docker-php-ext-enable imagick; \
-        docker-php-ext-install intl bcmath soap; \
+    curl 'https://pecl.php.net/get/imagick-3.4.4.tgz' -o imagick-3.4.4.tgz; \
+    pecl install -o -f imagick-3.4.4.tgz; \
+    docker-php-ext-enable imagick; \
+    rm -rf imagick-3.4.4.tgz; \  
+    docker-php-ext-install intl bcmath soap; \
 	rm -r /tmp/pear; \
 	\
 	runDeps="$( \
