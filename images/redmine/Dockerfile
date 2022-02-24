@@ -1,4 +1,4 @@
-FROM redmine:4.1.1-alpine
+FROM redmine:4.1.6-alpine
 
 # build libraries for patron gem (required by redmine_bots plugin)
 RUN apk add gcc \
