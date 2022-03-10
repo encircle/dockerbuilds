@@ -364,7 +364,11 @@ v1.6.5
 ======
 -updated drupal 9 to 9.3.3 backed down to php7.3 because of build errors.
 
-v1.6.6(latest)
+v1.6.6
 ======
 -updated php to 7.4
 -updated redmine to 4.1.6
+
+v1.6.7(latest)
+======
+-fixed php gd issue, added correct freetype and gd parameters back in
