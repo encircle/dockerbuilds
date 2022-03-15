@@ -369,6 +369,10 @@ v1.6.6
 -updated php to 7.4
 -updated redmine to 4.1.6
 
-v1.6.7(latest)
+v1.6.7
 ======
 -fixed php gd issue, added correct freetype and gd parameters back in
+
+v1.6.8(latest)
+======
+-wordpress 5.8.4
