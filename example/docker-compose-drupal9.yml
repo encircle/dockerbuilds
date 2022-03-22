@@ -22,6 +22,7 @@ services:
       IP_WHITELIST_2: 5.153.250.222
       FPM_HOST: drupal:9000
       SITE: localhost
+      WEBROOT: /var/www/html/site/web
       HTPASS: 'TEST:$$apr1$$LhQTAPRP$$Gkrctq0MhCinvh45a9Qr6/'
       MODSEC_ENGINE_MODE: 'On'
       DISABLE_CONF: null
