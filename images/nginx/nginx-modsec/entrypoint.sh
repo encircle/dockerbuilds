@@ -89,7 +89,10 @@ function main() {
   basic_auth_whitelist
   modsec
   custom_errors
-  get_cloudflare_ips
+  no_cloudflare=${NO_CLOUDFLARE:-False}
+  if [ $no_cloudflare = False ]; then
+    get_cloudflare_ips
+  fi
   nginx -g 'daemon off;'
 }
 
