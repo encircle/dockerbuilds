@@ -13,7 +13,8 @@ function log_permissions()
   touch /var/log/nginx/access.log
   touch /var/log/nginx/error.log
   touch /var/log/nginx/modsec_audit.log
-  chmod 600 /var/log/nginx/*.log
+  chown :10013 /var/log/nginx/*.log
+  chmod 640 /var/log/nginx/*.log
 }
 
 function basic_auth_whitelist()
