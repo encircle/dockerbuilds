@@ -409,6 +409,10 @@ v1.6.16
 ======
 - Drupal 9 upgraded to v9.3.19 moderately critical security update.
 
-v1.6.17(latest)
+v1.6.17
 ======
 - Drupal 9 upgraded to v9.4.3 moderately critical security update.
+
+v1.6.18
+======
+- set log files to be readable for www-data so that fluentd can read them
