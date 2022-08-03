@@ -416,3 +416,7 @@ v1.6.17
 v1.6.18
 ======
 - set log files to be readable for www-data so that fluentd can read them
+
+v1.6.19
+======
+- drupal 9 image corrected to 9.3 branch instead of 9.4
