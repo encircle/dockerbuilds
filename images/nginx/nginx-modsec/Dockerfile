@@ -92,6 +92,7 @@ RUN rm /etc/nginx/nginx.conf \
 # Copy base config
 COPY nginx.conf  /etc/nginx/nginx.conf
 COPY default.conf       /etc/nginx/conf.d/default.conf
+COPY fastcgi_buffer_size.conf /etc/nginx/conf.d/fastcgi_buffer_size.conf
 
 # Copy hardening configs
 COPY hardening/*.conf /etc/nginx/hardening.d/
