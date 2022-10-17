@@ -420,3 +420,11 @@ v1.6.18
 v1.6.19
 ======
 - drupal 9 image corrected to 9.3 branch instead of 9.4
+
+v1.6.20
+======
+- drupal7 update to 7.92
+
+v1.6.21
+======
+- drupal9 update to 9.3.22
