@@ -23,6 +23,13 @@ services:
       context: ./images/php
       dockerfile: wordpress/Dockerfile
 
+  wordpress6:
+    container_name: wordpress6
+    image: encircle/wordpress6:latest
+    build:
+      context: ./images/php
+      dockerfile: wordpress6/Dockerfile
+
   drupal7:
     container_name: drupal7
     image: encircle/drupal7:latest
