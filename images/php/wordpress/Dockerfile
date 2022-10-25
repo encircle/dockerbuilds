@@ -1,6 +1,6 @@
 FROM php:7.4-fpm-alpine
 
-ENV WORDPRESS_VERSION 5.8.4
+ENV WORDPRESS_VERSION 5.8.6
 
 # Setup
 RUN ln -s -f /dev/null /root/.bash_history \
