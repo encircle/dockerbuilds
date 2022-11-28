@@ -436,3 +436,11 @@ v1.6.22
 v1.6.23
 ======
 - wordpress 5.8.6
+
+v1.6.24
+======
+- Drupal entrypoint fixes
+
+v1.6.25
+======
+- Wordpress6 update to 6.1.1
