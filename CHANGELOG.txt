@@ -444,3 +444,11 @@ v1.6.24
 v1.6.25
 ======
 - Wordpress6 update to 6.1.1
+
+v1.6.26
+======
+- nginx-proxy - added bucket size as per nginx-modsec image.
+
+v1.6.27
+======
+rebuild only, no code changes
