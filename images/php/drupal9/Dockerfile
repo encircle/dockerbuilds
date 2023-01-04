@@ -1,7 +1,7 @@
-FROM php:7.4-fpm-alpine
+FROM php:8.1-fpm-alpine
 
 ENV COMPOSER_MD5 340f0b7d000eeae67c619b4e3b3207a4
-ENV DRUPAL_VERSION 9.4.8
+ENV DRUPAL_VERSION 9.5.0
 
 # install the PHP extensions we need
 RUN set -eux; \
@@ -47,7 +47,7 @@ apk add --no-cache --virtual .build-deps \
  docker-php-ext-enable redis; \
  rm -rf redis-5.3.7.tgz; \  
 # xdebug
- curl 'https://pecl.php.net/get/xdebug-3.1.3.tgz' -o xdebug-3.1.3.tgz;\
+ curl 'https://pecl.php.net/get/xdebug-3.2.0.tgz' -o xdebug-3.2.0.tgz;\
  pecl install -o -f xdebug-3.1.3.tgz; \
  docker-php-ext-enable xdebug; \
  rm -rf xdebug-3.1.3.tgz; \
@@ -57,7 +57,7 @@ apk add --no-cache \
         libmemcached-dev \
         zlib-dev \
         curl;\
-curl -L -o /tmp/memcached.tar.gz "https://github.com/php-memcached-dev/php-memcached/archive/v3.1.5.tar.gz";\
+curl -L -o /tmp/memcached.tar.gz "https://github.com/php-memcached-dev/php-memcached/archive/v3.2.0.tar.gz";\
 mkdir -p /usr/src/php/ext/memcached;\
 tar -C /usr/src/php/ext/memcached -zxvf /tmp/memcached.tar.gz --strip 1;\
 docker-php-ext-configure memcached;\
