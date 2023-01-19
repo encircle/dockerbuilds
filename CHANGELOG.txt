@@ -456,3 +456,7 @@ rebuild only, no code changes
 v1.6.28
 ======
 rebuild only, no code changes to mitigate CVE-2022-47629 libksba mariadb
+
+v1.6.29
+======
+- Drupal 9.4.10
