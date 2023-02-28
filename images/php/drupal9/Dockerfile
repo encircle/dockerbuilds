@@ -45,7 +45,7 @@ apk add --no-cache --virtual .build-deps \
  curl 'https://pecl.php.net/get/redis-5.3.7.tgz' -o redis-5.3.7.tgz; \
  pecl install -o -f redis-5.3.7.tgz; \
  docker-php-ext-enable redis; \
- rm -rf redis-5.3.7.tgz; \  
+ rm -rf redis-5.3.7.tgz; \
 # xdebug
  curl 'https://pecl.php.net/get/xdebug-3.2.0.tgz' -o xdebug-3.2.0.tgz;\
  pecl install -o -f xdebug-3.1.3.tgz; \
@@ -129,7 +129,10 @@ RUN apk add --no-cache mariadb-client
 # admin packages
 RUN apk add --no-cache git nano bash
 
-# upgrade packages
+# install node, npm, and sass package
+RUN apk add --no-cache nodejs npm && npm install -g sass
+
+ upgrade packages
 RUN apk update \
  && apk upgrade
 
