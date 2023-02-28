@@ -130,7 +130,9 @@ RUN apk add --no-cache mariadb-client
 RUN apk add --no-cache git nano bash
 
 # install node, npm, and sass package
-RUN apk add --no-cache nodejs npm && npm install -g sass
+RUN apk add --no-cache nodejs npm
+
+RUN npm install -g sass
 
  upgrade packages
 RUN apk update \
