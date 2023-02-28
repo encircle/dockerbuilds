@@ -14,7 +14,6 @@ RUN set -eux; \
 		libzip-dev \
 # postgresql-dev is needed for https://bugs.alpinelinux.org/issues/3642
 		postgresql-dev \
-		openssh \
 	; \
 	\
 	docker-php-ext-configure gd --with-freetype --with-jpeg\
@@ -133,7 +132,8 @@ RUN apk add --no-cache git nano bash
 RUN apk add --no-cache nodejs npm
 
 RUN npm install -g sass
-
+# neede for git
+RUN apk add --no-cache openssh
 # upgrade packages
 RUN apk update \
  && apk upgrade
