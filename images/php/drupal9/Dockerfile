@@ -134,7 +134,7 @@ RUN apk add --no-cache nodejs npm
 
 RUN npm install -g sass
 
- upgrade packages
+# upgrade packages
 RUN apk update \
  && apk upgrade
 
