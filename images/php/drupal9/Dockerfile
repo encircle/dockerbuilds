@@ -109,6 +109,7 @@ RUN set -eux;\
 RUN apk add --no-cache --virtual .build-deps shadow;\
             usermod -u 10013 www-data;\
             groupmod -g 10013 www-data;\
+            usemod --shell /bin/ash;\
             apk del shadow
 
 # directory for composer drupal project
