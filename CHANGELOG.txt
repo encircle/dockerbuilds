@@ -464,3 +464,7 @@ v1.6.29
 v1.6.30
 ======
 rebuild only, no code changes
+
+v1.6.30
+======
+- Drupal 9.4.12
