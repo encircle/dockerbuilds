@@ -125,6 +125,8 @@ RUN chmod 755 /usr/local/bin/permissions.sh \
 # mysql package for drush
 RUN apk add --no-cache mariadb-client
 
+RUN ln -s /usr/bin/drush /var/src/drupal/site/vendor/bin/drush
+
 # admin packages
 RUN apk add --no-cache git nano bash
 
