@@ -44,6 +44,10 @@ function drupal_update() {
     composer require "drupal/core-composer-scaffold:=${DRUPAL_VERSION}" --with-all-dependencies
     composer require "drupal/core-project-message:=${DRUPAL_VERSION}" --with-all-dependencies
     composer require "drupal/core-recommended:=${DRUPAL_VERSION}" --with-all-dependencies
+    composer require "civicrm/civicrm-core:~5.42",
+    composer require "civicrm/civicrm-drupal-8:~5.42",
+    composer require "civicrm/civicrm-packages:~5.42",
+    composer require "civicrm/cv:^0.3.40",
     $INSTALL_DIR/site/vendor/bin/drush updatedb -y
     ${INSTALL_DIR}/site/vendor/bin/drush cache:rebuild
   fi 
