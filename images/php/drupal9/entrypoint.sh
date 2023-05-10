@@ -51,7 +51,7 @@ function drupal_update() {
 
   volume_civi_version=${composer show 'civicrm/civicrm-core' | sed -n '/versions/s/^[^0-9]\+\([^,]\+\).*$/\1/p'}
   image_civi_version=$CIVICRM_VERSION
-  if [[ $volumevolume_civi_version_version != $image_civi_version ]]; then
+  if [[ $volume_civi_version_version != $image_civi_version ]]; then
     composer require "civicrm/civicrm-core:${CIVICRM_VERSION}"
     composer require "civicrm/civicrm-drupal-8:${CIVICRM_VERSION}"
     composer require "civicrm/civicrm-packages:${CIVICRM_VERSION}"
