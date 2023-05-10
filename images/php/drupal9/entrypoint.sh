@@ -56,6 +56,8 @@ function drupal_update() {
     composer require "civicrm/civicrm-drupal-8:${CIVICRM_VERSION}"
     composer require "civicrm/civicrm-packages:${CIVICRM_VERSION}"
     composer require "civicrm/cv:^0.3.40"
+    cv upgrade-db
+    cv ext:upgrade-db
   fi
 }
 
