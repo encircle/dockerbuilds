@@ -133,7 +133,7 @@ RUN curl -LsS https://download.civicrm.org/civix/civix.phar -o /usr/local/bin/ci
  && chmod +x /usr/local/bin/civix
 
 # admin packages
-RUN apk add --no-cache git nano bash
+RUN apk add --no-cache git nano bash zip
 
 # install node, npm, and sass package
 RUN apk add --no-cache nodejs npm
