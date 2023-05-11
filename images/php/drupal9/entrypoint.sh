@@ -40,7 +40,7 @@ function drupal_update() {
   volume_version=$($INSTALL_DIR/site/vendor/bin/drush status | grep 'Drupal version' | awk '{print $4}')
   image_version=$DRUPAL_VERSION
 
-  if [[ $volume_version != $image_version ]]; then
+  if [[ "$volume_version" != "$image_version" ]]; then
     composer require "drupal/core-composer-scaffold:=${DRUPAL_VERSION}" --with-all-dependencies
     composer require "drupal/core-project-message:=${DRUPAL_VERSION}" --with-all-dependencies
     composer require "drupal/core-recommended:=${DRUPAL_VERSION}" --with-all-dependencies
@@ -51,7 +51,7 @@ function drupal_update() {
 
   volume_civi_version=$(composer show 'civicrm/civicrm-core' | sed -n '/versions/s/^[^0-9]\+\([^,]\+\).*$/\1/p')
   image_civi_version=$CIVICRM_VERSION
-  if [[ $volume_civi_version_version != $image_civi_version ]]; then
+  if [[ "$volume_civi_version" != "$image_civi_version" ]]; then
 
     # if we are using an esr release - add civicrm gitlab repo
     if [[ "$CIVICRM_VERSION" == *-esr ]]; then
