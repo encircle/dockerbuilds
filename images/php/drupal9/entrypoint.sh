@@ -52,6 +52,13 @@ function drupal_update() {
   volume_civi_version=$(composer show 'civicrm/civicrm-core' | sed -n '/versions/s/^[^0-9]\+\([^,]\+\).*$/\1/p')
   image_civi_version=$CIVICRM_VERSION
   if [[ $volume_civi_version_version != $image_civi_version ]]; then
+
+    # if we are using an esr release - add civicrm gitlab repo
+    if [[ "$CIVICRM_VERSION" == *-esr ]]; then
+      composer config esr-core vcs git@lab.civicrm.org:esr/core.git
+      composer config esr-packages vcs git@lab.civicrm.org:esr/packages.git
+      composer config esr-drupal-8 vcs git@lab.civicrm.org:esr/esr-drupal-8.git
+    fi
     composer require "civicrm/civicrm-core:${CIVICRM_VERSION}"
     composer require "civicrm/civicrm-drupal-8:${CIVICRM_VERSION}"
     composer require "civicrm/civicrm-packages:${CIVICRM_VERSION}"
