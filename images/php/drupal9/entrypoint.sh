@@ -55,15 +55,14 @@ function drupal_update() {
 
     # if we are using an esr release - add civicrm gitlab repo
     if [[ "$CIVICRM_VERSION" == *-esr ]]; then
+      ssh -o "StrictHostKeyChecking no" git@lab.civicrm.org
       composer config esr-core vcs git@lab.civicrm.org:esr/core.git
       composer config esr-packages vcs git@lab.civicrm.org:esr/packages.git
       composer config esr-drupal-8 vcs git@lab.civicrm.org:esr/esr-drupal-8.git
     fi
-    composer require "civicrm/civicrm-core:${CIVICRM_VERSION}"
-    composer require "civicrm/civicrm-drupal-8:${CIVICRM_VERSION}"
-    composer require "civicrm/civicrm-packages:${CIVICRM_VERSION}"
+    composer require "civicrm/civicrm-core:${CIVICRM_VERSION}" "civicrm/civicrm-drupal-8:${CIVICRM_VERSION}" "civicrm/civicrm-packages:${CIVICRM_VERSION}" -W
     composer require "civicrm/cv:^0.3.40"
-    cv upgrade-db
+    cv upgrade:db
     cv ext:upgrade-db
   fi
 }
