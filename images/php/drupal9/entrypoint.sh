@@ -55,7 +55,7 @@ function drupal_update() {
 
     # if we are using an esr release - add civicrm gitlab repo
     if [[ "$CIVICRM_VERSION" == *-esr ]]; then
-      ssh -o "StrictHostKeyChecking no" git@lab.civicrm.org
+      ssh-keyscan -H lab.civicrm.org > ~/.ssh/known_hosts
       composer config repositories.esr-core vcs git@lab.civicrm.org:esr/core.git
       composer config repositories.esr-packages vcs git@lab.civicrm.org:esr/packages.git
       composer config repositories.esr-drupal-8 vcs git@lab.civicrm.org:esr/drupal-8.git
