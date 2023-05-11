@@ -54,7 +54,7 @@ function drupal_update() {
   if [[ "$volume_civi_version" != $image_civi_version ]]; then
 
     # if we are using an esr release - add civicrm gitlab repo
-    if [[ "$CIVICRM_VERSION" == *-esr ]]; then
+    if [[ "$CIVICRM_VERSION" = *-esr ]]; then
       ssh-keyscan -H lab.civicrm.org > ~/.ssh/known_hosts
       composer config repositories.esr-core vcs git@lab.civicrm.org:esr/core.git
       composer config repositories.esr-packages vcs git@lab.civicrm.org:esr/packages.git
