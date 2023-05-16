@@ -39,8 +39,7 @@ RUN set -eux; \
 
 RUN set -eux;\
 # build tools
-apk add --no-cache --virtual .build-deps \
-            autoconf g++ make; \
+apk add --no-cache --virtual .build-deps autoconf g++ make;
 # redis
  curl 'https://pecl.php.net/get/redis-5.3.7.tgz' -o redis-5.3.7.tgz; \
  pecl install -o -f redis-5.3.7.tgz; \
@@ -48,9 +47,9 @@ apk add --no-cache --virtual .build-deps \
  rm -rf redis-5.3.7.tgz; \
 # xdebug
  curl 'https://pecl.php.net/get/xdebug-3.2.0.tgz' -o xdebug-3.2.0.tgz;\
- pecl install -o -f xdebug-3.1.3.tgz; \
+ pecl install -o -f xdebug-3.2.0.tgz; \
  docker-php-ext-enable xdebug; \
- rm -rf xdebug-3.1.3.tgz; \
+ rm -rf xdebug-3.2.0.tgz; \
 # memcache
 apk add --no-cache \
         libpq \

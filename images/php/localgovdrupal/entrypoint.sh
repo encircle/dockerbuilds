@@ -23,11 +23,16 @@ function drupal_install() {
   chown root:www-data site
   chown -R www-data:www-data $INSTALL_DIR/site/web/sites $INSTALL_DIR/site/web/modules $INSTALL_DIR/site/web/themes
 
-  #cd $INSTALL_DIR/site
-  composer require -n drush/drush:^11.5 -W
-
+  cd $INSTALL_DIR/site
+  composer config -n --no-plugins allow-plugins.civicrm/civicrm-asset-plugin true
+  composer config -n --no-plugins allow-plugins.drupal/core-composer-scaffold true
+  composer config -n --no-plugins allow-plugins.drupal/core-project-message true
+  composer config -n --no-plugins allow-plugins.drupal/core-recommended true
+  # drush comes with localgovdrupal distro
+  #composer require -n drush/drush:^11.5
+  
   cp $INSTALL_DIR/site/web/sites/default/default.settings.php $INSTALL_DIR/site/web/sites/default/settings.php
-  yes | $INSTALL_DIR/site/vendor/bin/drush site-install standard install_configure_form.update_status_module='array(FALSE,FALSE)'\
+  yes | drush site-install standard install_configure_form.update_status_module='array(FALSE,FALSE)'\
     --db-url="mysql://${MYSQL_USER}:${MYSQL_PASSWORD}@${DB_HOST}/${MYSQL_DATABASE}"\
     --site-name="${TITLE}"\
     --account-name="${ADMIN_USER}"\
@@ -36,19 +41,27 @@ function drupal_install() {
 }
 
 function drupal_update() {
+  LOCALGOVDRUPAL_VERSION=2.3.15
+  localgovdrupal_image_version=$LOCALGOVDRUPAL_VERSION
+  localgovdrupal_version=$(composer show 'localgovdrupal/localgov' | sed -n '/versions/s/^[^0-9]\+\([^,]\+\).*$/\1/p')
 
-  volume_version=$($INSTALL_DIR/site/vendor/bin/drush status | grep 'Drupal version' | awk '{print $4}')
+  if [[ "$localgovdrupal_version" != $localgovdrupal_image_version ]]; then
+    composer require "localgovdrupal/localgov:=${DRUPAL_VERSION}" --with-all-dependencies
+  fi
+
+
+  volume_version=$(drush status | grep 'Drupal version' | awk '{print $4}')
   image_version=$DRUPAL_VERSION
 
   if [[ "$volume_version" != $image_version ]]; then
     composer require "drupal/core-composer-scaffold:=${DRUPAL_VERSION}" --with-all-dependencies
     composer require "drupal/core-project-message:=${DRUPAL_VERSION}" --with-all-dependencies
-    composer require "drupal/core-recommended:=${DRUPAL_VERSION}" --with-all-dependencies
-
-    $INSTALL_DIR/site/vendor/bin/drush updatedb -y
-    ${INSTALL_DIR}/site/vendor/bin/drush cache:rebuild
+    composer require "drupal/core-recommended:=${DRUPAL_VERSION}" --with-all-dependencies   
   fi
 
+  drush updatedb -y
+  drush cache:rebuild
+  
   volume_civi_version=$(composer show 'civicrm/civicrm-core' | sed -n '/versions/s/^[^0-9]\+\([^,]\+\).*$/\1/p')
   image_civi_version=$CIVICRM_VERSION
   if [[ "$volume_civi_version" != $image_civi_version ]]; then
@@ -60,7 +73,7 @@ function drupal_update() {
       composer config repositories.esr-packages vcs git@lab.civicrm.org:esr/packages.git
       composer config repositories.esr-drupal-8 vcs git@lab.civicrm.org:esr/drupal-8.git
     fi
-    composer config -n --no-plugins allow-plugins.civicrm/civicrm-asset-plugin true
+    
     #composer require -n "civicrm/civicrm-core:${CIVICRM_VERSION}" "civicrm/civicrm-drupal-8:${CIVICRM_VERSION}" "civicrm/civicrm-packages:${CIVICRM_VERSION}" -W
     #composer require -n "civicrm/cv:^0.3.40"
     #cv upgrade:db || true
