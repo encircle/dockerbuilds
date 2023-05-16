@@ -24,7 +24,7 @@ function drupal_install() {
   chown -R www-data:www-data $INSTALL_DIR/site/web/sites $INSTALL_DIR/site/web/modules $INSTALL_DIR/site/web/themes
 
   cd $INSTALL_DIR/site
-  composer require drush/drush:~10
+  composer require drush/drush
 
   cp $INSTALL_DIR/site/web/sites/default/default.settings.php $INSTALL_DIR/site/web/sites/default/settings.php
   yes | $INSTALL_DIR/site/vendor/bin/drush site-install standard install_configure_form.update_status_module='array(FALSE,FALSE)'\
