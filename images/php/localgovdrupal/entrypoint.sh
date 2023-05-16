@@ -23,8 +23,8 @@ function drupal_install() {
   chown root:www-data site
   chown -R www-data:www-data $INSTALL_DIR/site/web/sites $INSTALL_DIR/site/web/modules $INSTALL_DIR/site/web/themes
 
-  cd $INSTALL_DIR/site
-  composer require drush/drush
+  #cd $INSTALL_DIR/site
+  composer require -n drush/drush:^11.5 -W
 
   cp $INSTALL_DIR/site/web/sites/default/default.settings.php $INSTALL_DIR/site/web/sites/default/settings.php
   yes | $INSTALL_DIR/site/vendor/bin/drush site-install standard install_configure_form.update_status_module='array(FALSE,FALSE)'\
@@ -60,10 +60,11 @@ function drupal_update() {
       composer config repositories.esr-packages vcs git@lab.civicrm.org:esr/packages.git
       composer config repositories.esr-drupal-8 vcs git@lab.civicrm.org:esr/drupal-8.git
     fi
-    composer require "civicrm/civicrm-core:${CIVICRM_VERSION}" "civicrm/civicrm-drupal-8:${CIVICRM_VERSION}" "civicrm/civicrm-packages:${CIVICRM_VERSION}" -W
-    composer require "civicrm/cv:^0.3.40"
-    cv upgrade:db
-    cv ext:upgrade-db
+    composer config -n --no-plugins allow-plugins.civicrm/civicrm-asset-plugin true
+    #composer require -n "civicrm/civicrm-core:${CIVICRM_VERSION}" "civicrm/civicrm-drupal-8:${CIVICRM_VERSION}" "civicrm/civicrm-packages:${CIVICRM_VERSION}" -W
+    #composer require -n "civicrm/cv:^0.3.40"
+    #cv upgrade:db || true
+    #cv ext:upgrade-db || true
   fi
 }
 
