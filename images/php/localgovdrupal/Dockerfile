@@ -126,7 +126,7 @@ RUN chmod 755 /usr/local/bin/permissions.sh \
 # mysql package for drush
 RUN apk add --no-cache mariadb-client
 
-RUN ln -s /var/src/drupal/site/vendor/bin/drush /usr/local/bin/drush || true
+RUN ln -s /var/src/drupal/site/vendor/drush/drush/drush /usr/local/bin/drush || true
 RUN ln -s /var/src/drupal/site/vendor/bin/cv /usr/local/bin/cv || true
 
 #install civix
