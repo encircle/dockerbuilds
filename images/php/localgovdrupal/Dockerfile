@@ -128,7 +128,7 @@ RUN chmod 755 /usr/local/bin/permissions.sh \
 RUN apk add --no-cache mariadb-client
 
 RUN ln -s /var/src/drupal/site/vendor/drush/drush/drush /usr/local/bin/drush || true
-RUN ln -s /var/src/drupal/site/vendor/bin/cv /usr/local/bin/cv || true
+RUN ln -s /var/src/drupal/site/vendor/civicrm/cv/bin/cv /usr/local/bin/cv || true
 
 #install civix
 RUN curl -LsS https://download.civicrm.org/civix/civix.phar -o /usr/local/bin/civix \
