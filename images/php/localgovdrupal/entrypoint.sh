@@ -25,9 +25,16 @@ function drupal_install() {
 
   cd $INSTALL_DIR/site
   composer config -n --no-plugins allow-plugins.civicrm/civicrm-asset-plugin true
+  composer config --no-plugins allow-plugins.civicrm/composer-downloads-plugin true
+  composer config --no-plugins allow-plugins.civicrm/composer-compile-plugin true
+  composer config extra.compile-mode all
+  composer config extra.compile-mode whitelist
+  composer config extra.compile-mode none
+  
   composer config -n --no-plugins allow-plugins.drupal/core-composer-scaffold true
   composer config -n --no-plugins allow-plugins.drupal/core-project-message true
   composer config -n --no-plugins allow-plugins.drupal/core-recommended true
+
   # drush comes with localgovdrupal distro
   #composer require -n drush/drush:^11.5
   
@@ -74,8 +81,10 @@ function drupal_update() {
       composer config repositories.esr-drupal-8 vcs git@lab.civicrm.org:esr/drupal-8.git
     fi
     
-    #composer require -n "civicrm/civicrm-core:${CIVICRM_VERSION}" "civicrm/civicrm-drupal-8:${CIVICRM_VERSION}" "civicrm/civicrm-packages:${CIVICRM_VERSION}" -W
+    #composer require -n "civicrm/civicrm-{core,drupal-8,packages,asset-plugin}:${CIVICRM_VERSION}" -W
     #composer require -n "civicrm/cv:^0.3.40"
+    #TODO - need this in composer.json - "compile-whitelist": ["civicrm/civicrm-core", "civicrm/composer-compile-lib"]
+    #TODO - https://lab.civicrm.org/dev/civicrm-asset-plugin
     #cv upgrade:db || true
     #cv ext:upgrade-db || true
   fi
@@ -125,3 +134,4 @@ function main() {
 }
 
 main
+
