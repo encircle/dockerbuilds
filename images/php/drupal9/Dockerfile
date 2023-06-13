@@ -40,7 +40,7 @@ RUN set -eux; \
 
 RUN set -eux;\
 # build tools
-apk add --no-cache --virtual .build-deps autoconf g++ make;
+ apk add --no-cache --virtual .build-deps autoconf g++ make; \
 # redis
  curl 'https://pecl.php.net/get/redis-5.3.7.tgz' -o redis-5.3.7.tgz; \
  pecl install -o -f redis-5.3.7.tgz; \
