@@ -1,8 +1,8 @@
-# Drupal 9
+# Drupal 10
 
-This readme is for the encircle Drupal 9 image.
+This readme is for the encircle Drupal 10 image.
 
-The image is Drupal 7 on the official PHP alpine image, packaged with Composer and Drush.
+The image is Drupal 10 on the official PHP alpine image, packaged with Composer and Drush.
 
 Installations/upgrades are automated, if no site is present a new one will be installed.
 
