@@ -12,7 +12,15 @@ If a site is present (through a persistent mount), the version will be checked a
 
 **SITE**: Space seperated domains, the first of which is used for sendmail From address (noreply@$domain)
 
+**TITLE**: Site title for new installs
+
+**ADMIN_USER**: Admin username for new installs
+
+**ADMIN_PASSWORD**: Admin password for new installs
+
 **DB_HOST**: Database host for Drupal
+
+**CIVI**: False by default, If set to true, the container will install civicrm, if you are using the ESR release in the Dockerfile then you need to mount a folder for the civilab ssh keys
 
 ## Upgrade Drupal Version
 
