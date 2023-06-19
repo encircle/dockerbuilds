@@ -13,18 +13,72 @@ function drupal_installed() {
 
 }
 
-function drupal_install() {
+function civi_installed() {
 
+  [[ -f $INSTALL_DIR/site/vendor/civicrm/civicrm-core/civicrm-version.php ]]
+
+}
+
+function civi_install(){
+  set -eux
+
+  # if we are using an esr release - add civicrm gitlab repo
+  if [[ "$CIVICRM_VERSION" = *+esr ]]; then
+    ssh-keyscan -H lab.civicrm.org > ~/.ssh/known_hosts
+    composer config repositories.esr-core vcs git@lab.civicrm.org:esr/core.git
+    composer config repositories.esr-packages vcs git@lab.civicrm.org:esr/packages.git
+    composer config repositories.esr-drupal-8 vcs git@lab.civicrm.org:esr/drupal-8.git
+  fi
+
+  #civi requirements
+  composer config extra.enable-patching true
+  composer config minimum-stability dev
+  composer remove drush/drush
+  composer config --no-plugins allow-plugins.cweagans/composer-patches true
+  composer config --no-plugins allow-plugins.civicrm/civicrm-asset-plugin true
+  composer config --no-plugins allow-plugins.civicrm/composer-downloads-plugin true
+  composer config --no-plugins allow-plugins.civicrm/composer-compile-plugin true
+  composer config extra.compile-mode all
+  composer require civicrm/civicrm-{core,packages,drupal-8}:"${CIVICRM_VERSION}"
+  composer require drush/drush
+ 
+  #civi install onto site
+  cv core:install --cms-base-url="https://${SITE}" --lang="en_GB"
+  cv upgrade:db
+  cv ext:upgrade-db
+}
+
+function civi_update(){
+  volume_civi_version=$(composer show 'civicrm/civicrm-core' | sed -n '/versions/s/^[^0-9]\+\([^,]\+\).*$/\1/p')
+  image_civi_version=$CIVICRM_VERSION
+
+  if [[ "$volume_civi_version" != $image_civi_version ]]; then
+
+    # if we are using an esr release - add civicrm gitlab repo
+    if [[ "$CIVICRM_VERSION" = *+esr ]]; then
+      ssh-keyscan -H lab.civicrm.org > ~/.ssh/known_hosts
+      composer config repositories.esr-core vcs git@lab.civicrm.org:esr/core.git
+      composer config repositories.esr-packages vcs git@lab.civicrm.org:esr/packages.git
+      composer config repositories.esr-drupal-8 vcs git@lab.civicrm.org:esr/drupal-8.git
+    fi
+
+    composer require civicrm/civicrm-{core,packages,drupal-8}:"${CIVICRM_VERSION}" -W
+    cv upgrade:db
+    cv ext:upgrade-db
+  fi
+}
+
+function drupal_install() {
   set -eux
 
   cd $INSTALL_DIR
-  composer create-project drupal/recommended-project site
+  composer create-project drupal/recommended-project:$DRUPAL_VERSION site
   chmod 750 $INSTALL_DIR/site
   chown root:www-data site
   chown -R www-data:www-data $INSTALL_DIR/site/web/sites $INSTALL_DIR/site/web/modules $INSTALL_DIR/site/web/themes
 
   cd $INSTALL_DIR/site
-  composer require drush/drush:~10
+  composer require drush/drush
 
   cp $INSTALL_DIR/site/web/sites/default/default.settings.php $INSTALL_DIR/site/web/sites/default/settings.php
   yes | $INSTALL_DIR/site/vendor/bin/drush site-install standard install_configure_form.update_status_module='array(FALSE,FALSE)'\
@@ -33,10 +87,13 @@ function drupal_install() {
     --account-name="${ADMIN_USER}"\
     --account-pass="${ADMIN_PASSWORD}"
 
+  #turn off preprocessors
+  drush -y config-set system.performance css.preprocess 0
+  drush -y config-set system.performance js.preprocess 0
+
 }
 
 function drupal_update() {
-
   volume_version=$($INSTALL_DIR/site/vendor/bin/drush status | grep 'Drupal version' | awk '{print $4}')
   image_version=$DRUPAL_VERSION
 
@@ -47,23 +104,6 @@ function drupal_update() {
 
     $INSTALL_DIR/site/vendor/bin/drush updatedb -y
     ${INSTALL_DIR}/site/vendor/bin/drush cache:rebuild
-  fi
-
-  volume_civi_version=$(composer show 'civicrm/civicrm-core' | sed -n '/versions/s/^[^0-9]\+\([^,]\+\).*$/\1/p')
-  image_civi_version=$CIVICRM_VERSION
-  if [[ "$volume_civi_version" != $image_civi_version ]]; then
-
-    # if we are using an esr release - add civicrm gitlab repo
-    if [[ "$CIVICRM_VERSION" = *+esr ]]; then
-      ssh-keyscan -H lab.civicrm.org > ~/.ssh/known_hosts
-      composer config repositories.esr-core vcs git@lab.civicrm.org:esr/core.git
-      composer config repositories.esr-packages vcs git@lab.civicrm.org:esr/packages.git
-      composer config repositories.esr-drupal-8 vcs git@lab.civicrm.org:esr/drupal-8.git
-    fi
-    composer require "civicrm/civicrm-core:${CIVICRM_VERSION}" "civicrm/civicrm-drupal-8:${CIVICRM_VERSION}" "civicrm/civicrm-packages:${CIVICRM_VERSION}" -W
-    composer require "civicrm/cv:^0.3.40"
-    cv upgrade:db
-    cv ext:upgrade-db
   fi
 }
 
@@ -82,6 +122,7 @@ function main() {
 
   INSTALL_DIR=/var/src/drupal
   WEBROOT=/var/www/html/site/web
+  
 
   configure_postfix
 
@@ -99,6 +140,13 @@ function main() {
 
   # check/apply update if installed
   drupal_installed && drupal_update
+
+  civi=${CIVI:-False}
+  if [ "$civi" = true ]; then
+    civi_installed || civi_install
+
+    civi_installed && civi_update
+  fi
 
   webroot_setup
 

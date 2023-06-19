@@ -39,9 +39,8 @@ function civi_install(){
   composer config --no-plugins allow-plugins.civicrm/composer-downloads-plugin true
   composer config --no-plugins allow-plugins.civicrm/composer-compile-plugin true
   composer config extra.compile-mode all
-  composer require civicrm/civicrm-{core,packages,drupal-8}:"${CIVICRM_VERSION}" -W
+  composer require civicrm/civicrm-{core,packages,drupal-8}:"${CIVICRM_VERSION}"
   composer require drush/drush
-  composer require "civicrm/cv:^0.3.40"
 
   #civi install onto site
   cv core:install --cms-base-url="https://${SITE}" --lang="en_GB"
@@ -64,7 +63,6 @@ function civi_update(){
     fi
 
     composer require civicrm/civicrm-{core,packages,drupal-8}:"${CIVICRM_VERSION}" -W
-    composer require "civicrm/cv:^0.3.40"
     cv upgrade:db
     cv ext:upgrade-db
   fi
@@ -80,7 +78,7 @@ function drupal_install() {
   chown -R www-data:www-data $INSTALL_DIR/site/web/sites $INSTALL_DIR/site/web/modules $INSTALL_DIR/site/web/themes
 
   cd $INSTALL_DIR/site
-  composer require drush/drush:~10
+  composer require drush/drush
 
   cp $INSTALL_DIR/site/web/sites/default/default.settings.php $INSTALL_DIR/site/web/sites/default/settings.php
   yes | $INSTALL_DIR/site/vendor/bin/drush site-install standard install_configure_form.update_status_module='array(FALSE,FALSE)'\
