@@ -1,8 +1,8 @@
 # Drupal 9
 
-This readme is for the encircle Drupal 9 image.
+This readme is for the encircle LocalGovDrupal image
 
-The image is Drupal 7 on the official PHP alpine image, packaged with Composer and Drush.
+The image is Drupal 9 on the official PHP alpine image, packaged with Composer and Drush.
 
 Installations/upgrades are automated, if no site is present a new one will be installed.
 
@@ -11,6 +11,12 @@ If a site is present (through a persistent mount), the version will be checked a
 ## Environment Variables
 
 **SITE**: Space seperated domains, the first of which is used for sendmail From address (noreply@$domain)
+
+**TITLE**: Site title for new installs
+
+**ADMIN_USER**: Admin username for new installs
+
+**ADMIN_PASSWORD**: Admin password for new installs
 
 **DB_HOST**: Database host for Drupal
 

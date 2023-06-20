@@ -2,8 +2,8 @@ FROM php:8.1-fpm-alpine
 
 ENV COMPOSER_MD5 340f0b7d000eeae67c619b4e3b3207a4
 ENV DRUPAL_VERSION 9.5.8
-ENV CIVICRM_VERSION 5.58.1
-ENV LOCALGOVDRUPAL_VERSION 2.3.15
+ENV CIVICRM_VERSION 5.62.1
+ENV LOCALGOVPROJECT_VERSION 2.0.9
 
 # install the PHP extensions we need
 RUN set -eux; \
@@ -128,7 +128,9 @@ RUN chmod 755 /usr/local/bin/permissions.sh \
 RUN apk add --no-cache mariadb-client
 
 RUN ln -s /var/src/drupal/site/vendor/drush/drush/drush /usr/local/bin/drush || true
-RUN ln -s /var/src/drupal/site/vendor/civicrm/cv/bin/cv /usr/local/bin/cv || true
+
+RUN curl -LsS https://download.civicrm.org/cv/cv.phar -o /usr/local/bin/cv
+RUN chmod +x /usr/local/bin/cv
 
 #install civix
 RUN curl -LsS https://download.civicrm.org/civix/civix.phar -o /usr/local/bin/civix \
@@ -148,7 +150,7 @@ RUN apk update \
  && apk upgrade
 
 # entrypoint
-COPY drupal9/entrypoint.sh /usr/local/bin/
+COPY localgovdrupal/entrypoint.sh /usr/local/bin/
 RUN chmod 755 /usr/local/bin/entrypoint.sh
 
 WORKDIR /var/src/drupal/site
