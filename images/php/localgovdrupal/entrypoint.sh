@@ -1,22 +1,16 @@
 set -x
 
 function configure_postfix() {
-
   DOMAIN=$(echo ${SITE} | awk -F ' ' '{ print $1 }')
   sed -i "s/\${SITE}/${DOMAIN}/g" /usr/local/etc/php/conf.d/postfix.ini
-
 }
 
 function drupal_installed() {
-
   [[ -f $INSTALL_DIR/site/web/sites/default/settings.php ]]
-
 }
 
 function civi_installed() {
-
   [[ -f $INSTALL_DIR/site/vendor/civicrm/civicrm-core/civicrm-version.php ]]
-
 }
 
 function civi_install(){
@@ -60,7 +54,7 @@ function civi_update(){
       composer config repositories.esr-drupal-8 vcs git@lab.civicrm.org:esr/drupal-8.git
     fi
 
-    composer require civicrm/civicrm-{core,packages,drupal-8}:"${CIVICRM_VERSION}" -W
+    composer require civicrm/civicrm-{core,packages,drupal-8}:"${CIVICRM_VERSION}" --with-all-dependencies
     cv upgrade:db
     cv ext:upgrade-db
   fi
@@ -72,60 +66,62 @@ function drupal_install() {
 
   #create project
   cd $INSTALL_DIR
-  composer create-project localgovdrupal/localgov-project:=$LOCALGOVPROJECT_VERSION site
+  composer create-project localgovdrupal/localgov-project site --no-install
+
+  #set the drupal version
+  cd $INSTALL_DIR/site
+  composer require "drupal/core-composer-scaffold:=${DRUPAL_VERSION}" --with-all-dependencies
+  composer require "drupal/core-project-message:=${DRUPAL_VERSION}" --with-all-dependencies
+  composer require "drupal/core-recommended:=${DRUPAL_VERSION}" --with-all-dependencies
+
+  #install dependencies
+  composer install
+  
   chmod 750 $INSTALL_DIR/site
-  chown root:www-data site
+  chown root:www-data $INSTALL_DIR/site
   chown -R www-data:www-data $INSTALL_DIR/site/web/sites $INSTALL_DIR/site/web/modules $INSTALL_DIR/site/web/themes
 
   #copy default settings file
   cp $INSTALL_DIR/site/web/sites/default/default.settings.php $INSTALL_DIR/site/web/sites/default/settings.php
 
   #install site
-  yes | /usr/local/bin/drush site-install localgov install_configure_form.enable_update_status_emails=NULL \
+  yes | drush site-install localgov install_configure_form.update_status_module='array(FALSE,FALSE)'\
     --db-url="mysql://${MYSQL_USER}:${MYSQL_PASSWORD}@${DB_HOST}/${MYSQL_DATABASE}"\
     --site-name="${TITLE}"\
     --account-name="${ADMIN_USER}"\
     --account-pass="${ADMIN_PASSWORD}"
 
-  #turn off preprocessors
+  #preprocessors
   drush -y config-set system.performance css.preprocess 0
   drush -y config-set system.performance js.preprocess 0
+  drush -y cache:rebuild
 }
 
 function drupal_update() {
-  # localgov_volume_version=$(composer show 'localgovdrupal/localgov' | sed -n '/versions/s/^[^0-9]\+\([^,]\+\).*$/\1/p')
-  # localgov_image_version=$LOCALGOVPROJECT_VERSION
-
-  # if [[ "$localgov_volume_version" != $localgov_image_version ]]; then
-  #   composer require "localgovdrupal/localgov:=${LOCALGOVPROJECT_VERSION}" --with-all-dependencies
-  # fi
-
+  cd $INSTALL_DIR/site
   volume_version=$(drush status | grep 'Drupal version' | awk '{print $4}')
   image_version=$DRUPAL_VERSION
 
-  # if [[ "$volume_version" != $image_version ]]; then
-  #   composer require "drupal/core-composer-scaffold:=${DRUPAL_VERSION}" --with-all-dependencies
-  #   composer require "drupal/core-project-message:=${DRUPAL_VERSION}" --with-all-dependencies
-  #   composer require "drupal/core-recommended:=${DRUPAL_VERSION}" --with-all-dependencies
+  if [[ "$volume_version" != $image_version ]]; then
+    composer require "drupal/core-composer-scaffold:=${DRUPAL_VERSION}" --with-all-dependencies
+    composer require "drupal/core-project-message:=${DRUPAL_VERSION}" --with-all-dependencies
+    composer require "drupal/core-recommended:=${DRUPAL_VERSION}" --with-all-dependencies
 
-  #   /usr/local/bin/drush updatedb -y
-  #   /usr/local/bin/drush cache:rebuild
-  # fi
+    drush -y updatedb
+    drush -y cache:rebuild
+  fi
 }
 
 function webroot_setup() {
-
   rm -rf /var/www/html
   ln -s $INSTALL_DIR /var/www/html
   chown -h root:www-data $WEBROOT/
   chown root:www-data $INSTALL_DIR/site/web
   chmod 750 $WEBROOT/
   chmod 750 $INSTALL_DIR/site/web
-
 }
 
 function main() {
-
   INSTALL_DIR=/var/src/drupal
   WEBROOT=/var/www/html/site/web
 
@@ -160,8 +156,6 @@ function main() {
 
   # start the daemon
   php-fpm
-
 }
 
 main
-

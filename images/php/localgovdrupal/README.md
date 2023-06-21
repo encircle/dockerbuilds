@@ -20,7 +20,7 @@ If a site is present (through a persistent mount), the version will be checked a
 
 **DB_HOST**: Database host for Drupal
 
-## Upgrade Drupal Version
+## Upgrade Drupal/CiviCRM Version
 
 To upgrade the Drupal version to a later Drupal 9 release, follow the below steps:
 
@@ -37,7 +37,7 @@ curl -fSL "https://ftp.drupal.org/files/projects/drupal-${DRUPAL_VERSION}.tar.gz
 md5sum drupal.tar.gz && rm drupal.tar.gz
 ```
 
-3. Update the Drupal version environment variable in the Dockerfile (towards the top)
+## Upgrade Drupal/CiviCRM Version
 
 ```
 vi Dockerfile
@@ -47,6 +47,10 @@ Change:
 
 ```
 ENV DRUPAL_VERSION 9.19
+```
+
+```
+ENV CIVICRM_VERSION 5.62 / 5.57.5+esr
 ```
 
 4. Update the Drupal MD5 hash in the Dockerfile
