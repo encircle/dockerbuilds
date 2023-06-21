@@ -1,8 +1,7 @@
 FROM php:8.1-fpm-alpine
 
 ENV COMPOSER_MD5 340f0b7d000eeae67c619b4e3b3207a4
-ENV DRUPAL_VERSION 9.5.8
-#ENV CIVICRM_VERSION 5.57.5+esr
+ENV DRUPAL_VERSION 9.5.9
 ENV CIVICRM_VERSION 5.62
 
 # install the PHP extensions we need
@@ -43,6 +42,7 @@ RUN set -eux;\
 # build tools
 apk add --no-cache --virtual .build-deps autoconf g++ make; \
 apk add --update linux-headers; \
+apk add openssh-client; \
 # redis
  curl 'https://pecl.php.net/get/redis-5.3.7.tgz' -o redis-5.3.7.tgz; \
  pecl install -o -f redis-5.3.7.tgz; \

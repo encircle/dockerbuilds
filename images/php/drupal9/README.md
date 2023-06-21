@@ -20,9 +20,9 @@ If a site is present (through a persistent mount), the version will be checked a
 
 **DB_HOST**: Database host for Drupal
 
-**CIVI**: False by default, If set to true, the container will install civicrm, if you are using the ESR release in the Dockerfile then you need to mount a folder for the civilab ssh keys
+**CIVI**: False by default, If set to true, the container will install civicrm, if you are using the ESR release in the Dockerfile then you need to mount a folder for the civilab ssh private key, e.g. - ./conf/ssh:/root/.ssh
 
-## Upgrade Drupal Version
+## Upgrade Drupal/CiviCRM Version
 
 To upgrade the Drupal version to a later Drupal 9 release, follow the below steps:
 
@@ -39,7 +39,7 @@ curl -fSL "https://ftp.drupal.org/files/projects/drupal-${DRUPAL_VERSION}.tar.gz
 md5sum drupal.tar.gz && rm drupal.tar.gz
 ```
 
-3. Update the Drupal version environment variable in the Dockerfile (towards the top)
+3. Update the Drupal and/or the civi version environment variable in the Dockerfile (towards the top)
 
 ```
 vi Dockerfile
@@ -49,6 +49,10 @@ Change:
 
 ```
 ENV DRUPAL_VERSION 9.19
+```
+
+```
+ENV CIVICRM_VERSION 5.62 / 5.57.5+esr
 ```
 
 4. Update the Drupal MD5 hash in the Dockerfile
