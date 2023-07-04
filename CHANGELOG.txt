@@ -465,6 +465,20 @@ v1.6.30
 ======
 rebuild only, no code changes
 
-v1.6.30
+v1.6.31
 ======
 - Drupal 9.4.12
+
+v1.6.32
+======
+- Wordpress 6 update
+
+v1.6.33
+======
+Drupal 7 update
+
+v1.6.34
+======
+Drupal 9 update
+Wordpress update
+Wordpress 6 update
