@@ -1,6 +1,6 @@
 FROM php:8.1-fpm-alpine
 
-ENV COMPOSER_MD5 340f0b7d000eeae67c619b4e3b3207a4
+ENV COMPOSER_SHA384 e21205b207c3ff031906575712edab6f13eb0b361f2085f1f1237b7126d785e826a450292b6cfd1d64d92e6563bbde02
 ENV DRUPAL_VERSION 10.0.9
 ENV CIVICRM_VERSION 5.62.1
 
@@ -42,6 +42,7 @@ RUN set -eux;\
 # build tools
 apk add --no-cache --virtual .build-deps autoconf g++ make; \
 apk add --update linux-headers; \
+apk add openssh-client; \
 
 # redis
  curl 'https://pecl.php.net/get/redis-5.3.7.tgz' -o redis-5.3.7.tgz; \
@@ -103,7 +104,7 @@ COPY conf/www.conf /usr/local/etc/php-fpm.d/www.conf
 # composer
 RUN set -eux;\
   php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');";\
-  echo "${COMPOSER_MD5} *composer-setup.php" | md5sum -c -;\
+  php -r "if (hash_file('sha384', 'composer-setup.php') === '${COMPOSER_SHA384}') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" \
   php composer-setup.php --install-dir=/usr/local/bin --filename=composer --quiet;\
   rm composer-setup.php
 
