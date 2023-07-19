@@ -80,29 +80,25 @@ function drupal_install() {
   composer require drush/drush
 
   cp $INSTALL_DIR/site/web/sites/default/default.settings.php $INSTALL_DIR/site/web/sites/default/settings.php
-  yes | drush site-install standard install_configure_form.update_status_module='array(FALSE,FALSE)'\
+  yes | $INSTALL_DIR/site/vendor/bin/drush site-install standard install_configure_form.update_status_module='array(FALSE,FALSE)'\
     --db-url="mysql://${MYSQL_USER}:${MYSQL_PASSWORD}@${DB_HOST}/${MYSQL_DATABASE}"\
     --site-name="${TITLE}"\
     --account-name="${ADMIN_USER}"\
     --account-pass="${ADMIN_PASSWORD}"
-
-  #turn off preprocessors
-  drush -y config-set system.performance css.preprocess 0
-  drush -y config-set system.performance js.preprocess 0
-  drush -y cache:rebuild
 }
 
 function drupal_update() {
-  volume_version=$(drush status | grep 'Drupal version' | awk '{print $4}')
+  volume_version=$($INSTALL_DIR/site/vendor/bin/drush status | grep 'Drupal version' | awk '{print $4}')
   image_version=$DRUPAL_VERSION
 
   if [[ "$volume_version" != $image_version ]]; then
+    composer config extra.compile-mode all
     composer require "drupal/core-composer-scaffold:=${DRUPAL_VERSION}" --with-all-dependencies
     composer require "drupal/core-project-message:=${DRUPAL_VERSION}" --with-all-dependencies
     composer require "drupal/core-recommended:=${DRUPAL_VERSION}" --with-all-dependencies
 
-    drush updatedb -y
-    drush cache:rebuild
+    $INSTALL_DIR/site/vendor/bin/drush updatedb -y
+    $INSTALL_DIR/site/vendor/bin/drush cache:rebuild
   fi
 }
 

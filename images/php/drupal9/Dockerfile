@@ -104,8 +104,8 @@ COPY conf/www.conf /usr/local/etc/php-fpm.d/www.conf
 # composer
 RUN set -eux;\
   php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');";\
-  php -r "if (hash_file('sha384', 'composer-setup.php') === '${COMPOSER_SHA384}') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" \
-  php composer-setup.php --install-dir=/usr/local/bin --filename=composer --quiet;\
+  php -r "if (hash_file('sha384', 'composer-setup.php') === '${COMPOSER_SHA384}') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); };" \
+  && php composer-setup.php --install-dir=/usr/local/bin --filename=composer --quiet;\
   rm composer-setup.php
 
 # user accounts
