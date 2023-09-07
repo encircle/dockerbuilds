@@ -486,3 +486,7 @@ Wordpress 6 update
 v1.6.35
 ======
 Rebuild only
+
+v1.6.36
+======
+Drupal 9.4.15 - 9.5.10

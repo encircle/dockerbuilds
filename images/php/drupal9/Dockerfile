@@ -1,7 +1,7 @@
 FROM php:7.4-fpm-alpine
 
 ENV COMPOSER_MD5 1ed7f4591e495065b399986d3da25b9f
-ENV DRUPAL_VERSION 9.4.15
+ENV DRUPAL_VERSION 9.5.10
 
 # install the PHP extensions we need
 RUN set -eux; \
