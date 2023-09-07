@@ -482,3 +482,7 @@ v1.6.34
 Drupal 9 update
 Wordpress update
 Wordpress 6 update
+
+v1.6.35
+======
+Rebuild only
