@@ -1,8 +1,8 @@
 # Drupal 9
 
-This readme is for the encircle Drupal 9 image.
+This readme is for the encircle LocalGovDrupal image
 
-The image is Drupal 7 on the official PHP alpine image, packaged with Composer and Drush.
+The image is Drupal 9 on the official PHP alpine image, packaged with Composer and Drush.
 
 Installations/upgrades are automated, if no site is present a new one will be installed.
 
@@ -19,8 +19,6 @@ If a site is present (through a persistent mount), the version will be checked a
 **ADMIN_PASSWORD**: Admin password for new installs
 
 **DB_HOST**: Database host for Drupal
-
-**CIVI**: False by default, If set to true, the container will install civicrm, if you are using the ESR release in the Dockerfile then you need to mount a folder for the civilab ssh private key, e.g. - ./conf/ssh:/root/.ssh
 
 ## Upgrade Drupal/CiviCRM Version
 
@@ -39,7 +37,7 @@ curl -fSL "https://ftp.drupal.org/files/projects/drupal-${DRUPAL_VERSION}.tar.gz
 md5sum drupal.tar.gz && rm drupal.tar.gz
 ```
 
-3. Update the Drupal and/or the civi version environment variable in the Dockerfile (towards the top)
+## Upgrade Drupal/CiviCRM Version
 
 ```
 vi Dockerfile

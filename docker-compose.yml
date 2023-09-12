@@ -50,6 +50,20 @@ services:
     build:
       context: ./images/php
       dockerfile: drupal9/Dockerfile
+      
+  drupal10:
+    container_name: drupal10
+    image: encircle/drupal10:latest
+    build:
+      context: ./images/php
+      dockerfile: drupal10/Dockerfile
+   
+  localgovdrupal:
+    container_name: localgovdrupal
+    image: encircle/localgovdrupal:latest
+    build:
+      context: ./images/php
+      dockerfile: localgovdrupal/Dockerfile
 
   postfix:
     container_name: postfix

@@ -1,8 +1,8 @@
-# Drupal 9
+# Drupal 10
 
-This readme is for the encircle Drupal 9 image.
+This readme is for the encircle Drupal 10 image.
 
-The image is Drupal 7 on the official PHP alpine image, packaged with Composer and Drush.
+The image is Drupal 10 on the official PHP alpine image, packaged with Composer and Drush.
 
 Installations/upgrades are automated, if no site is present a new one will be installed.
 
@@ -20,7 +20,7 @@ If a site is present (through a persistent mount), the version will be checked a
 
 **DB_HOST**: Database host for Drupal
 
-**CIVI**: False by default, If set to true, the container will install civicrm, if you are using the ESR release in the Dockerfile then you need to mount a folder for the civilab ssh private key, e.g. - ./conf/ssh:/root/.ssh
+**CIVI**: False by default, If set to true, the container will install civicrm (minimum version 5.60 for drupal10), if you are using the ESR release in the Dockerfile then you need to mount a folder for the civilab ssh keys
 
 ## Upgrade Drupal/CiviCRM Version
 
@@ -52,7 +52,7 @@ ENV DRUPAL_VERSION 9.19
 ```
 
 ```
-ENV CIVICRM_VERSION 5.62 / 5.57.5+esr
+ENV CIVICRM_VERSION 5.60 / 5.57.5+esr
 ```
 
 4. Update the Drupal MD5 hash in the Dockerfile

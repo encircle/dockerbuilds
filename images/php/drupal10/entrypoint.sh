@@ -92,7 +92,6 @@ function drupal_update() {
   image_version=$DRUPAL_VERSION
 
   if [[ "$volume_version" != $image_version ]]; then
-    composer config extra.compile-mode all
     composer require "drupal/core-composer-scaffold:=${DRUPAL_VERSION}" --with-all-dependencies
     composer require "drupal/core-project-message:=${DRUPAL_VERSION}" --with-all-dependencies
     composer require "drupal/core-recommended:=${DRUPAL_VERSION}" --with-all-dependencies

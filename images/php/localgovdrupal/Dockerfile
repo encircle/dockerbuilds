@@ -1,8 +1,8 @@
 FROM php:8.1-fpm-alpine
 
-ENV COMPOSER_SHA384 e21205b207c3ff031906575712edab6f13eb0b361f2085f1f1237b7126d785e826a450292b6cfd1d64d92e6563bbde02
+ENV COMPOSER_MD5 340f0b7d000eeae67c619b4e3b3207a4
 ENV DRUPAL_VERSION 9.5.9
-ENV CIVICRM_VERSION 5.62.3
+ENV CIVICRM_VERSION 5.62.1
 
 # install the PHP extensions we need
 RUN set -eux; \
@@ -40,10 +40,8 @@ RUN set -eux; \
 
 RUN set -eux;\
 # build tools
-apk add --no-cache --virtual .build-deps autoconf g++ make; \
-apk add --update linux-headers; \
-apk add openssh-client; \
-
+apk add --no-cache --virtual .build-deps \
+            autoconf g++ make; \
 # redis
  curl 'https://pecl.php.net/get/redis-5.3.7.tgz' -o redis-5.3.7.tgz; \
  pecl install -o -f redis-5.3.7.tgz; \
@@ -51,9 +49,9 @@ apk add openssh-client; \
  rm -rf redis-5.3.7.tgz; \
 # xdebug
  curl 'https://pecl.php.net/get/xdebug-3.2.0.tgz' -o xdebug-3.2.0.tgz;\
- pecl install -o -f xdebug-3.2.0.tgz; \
+ pecl install -o -f xdebug-3.1.3.tgz; \
  docker-php-ext-enable xdebug; \
- rm -rf xdebug-3.2.0.tgz; \
+ rm -rf xdebug-3.1.3.tgz; \
 # memcache
 apk add --no-cache \
         libpq \
@@ -104,15 +102,14 @@ COPY conf/www.conf /usr/local/etc/php-fpm.d/www.conf
 # composer
 RUN set -eux;\
   php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');";\
-  php -r "if (hash_file('sha384', 'composer-setup.php') === '${COMPOSER_SHA384}') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); };" \
-  && php composer-setup.php --install-dir=/usr/local/bin --filename=composer --quiet;\
+  echo "${COMPOSER_MD5} *composer-setup.php" | md5sum -c -;\
+  php composer-setup.php --install-dir=/usr/local/bin --filename=composer --quiet;\
   rm composer-setup.php
 
 # user accounts
 RUN apk add --no-cache --virtual .build-deps shadow;\
             usermod -u 10013 www-data;\
             groupmod -g 10013 www-data;\
-            usemod --shell /bin/bash;\
             apk del shadow
 
 # directory for composer drupal project
@@ -130,7 +127,7 @@ RUN chmod 755 /usr/local/bin/permissions.sh \
 # mysql package for drush
 RUN apk add --no-cache mariadb-client
 
-RUN ln -s /var/src/drupal/site/vendor/bin/drush /usr/local/bin/drush || true
+RUN ln -s /var/src/drupal/site/vendor/drush/drush/drush /usr/local/bin/drush || true
 
 RUN curl -LsS https://download.civicrm.org/cv/cv.phar -o /usr/local/bin/cv
 RUN chmod +x /usr/local/bin/cv
@@ -142,15 +139,17 @@ RUN curl -LsS https://download.civicrm.org/civix/civix.phar -o /usr/local/bin/ci
 # admin packages
 RUN apk add --no-cache git nano bash zip
 
-#sass
-RUN apk add --no-cache nodejs npm && npm install -g sass
+# install node, npm, and sass package
+RUN apk add --no-cache nodejs npm
+
+RUN npm install -g sass
 
 # upgrade packages
 RUN apk update \
  && apk upgrade
 
 # entrypoint
-COPY drupal9/entrypoint.sh /usr/local/bin/
+COPY localgovdrupal/entrypoint.sh /usr/local/bin/
 RUN chmod 755 /usr/local/bin/entrypoint.sh
 
 WORKDIR /var/src/drupal/site

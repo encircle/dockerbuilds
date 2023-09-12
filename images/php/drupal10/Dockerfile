@@ -1,7 +1,7 @@
 FROM php:8.1-fpm-alpine
 
 ENV COMPOSER_SHA384 e21205b207c3ff031906575712edab6f13eb0b361f2085f1f1237b7126d785e826a450292b6cfd1d64d92e6563bbde02
-ENV DRUPAL_VERSION 9.5.9
+ENV DRUPAL_VERSION 10.0.9
 ENV CIVICRM_VERSION 5.62.3
 
 # install the PHP extensions we need
@@ -150,7 +150,7 @@ RUN apk update \
  && apk upgrade
 
 # entrypoint
-COPY drupal9/entrypoint.sh /usr/local/bin/
+COPY drupal10/entrypoint.sh /usr/local/bin/
 RUN chmod 755 /usr/local/bin/entrypoint.sh
 
 WORKDIR /var/src/drupal/site

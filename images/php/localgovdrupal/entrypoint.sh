@@ -16,28 +16,23 @@ function civi_installed() {
 function civi_install(){
   set -eux
 
-  #civi requirements
-  composer config extra.enable-patching true
-  composer config minimum-stability dev
-  composer remove drush/drush
-  composer config --no-plugins allow-plugins.cweagans/composer-patches true
-  composer config --no-plugins allow-plugins.civicrm/civicrm-asset-plugin true
-  composer config --no-plugins allow-plugins.civicrm/composer-downloads-plugin true
-  composer config --no-plugins allow-plugins.civicrm/composer-compile-plugin true
-  composer config extra.compile-mode all
-
   # if we are using an esr release - add civicrm gitlab repo
   if [[ "$CIVICRM_VERSION" = *+esr ]]; then
     ssh-keyscan -H lab.civicrm.org > ~/.ssh/known_hosts
     composer config repositories.esr-core vcs git@lab.civicrm.org:esr/core.git
     composer config repositories.esr-packages vcs git@lab.civicrm.org:esr/packages.git
     composer config repositories.esr-drupal-8 vcs git@lab.civicrm.org:esr/drupal-8.git
-    
   fi
 
-  #require civi
+  #civi requirements
+  composer config extra.enable-patching true
+  composer config minimum-stability dev
+  composer config --no-plugins allow-plugins.cweagans/composer-patches true
+  composer config --no-plugins allow-plugins.civicrm/civicrm-asset-plugin true
+  composer config --no-plugins allow-plugins.civicrm/composer-downloads-plugin true
+  composer config --no-plugins allow-plugins.civicrm/composer-compile-plugin true
+  composer config extra.compile-mode all
   composer require civicrm/civicrm-{core,packages,drupal-8}:"${CIVICRM_VERSION}"
-  composer require drush/drush
 
   #civi install onto site
   cv core:install --cms-base-url="https://${SITE}" --lang="en_GB"
@@ -59,46 +54,61 @@ function civi_update(){
       composer config repositories.esr-drupal-8 vcs git@lab.civicrm.org:esr/drupal-8.git
     fi
 
-    #require updated civi
     composer require civicrm/civicrm-{core,packages,drupal-8}:"${CIVICRM_VERSION}" --with-all-dependencies
-
     cv upgrade:db
     cv ext:upgrade-db
   fi
 }
 
+#uses https://github.com/localgovdrupal/localgov_project/
 function drupal_install() {
   set -eux
 
+  #create project
   cd $INSTALL_DIR
-  composer create-project drupal/recommended-project:$DRUPAL_VERSION site
+  composer create-project localgovdrupal/localgov-project site --no-install
+
+  #set the drupal version
+  cd $INSTALL_DIR/site
+  composer require "drupal/core-composer-scaffold:=${DRUPAL_VERSION}" --with-all-dependencies
+  composer require "drupal/core-project-message:=${DRUPAL_VERSION}" --with-all-dependencies
+  composer require "drupal/core-recommended:=${DRUPAL_VERSION}" --with-all-dependencies
+
+  #install dependencies
+  composer install
+  
   chmod 750 $INSTALL_DIR/site
-  chown root:www-data site
+  chown root:www-data $INSTALL_DIR/site
   chown -R www-data:www-data $INSTALL_DIR/site/web/sites $INSTALL_DIR/site/web/modules $INSTALL_DIR/site/web/themes
 
-  cd $INSTALL_DIR/site
-  composer require drush/drush
-
+  #copy default settings file
   cp $INSTALL_DIR/site/web/sites/default/default.settings.php $INSTALL_DIR/site/web/sites/default/settings.php
-  yes | $INSTALL_DIR/site/vendor/bin/drush site-install standard install_configure_form.update_status_module='array(FALSE,FALSE)'\
+
+  #install site
+  yes | drush site-install localgov install_configure_form.update_status_module='array(FALSE,FALSE)'\
     --db-url="mysql://${MYSQL_USER}:${MYSQL_PASSWORD}@${DB_HOST}/${MYSQL_DATABASE}"\
     --site-name="${TITLE}"\
     --account-name="${ADMIN_USER}"\
     --account-pass="${ADMIN_PASSWORD}"
+
+  #preprocessors
+  drush -y config-set system.performance css.preprocess 0
+  drush -y config-set system.performance js.preprocess 0
+  drush -y cache:rebuild
 }
 
 function drupal_update() {
-  volume_version=$($INSTALL_DIR/site/vendor/bin/drush status | grep 'Drupal version' | awk '{print $4}')
+  cd $INSTALL_DIR/site
+  volume_version=$(drush status | grep 'Drupal version' | awk '{print $4}')
   image_version=$DRUPAL_VERSION
 
   if [[ "$volume_version" != $image_version ]]; then
-    composer config extra.compile-mode all
     composer require "drupal/core-composer-scaffold:=${DRUPAL_VERSION}" --with-all-dependencies
     composer require "drupal/core-project-message:=${DRUPAL_VERSION}" --with-all-dependencies
     composer require "drupal/core-recommended:=${DRUPAL_VERSION}" --with-all-dependencies
 
-    $INSTALL_DIR/site/vendor/bin/drush updatedb -y
-    $INSTALL_DIR/site/vendor/bin/drush cache:rebuild
+    drush -y updatedb
+    drush -y cache:rebuild
   fi
 }
 
@@ -114,7 +124,7 @@ function webroot_setup() {
 function main() {
   INSTALL_DIR=/var/src/drupal
   WEBROOT=/var/www/html/site/web
-  
+
   configure_postfix
 
   # wait for the database connection
@@ -146,7 +156,6 @@ function main() {
 
   # start the daemon
   php-fpm
-
 }
 
 main

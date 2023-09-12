@@ -72,6 +72,7 @@ services:
       MYSQL_PASSWORD: password
       ADMIN_USER: admin
       ADMIN_PASSWORD: admin
+      CIVI: false
 
 networks:
   frontend:
