@@ -1,6 +1,6 @@
-ARG NGINX_VERSION=1.19.0
+ARG NGINX_VERSION=1.25.2
 ARG MODSEC_VERSION=3
-ARG OWASP_CRS_VERSION=3.3.0
+ARG OWASP_CRS_VERSION=3.3.4
 
 # Temporary image for Modsecurity compilations
 FROM nginx:${NGINX_VERSION}-alpine-perl as build
