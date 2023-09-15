@@ -84,7 +84,7 @@ vi Dockerfile
 Change:
 
 ```
-ARG OWASP_CRS_VERSION=3.3.0
+ARG OWASP_CRS_VERSION=3.3.4
 ```
 
 ## Modsec
