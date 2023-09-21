@@ -2,7 +2,7 @@
 
 configure_sendgrid() {
   echo 'smtp_sasl_auth_enable = yes'                             >> $main_cf
-  echo 'smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd' >> $main_cf
+  echo 'smtp_sasl_password_maps = lmdb:/etc/postfix/sasl_passwd' >> $main_cf
   echo 'smtp_sasl_security_options = noanonymous'                >> $main_cf
   echo 'smtp_sasl_tls_security_options = noanonymous'            >> $main_cf
   echo 'smtp_tls_security_level = encrypt'                       >> $main_cf

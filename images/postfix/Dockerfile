@@ -1,4 +1,4 @@
-FROM alpine:3.12
+FROM alpine:3.18.3
 
 ENV TZ=
 # Postfix myhostname
@@ -27,7 +27,7 @@ ENV INBOUND_DEBUGGING=
 # Install postfix first to get the first account (101)
 # Install opendkim second to get the second account (102)
 RUN        true && \
-           apk add --no-cache --upgrade cyrus-sasl cyrus-sasl-plain cyrus-sasl-login && \
+           apk add --no-cache --upgrade cyrus-sasl cyrus-sasl-login && \
            apk add --no-cache postfix && \
            apk add --no-cache opendkim && \
            apk add --no-cache ca-certificates tzdata supervisor rsyslog && \
