@@ -495,6 +495,21 @@ v1.7.2
 ======
 Refactored in pca_dev changes
 
+v1.7.3
+======
+Rebuild only
+
+v1.7.4
+======
+Updated postfix - removed cyrus-sasl-plain
+
 v1.7.5
 ======
 Drupal 9.5.10 - 9.5.11
+
+v1.7.6
+======
+drupal 7.97-7.98
+drupal 10.1.4-10.1.5
+wordpress 6.2.2-6.3.2
+rebuild for CVE-2023-38545
