@@ -57,6 +57,13 @@ services:
     build:
       context: ./images/php
       dockerfile: drupal10/Dockerfile
+      
+  magento1:
+    container_name: magento1
+    image: encircle/magento1:latest
+    build:
+      context: ./images/php
+      dockerfile: magento1/Dockerfile
    
   localgovdrupal:
     container_name: localgovdrupal
