@@ -1,4 +1,4 @@
-FROM alpine:3.12.0
+FROM alpine:3.18.3
 
 COPY entrypoint.sh /usr/local/bin
 RUN apk --no-cache add memcached && chmod +x /usr/local/bin/entrypoint.sh
