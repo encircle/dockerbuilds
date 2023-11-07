@@ -45,6 +45,8 @@ certificates  /etc/nginx/certs
 
 **NO_CLOUDFLARE**: If set to True the container won't download cloudflare public ips and autogenerate Nginx's set_real_ip directives in /etc/nginx/conf.d/cloudflare.conf. This allows a container to override the stock Cloudflare real_ip configuration For use when the container is used behind a Proxy server
 
+**DRUPAL_MODE**: If set to on - clean urls add the original path as the q parameter in the url for index.php rewriting
+
 ## Upgrade NGINX Version
 
 Update the NGINX_VERSION environment variable in the Dockerfile

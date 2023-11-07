@@ -29,6 +29,7 @@ services:
       AV_HOST: null
       AV_PORT: null
       AV_APIKEY: null
+      DRUPAL_MODE: 'On'
 
   database:
     container_name: database

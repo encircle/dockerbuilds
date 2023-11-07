@@ -513,3 +513,7 @@ drupal 7.97-7.98
 drupal 10.1.4-10.1.5
 wordpress 6.2.2-6.3.2
 rebuild for CVE-2023-38545
+
+v1.7.7
+=======
+Added DRUPAL_MODE=On|Off to nginx modsec container to enable Drupal style clean urls.
