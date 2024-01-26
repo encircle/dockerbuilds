@@ -530,3 +530,7 @@ wordpress 6.4.1 -> 6.4.2
 memcache alpine 3.12 -> 3.18.5
 postfix alpine 3.18.3 -> 3.18.5
 general refresh of image base packages
+
+v1.7.10
+========
+Upgraded drupal10 to 10.1.8
