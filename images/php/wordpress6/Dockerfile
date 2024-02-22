@@ -33,6 +33,10 @@ RUN set -ex; \
 		libjpeg-turbo-dev \
 		libpng-dev \
 		libzip-dev \
+		autoconf\
+		g++\
+		make\
+	    linux-headers\
 	; \
 	\
 	docker-php-ext-configure gd --with-freetype --with-jpeg; \
@@ -48,6 +52,10 @@ RUN set -ex; \
     docker-php-ext-enable imagick; \
     rm -rf imagick-3.7.0.tgz; \  
     docker-php-ext-install intl bcmath soap; \   
+    curl 'https://pecl.php.net/get/xdebug-3.3.1.tgz' -o xdebug-3.3.1.tgz;\
+    pecl install -o -f xdebug-3.3.1.tgz; \
+    docker-php-ext-enable xdebug; \
+    rm -rf xdebug-3.3.1.tgz; \
 	rm -r /tmp/pear; \
 	\
 	runDeps="$( \
