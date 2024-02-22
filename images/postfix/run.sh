@@ -37,9 +37,6 @@ postconf -e relay_domains=
 # Increase the allowed header size, the default (102400) is quite smallish
 postconf -e "header_size_limit=4096000"
 
-# Always add missing headers
-postconf -e "always_add_missing_headers=yes"
-
 if [ ! -z "$MESSAGE_SIZE_LIMIT" ]; then
 	echo  -e "‣ $notice Restricting message_size_limit to: ${emphasis}$MESSAGE_SIZE_LIMIT bytes${reset}"
 	postconf -e "message_size_limit=$MESSAGE_SIZE_LIMIT"
