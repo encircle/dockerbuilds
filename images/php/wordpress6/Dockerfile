@@ -1,6 +1,6 @@
-FROM php:7.4-fpm-alpine
+FROM php:8.1-fpm-alpine
 
-ENV WORDPRESS_VERSION 6.4.3
+ENV WORDPRESS_VERSION 6.5.2
 
 # Setup
 RUN ln -s -f /dev/null /root/.bash_history \
@@ -43,7 +43,7 @@ RUN set -ex; \
 		mysqli \
 		zip \
 	; \
-    curl 'https://pecl.php.net/get/imagick-3.4.4.tgz' -o imagick-3.4.4.tgz; \
+    curl 'https://pecl.php.net/get/imagick-3.7.0.tgz' -o imagick-3.4.4.tgz; \
     pecl install -o -f imagick-3.4.4.tgz; \
     docker-php-ext-enable imagick; \
     rm -rf imagick-3.4.4.tgz; \  

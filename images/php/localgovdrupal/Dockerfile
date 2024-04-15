@@ -49,7 +49,7 @@ apk add openssh-client; \
  docker-php-ext-enable redis; \
  rm -rf redis-5.3.7.tgz; \
 # xdebug
- curl 'https://pecl.php.net/get/xdebug-3.2.0.tgz' -o xdebug-3.2.0.tgz;\
+ curl 'https://pecl.php.net/get/xdebug-3.1.3.tgz' -o xdebug-3.1.3.tgz;\
  pecl install -o -f xdebug-3.1.3.tgz; \
  docker-php-ext-enable xdebug; \
  rm -rf xdebug-3.1.3.tgz; \
