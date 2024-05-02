@@ -85,7 +85,7 @@ RUN apk add shadow \
  && groupmod -g 10013 www-data
 
 # Permissions script
-COPY wordpress/permissions.sh /usr/local/bin
+COPY wordpress6/permissions.sh /usr/local/bin
 
 RUN chmod 755 /usr/local/bin/permissions.sh \
  && crontab -l > /tmp/.cron \
@@ -102,6 +102,6 @@ ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so php
 RUN apk update \
  && apk upgrade
 
-COPY wordpress/entrypoint.sh /usr/local/bin/
+COPY wordpress6/entrypoint.sh /usr/local/bin/
 
 ENTRYPOINT [ "bash", "/usr/local/bin/entrypoint.sh" ]
