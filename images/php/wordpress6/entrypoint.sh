@@ -4,6 +4,10 @@ wordpress_installed() {
   [[ -f /var/www/html/wp-config.php ]]
 }
 
+civi_installed() {
+  [[ -f /var/www/html/wp-content/plugins/civicrm/civicrm/civicrm-version.php ]]
+}
+
 install_wordpress() {
 
   wp --allow-root core download \
@@ -26,7 +30,6 @@ install_wordpress() {
      --admin_user="${ADMIN_USER}" \
      --admin_password="${ADMIN_PASSWORD}" \
      --admin_email="${ADMIN_EMAIL}"
-
 }
 
 upgrade_wordpress() {
@@ -40,6 +43,19 @@ upgrade_wordpress() {
     wp --allow-root core update --version="$WORDPRESS_VERSION"
   fi
 
+}
+
+function install_civi(){
+  cd /var/www/html/wp-content/plugins
+  wget https://download.civicrm.org/civicrm-${CIVICRM_VERSION}-wordpress.zip
+  unzip civicrm-${CIVICRM_VERSION}-wordpress.zip
+
+  cd /var/www/html
+  cv core:install --cms-base-url="https://${DOMAIN}" --lang="en_GB"
+}
+
+function upgrade_civi(){
+  set -eux
 }
 
 configure_postfix() {
@@ -61,6 +77,12 @@ wordpress_installed || install_wordpress
 
 # Only run if wordpress is installed
 wordpress_installed && upgrade_wordpress
+
+# Only run if wordpress is not installed
+civi_installed || install_civi
+
+# Only run if wordpress is installed
+civi_installed && upgrade_civi
 
 # Configure postfix
 configure_postfix

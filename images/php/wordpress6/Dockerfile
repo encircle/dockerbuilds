@@ -1,6 +1,7 @@
 FROM php:8.1-fpm-alpine
 
 ENV WORDPRESS_VERSION 6.5.2
+ENV CIVICRM_VERSION 5.72.2
 
 # Setup
 RUN ln -s -f /dev/null /root/.bash_history \
@@ -8,7 +9,10 @@ RUN ln -s -f /dev/null /root/.bash_history \
  && cd /tmp && curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
  && mv /tmp/wp-cli.phar /usr/local/bin/wp \
  && chmod 750 /usr/local/bin/wp \
- && chown root:10013 /usr/local/bin/wp
+ && chown root:10013 /usr/local/bin/wp \
+ && curl -LsS https://download.civicrm.org/cv/cv.phar -o /usr/local/bin/cv \
+ && chmod 750 /usr/local/bin/cv \
+ && chown root:10013 /usr/local/bin/cv
 
 # wordpress package dependencies
 RUN set -eux; \
@@ -86,7 +90,7 @@ RUN apk add shadow \
  && groupmod -g 10013 www-data
 
 # Permissions script
-COPY wordpress/permissions.sh /usr/local/bin
+COPY wordpress6/permissions.sh /usr/local/bin
 
 RUN chmod 755 /usr/local/bin/permissions.sh \
  && crontab -l > /tmp/.cron \
@@ -103,6 +107,6 @@ ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so php
 RUN apk update \
  && apk upgrade
 
-COPY wordpress/entrypoint.sh /usr/local/bin/
+COPY wordpress6/entrypoint.sh /usr/local/bin/
 
 ENTRYPOINT [ "bash", "/usr/local/bin/entrypoint.sh" ]
