@@ -26,4 +26,9 @@ COPY encircle.cnf /etc/mysql/conf.d/encircle.cnf
 
 # encircle overrides dir
 RUN mkdir /etc/mysql/encircle.d \
- && chown mysql:mysql /etc/mysql/encircle.d
+ && chown mysql:mysql /etc/mysql/encircle.d \
+ && chown mysql:mysql /etc/mysql/mariadb.cnf \
+ && chmod 640 /etc/mysql/mariadb.cnf \
+ && chown -R mysql:mysql /etc/mysql/conf.d \
+ && chmod -R 640 /etc/mysql/conf.d/*
+ 
