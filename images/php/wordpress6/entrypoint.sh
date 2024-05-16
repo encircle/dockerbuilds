@@ -78,11 +78,12 @@ wordpress_installed || install_wordpress
 # Only run if wordpress is installed
 wordpress_installed && upgrade_wordpress
 
-# Only run if wordpress is not installed
-civi_installed || install_civi
+civi=${CIVI:-False}
+if [ "$civi" = true ]; then
+  civi_installed || install_civi
 
-# Only run if wordpress is installed
-civi_installed && upgrade_civi
+  civi_installed && upgrade_civi
+fi
 
 # Configure postfix
 configure_postfix
