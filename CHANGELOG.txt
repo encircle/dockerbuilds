@@ -545,3 +545,7 @@ Wordpress 6.4.3 - > 6.5.2
 PHP 7.4 -> 8.1
 Drupal 8 - Updated composer hash
 Localgovdrupal - fixed xdebug
+
+v1.7.13
+========
+Rebuild for critical vuln CVE-2024-32002 git
