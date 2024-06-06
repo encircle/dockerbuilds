@@ -48,14 +48,36 @@ upgrade_wordpress() {
 function install_civi(){
   cd /var/www/html/wp-content/plugins
   wget https://download.civicrm.org/civicrm-${CIVICRM_VERSION}-wordpress.zip
+
+  # DL l10n
+  wget https://download.civicrm.org/civicrm-${CIVICRM_VERSION}-l10n.tar.gz
+
+  #unzip civi
   unzip civicrm-${CIVICRM_VERSION}-wordpress.zip
+
+  # unzip the new l10n
+  tar -xzf civicrm-${CIVICRM_VERSION}-l10n.tar.gz
 
   cd /var/www/html
   cv core:install --cms-base-url="https://${DOMAIN}" --lang="en_GB"
 }
 
 function upgrade_civi(){
-  set -eux
+  #https://gist.github.com/em-piguet/4ace59fdbcbc74cbcb14064dd90fadb4
+  echo "upgrade"
+  # VOLUME_VERSION="$(php -r 'require('"'"'/var/www/html/wp-content/plugins/civicrm/civicrm.php'"'"'); echo $CIVICRM_PLUGIN_VERSION;')"
+  # echo "Civi volume version : $VOLUME_VERSION"
+  # echo "Civi version : $CIVICRM_VERSION"
+
+
+  # cd /var/www/html/wp-content/plugins
+
+  # # DL main plugin
+  # wget https://download.civicrm.org/civicrm-$civi_version-wordpress.zip
+
+  # # DL l10n
+  # wget https://download.civicrm.org/civicrm-$civi_version-l10n.tar.gz
+
 }
 
 configure_postfix() {
