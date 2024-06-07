@@ -25,7 +25,7 @@ install_wordpress() {
 
   wp --allow-root core install \
      --path=/var/www/html \
-     --url="${DOMAIN}" \
+     --url="https://${DOMAIN}" \
      --title="${TITLE}" \
      --admin_user="${ADMIN_USER}" \
      --admin_password="${ADMIN_PASSWORD}" \
@@ -81,52 +81,58 @@ function upgrade_civi(){
 }
 
 configure_postfix() {
-  PRIMARY_DOMAIN=$(echo ${SITE} | awk -F ' ' '{ print $1 }')
-  sed -i "s/\${SITE}/${PRIMARY_DOMAIN}/g" /usr/local/etc/php/conf.d/postfix.ini
+  DOMAIN=$(echo ${SITE} | awk -F ' ' '{ print $1 }')
+  sed -i "s/\${SITE}/${DOMAIN}/g" /usr/local/etc/php/conf.d/postfix.ini
 }
 
-# wait for the database connection
-db_status=1
-while [[ $db_status != 0 ]]; do
-  echo 'Waiting for DB to be available'
-  $(nc -z "$WORDPRESS_DB_HOST" 3306 > /dev/null 2>&1)
-  db_status=$?
-  sleep 3
-done
+function main() {
+  # Configure postfix
+  configure_postfix
 
-# Only run if wordpress is not installed
-wordpress_installed || install_wordpress
+  # wait for the database connection
+  db_status=1
+  while [[ $db_status != 0 ]]; do
+    echo 'Waiting for DB to be available'
+    $(nc -z "$WORDPRESS_DB_HOST" 3306 > /dev/null 2>&1)
+    db_status=$?
+    sleep 3
+  done
 
-# Only run if wordpress is installed
-wordpress_installed && upgrade_wordpress
+  # Install wordpress if not installed
+  wordpress_installed || install_wordpress
 
-civi=${CIVI:-False}
-if [ "$civi" = true ]; then
-  civi_installed || install_civi
+  # check/apply update if installed
+  wordpress_installed && upgrade_wordpress
 
-  civi_installed && upgrade_civi
-fi
+  civi=${CIVI:-False}
+  if [ "$civi" = true ]; then
+    # Install civi if not installed
+    civi_installed || install_civi
 
-# Configure postfix
-configure_postfix
+    # check/apply update if installed
+    civi_installed && upgrade_civi
+  fi
 
-# Configure Wordpress
-wp --allow-root config create \
-   --force \
-   --path=/var/www/html \
-   --skip-check \
-   --dbname="${WORDPRESS_DB_NAME}" \
-   --dbuser="${WORDPRESS_DB_USER}" \
-   --dbpass="${WORDPRESS_DB_PASSWORD}" \
-   --dbhost="${WORDPRESS_DB_HOST}" \
-   --dbprefix="${WORDPRESS_TABLE_PREFIX}" \
-   --extra-php="${WORDPRESS_CONFIG_EXTRA}"
+  # Configure Wordpress
+  wp --allow-root config create \
+    --force \
+    --path=/var/www/html \
+    --skip-check \
+    --dbname="${WORDPRESS_DB_NAME}" \
+    --dbuser="${WORDPRESS_DB_USER}" \
+    --dbpass="${WORDPRESS_DB_PASSWORD}" \
+    --dbhost="${WORDPRESS_DB_HOST}" \
+    --dbprefix="${WORDPRESS_TABLE_PREFIX}" \
+    --extra-php="${WORDPRESS_CONFIG_EXTRA}"
 
-# permissions
-/usr/local/bin/permissions.sh 2>/dev/null &
+  # permissions
+  /usr/local/bin/permissions.sh 2>/dev/null &
 
-# Start crontab
-/usr/sbin/crond -f -l 8 &
+  # Start crontab
+  /usr/sbin/crond -f -l 8 &
 
-# Run PHP
-php-fpm
+  # Run PHP
+  php-fpm
+}
+
+main
