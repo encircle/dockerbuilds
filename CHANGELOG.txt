@@ -549,3 +549,7 @@ Localgovdrupal - fixed xdebug
 v1.7.13
 ========
 Rebuild for critical vuln CVE-2024-32002 git
+
+v1.7.14
+========
+ariadb config permissions fix
