@@ -143,11 +143,14 @@ RUN cd /tmp \
  && touch /etc/nginx/modsec/whitelist/whitelist.conf
 
 # CRS set up
-COPY crs-setup.conf   /etc/nginx/modsec/coreruleset-${OWASP_CRS_VERSION}/crs-setup.conf
+COPY crs-setup.conf /etc/nginx/modsec/coreruleset-${OWASP_CRS_VERSION}/crs-setup.conf
 
 # Upgrade packages
 RUN apk update \
  && apk upgrade --ignore nginx
+
+# healthcheck
+HEALTHCHECK --interval=5s --timeout=1s CMD curl -so /dev/null http://localhost/ || exit 1
 
 # Entrypoint
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh

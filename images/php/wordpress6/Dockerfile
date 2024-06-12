@@ -108,16 +108,15 @@ ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so php
 RUN apk update \
  && apk upgrade
 
-#healthcheck
+# healthcheck
 COPY wordpress6/docker-healthcheck.sh /usr/local/bin/docker-healthcheck
 RUN chmod +x /usr/local/bin/docker-healthcheck
+HEALTHCHECK --interval=5s --timeout=1s CMD /usr/local/bin/docker-healthcheck || exit 1
 
 # Enable php fpm status page and turn off access logging
 RUN echo "pm.status_path = /status" >> /usr/local/etc/php-fpm.d/zz-healthcheck.conf
 RUN echo "access.log = /dev/null" >> /usr/local/etc/php-fpm.d/zz-healthcheck-logging.conf
 
 COPY wordpress6/entrypoint.sh /usr/local/bin/
-
-#HEALTHCHECK --interval=5s --timeout=1s CMD docker-healthcheck || exit 1
 
 ENTRYPOINT [ "bash", "/usr/local/bin/entrypoint.sh" ]

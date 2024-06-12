@@ -31,4 +31,6 @@ RUN mkdir /etc/mysql/encircle.d \
  && chmod 640 /etc/mysql/mariadb.cnf \
  && chown -R mysql:mysql /etc/mysql/conf.d \
  && chmod -R 640 /etc/mysql/conf.d/*
- 
+
+# healthcheck
+HEALTHCHECK --interval=5s --timeout=1s CMD mysqladmin ping -h 127.0.0.1 --silent || exit 1
