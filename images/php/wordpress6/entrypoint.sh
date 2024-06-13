@@ -49,35 +49,69 @@ function install_civi(){
   cd /var/www/html/wp-content/plugins
   wget https://download.civicrm.org/civicrm-${CIVICRM_VERSION}-wordpress.zip
 
-  # DL l10n
-  wget https://download.civicrm.org/civicrm-${CIVICRM_VERSION}-l10n.tar.gz
-
   #unzip civi
   unzip civicrm-${CIVICRM_VERSION}-wordpress.zip
 
-  # unzip the new l10n
-  tar -xzf civicrm-${CIVICRM_VERSION}-l10n.tar.gz
-
   cd /var/www/html
+
+  #activate the plugin
+  wp plugin activate civicrm --allow-root
+
+  #install civi
   cv core:install --cms-base-url="https://${DOMAIN}" --lang="en_GB"
+
+  # clear civi cache
+  cv flush
+
+  # clear wp cache
+  wp cache flush --allow-root
 }
 
 function upgrade_civi(){
   #https://gist.github.com/em-piguet/4ace59fdbcbc74cbcb14064dd90fadb4
   echo "upgrade"
-  # VOLUME_VERSION="$(php -r 'require('"'"'/var/www/html/wp-content/plugins/civicrm/civicrm.php'"'"'); echo $CIVICRM_PLUGIN_VERSION;')"
-  # echo "Civi volume version : $VOLUME_VERSION"
-  # echo "Civi version : $CIVICRM_VERSION"
+  VOLUME_VERSION="$(awk '/CIVICRM_PLUGIN_VERSION/{print $2;exit}' /var/www/html/wp-content/plugins/civicrm/civicrm.php | tr -d ";'()")"
+  
+  echo "Civi volume version : $VOLUME_VERSION"
+  echo "Civi version : $CIVICRM_VERSION"
 
+  if [ "$VOLUME_VERSION" != "$CIVICRM_VERSION" ]; then
+    echo "Forcing Civi code update..."
 
-  # cd /var/www/html/wp-content/plugins
+    #download the updated plugin
+    cd /var/www/html/wp-content/plugins
+    wget https://download.civicrm.org/civicrm-${CIVICRM_VERSION}-wordpress.zip
 
-  # # DL main plugin
-  # wget https://download.civicrm.org/civicrm-$civi_version-wordpress.zip
+    # clear cache civi
+    cv flush
 
-  # # DL l10n
-  # wget https://download.civicrm.org/civicrm-$civi_version-l10n.tar.gz
+    # put the site into maintenance mode
+    wp maintenance-mode activate --allow-root
 
+    #remove current plugin
+    rm -rf civicrm
+
+    # unzip the new version
+    unzip civicrm-$CIVICRM_VERSION-wordpress.zip
+
+    # remove the downloaded files to save disk space
+    rm civicrm-$CIVICRM_VERSION-wordpress.zip
+
+    # remove maintenance
+    wp maintenance-mode deactivate --allow-root
+
+    # upgrade db
+    cv upgrade:db
+
+    # upgrade bundled extension
+    cv ext:upgrade-db
+
+    # clear civi cache
+    cv flush
+
+    # clear wp cache
+    wp cache flush --allow-root
+  fi
 }
 
 configure_postfix() {

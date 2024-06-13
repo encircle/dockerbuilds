@@ -1,6 +1,6 @@
 FROM php:8.1-fpm-alpine
 
-ENV WORDPRESS_VERSION 6.5.2
+ENV WORDPRESS_VERSION 6.5.4
 ENV CIVICRM_VERSION 5.72.2
 
 # Setup
@@ -113,7 +113,7 @@ COPY wordpress6/docker-healthcheck.sh /usr/local/bin/docker-healthcheck
 RUN chmod +x /usr/local/bin/docker-healthcheck
 HEALTHCHECK --interval=5s --timeout=1s CMD /usr/local/bin/docker-healthcheck || exit 1
 
-# Enable php fpm status page and turn off access logging
+# Enable php fpm status page and turn off access logging for healthcheck
 RUN echo "pm.status_path = /status" >> /usr/local/etc/php-fpm.d/zz-healthcheck.conf
 RUN echo "access.log = /dev/null" >> /usr/local/etc/php-fpm.d/zz-healthcheck-logging.conf
 
