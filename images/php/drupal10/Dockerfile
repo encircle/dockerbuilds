@@ -2,7 +2,7 @@ FROM php:8.1-fpm-alpine
 
 ENV COMPOSER_SHA384 dac665fdc30fdd8ec78b38b9800061b4150413ff2e3b6f88543c636f7cd84f6db9189d43a81e5503cda447da73c7e5b6
 ENV DRUPAL_VERSION 10.1.8
-ENV CIVICRM_VERSION 5.73.1
+ENV CIVICRM_VERSION 5.73.2
 
 # install the PHP extensions we need
 RUN set -eux; \
@@ -44,6 +44,9 @@ RUN set -eux;\
 apk add --no-cache --virtual .build-deps autoconf g++ make; \
 apk add --update linux-headers; \
 apk add openssh-client; \
+
+#healthcheck fcgi
+apk add --no-cache fcgi;\
 
 # redis
  curl 'https://pecl.php.net/get/redis-5.3.7.tgz' -o redis-5.3.7.tgz; \
@@ -149,6 +152,15 @@ RUN apk add --no-cache nodejs npm && npm install -g sass
 # upgrade packages
 RUN apk update \
  && apk upgrade
+
+# healthcheck
+COPY drupal10/docker-healthcheck.sh /usr/local/bin/docker-healthcheck
+RUN chmod +x /usr/local/bin/docker-healthcheck
+HEALTHCHECK --interval=5s --timeout=1s CMD /usr/local/bin/docker-healthcheck || exit 1
+
+# Enable php fpm status page and turn off access logging for healthcheck
+RUN echo "pm.status_path = /status" >> /usr/local/etc/php-fpm.d/zz-healthcheck.conf
+RUN echo "access.log = /dev/null" >> /usr/local/etc/php-fpm.d/zz-healthcheck-logging.conf
 
 # entrypoint
 COPY drupal10/entrypoint.sh /usr/local/bin/

@@ -9,7 +9,8 @@ services:
       - '80:80'
       - '443:443'
     depends_on:
-      - wordpress
+      wordpress:
+        condition: service_healthy
     volumes:
       - ./logs/nginx/:/var/log/nginx
       - ./wordpress/:/var/www/html
@@ -53,7 +54,8 @@ services:
     expose:
       - '9000'
     depends_on:
-      - database
+      database:
+        condition: service_healthy
     working_dir: /var/www/html
     volumes:
       - ./wordpress:/var/www/html
