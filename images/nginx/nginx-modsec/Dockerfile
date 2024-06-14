@@ -150,7 +150,7 @@ RUN apk update \
  && apk upgrade --ignore nginx
 
 # healthcheck
-HEALTHCHECK --interval=5s --timeout=1s CMD curl -so /dev/null http://localhost/ || exit 1
+HEALTHCHECK --interval=5s --timeout=1s CMD curl -so /dev/null http://localhost/healthcheck || exit 1
 
 # Entrypoint
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
