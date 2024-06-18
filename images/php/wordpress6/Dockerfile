@@ -111,7 +111,7 @@ RUN apk update \
 # healthcheck
 COPY wordpress6/docker-healthcheck.sh /usr/local/bin/docker-healthcheck
 RUN chmod +x /usr/local/bin/docker-healthcheck
-HEALTHCHECK --interval=5s --timeout=1s CMD /usr/local/bin/docker-healthcheck || exit 1
+HEALTHCHECK --interval=15s --timeout=2s --start-period=60s CMD /usr/local/bin/docker-healthcheck || exit 1
 
 # Enable php fpm status page and turn off access logging for healthcheck
 RUN echo "pm.status_path = /status" >> /usr/local/etc/php-fpm.d/zz-healthcheck.conf

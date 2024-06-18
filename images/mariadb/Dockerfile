@@ -33,4 +33,4 @@ RUN mkdir /etc/mysql/encircle.d \
  && chmod -R 640 /etc/mysql/conf.d/*
 
 # healthcheck
-HEALTHCHECK --interval=5s --timeout=1s CMD mysqladmin ping -h 127.0.0.1 -u $MYSQL_USER --password=$MYSQL_PASSWORD --silent || exit 1
+HEALTHCHECK --interval=15s --timeout=2s --start-period=60s CMD mysqladmin ping -h 127.0.0.1 -u $MYSQL_USER --password=$MYSQL_PASSWORD --silent || exit 1
