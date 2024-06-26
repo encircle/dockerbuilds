@@ -552,4 +552,9 @@ Rebuild for critical vuln CVE-2024-32002 git
 
 v1.7.14
 ========
-ariadb config permissions fix
+mariadb config permissions fix
+
+v1.7.15
+========
+Drupal update to 10.3.0
+Wordpress update to 6.5.5
