@@ -558,3 +558,7 @@ v1.7.15
 ========
 Drupal update to 10.3.0
 Wordpress update to 6.5.5
+
+v1.7.16
+========
+Drupal rollback to 10.2 branch (10.2.7)
