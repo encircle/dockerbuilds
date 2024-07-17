@@ -562,3 +562,8 @@ Wordpress update to 6.5.5
 v1.7.16
 ========
 Drupal rollback to 10.2 branch (10.2.7)
+
+v1.7.17
+========
+Drupal 7 updated to 7.99
+Drupal 7 permissions script changes
