@@ -567,3 +567,11 @@ v1.7.17
 ========
 Drupal 7 updated to 7.99
 Drupal 7 permissions script changes
+
+v1.7.18
+========
+update alpine version on memcache on docker
+
+v1.7.19
+========
+Rebuild for libexpat CVE-2024-45490, CVE-2024-45491, CVE-2024-45492
