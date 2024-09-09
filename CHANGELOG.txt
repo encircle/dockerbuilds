@@ -575,3 +575,7 @@ update alpine version on memcache on docker
 v1.7.19
 ========
 Rebuild for libexpat CVE-2024-45490, CVE-2024-45491, CVE-2024-45492
+
+v1.7.20
+========
+Modified mariadb image so that custom config directories are included after the main mysqld directives - otherwise they can get overrided by the default config
