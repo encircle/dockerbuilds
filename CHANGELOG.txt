@@ -579,3 +579,12 @@ Rebuild for libexpat CVE-2024-45490, CVE-2024-45491, CVE-2024-45492
 v1.7.20
 ========
 Modified mariadb image so that custom config directories are included after the main mysqld directives - otherwise they can get overrided by the default config
+
+v1.8
+========
+- nginx and owasp updated
+- docker-compose modified to fix local building issues.
+- Drupal 7 updated to 7.101
+- Drupal 10 updated to 10.2.10
+- Wordpress6 updated to 6.6.2
+- CiviCrm versions updated

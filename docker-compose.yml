@@ -8,6 +8,7 @@ services:
     build:
       context: ./images/nginx/nginx-modsec
       dockerfile: Dockerfile
+      network: host
 
   mariadb:
     container_name: mariadb
@@ -15,6 +16,7 @@ services:
     build:
       context: ./images/mariadb
       dockerfile: Dockerfile
+      network: host
 
   wordpress:
     container_name: wordpress
@@ -22,6 +24,7 @@ services:
     build:
       context: ./images/php
       dockerfile: wordpress/Dockerfile
+      network: host
 
   wordpress6:
     container_name: wordpress6
@@ -29,6 +32,7 @@ services:
     build:
       context: ./images/php
       dockerfile: wordpress6/Dockerfile
+      network: host
 
   drupal7:
     container_name: drupal7
@@ -36,6 +40,7 @@ services:
     build:
       context: ./images/php
       dockerfile: drupal7/Dockerfile
+      network: host
 
   drupal8:
     container_name: drupal8
@@ -43,6 +48,7 @@ services:
     build:
       context: ./images/php
       dockerfile: drupal8/Dockerfile
+      network: host
 
   drupal9:
     container_name: drupal9
@@ -50,6 +56,7 @@ services:
     build:
       context: ./images/php
       dockerfile: drupal9/Dockerfile
+      network: host
       
   drupal10:
     container_name: drupal10
@@ -57,6 +64,7 @@ services:
     build:
       context: ./images/php
       dockerfile: drupal10/Dockerfile
+      network: host
       
   magento1:
     container_name: magento1
@@ -64,6 +72,7 @@ services:
     build:
       context: ./images/php
       dockerfile: magento1/Dockerfile
+      network: host
    
   localgovdrupal:
     container_name: localgovdrupal
@@ -71,6 +80,7 @@ services:
     build:
       context: ./images/php
       dockerfile: localgovdrupal/Dockerfile
+      network: host
 
   postfix:
     container_name: postfix
@@ -78,6 +88,7 @@ services:
     build:
       context: ./images/postfix
       dockerfile: Dockerfile
+      network: host
 
   memcache:
     container_name: memcache
@@ -85,6 +96,7 @@ services:
     build:
       context: ./images/memcache
       dockerfile: Dockerfile
+      network: host
 
   nginx-proxy:
     container_name: nginx-proxy
@@ -92,6 +104,7 @@ services:
     build:
       context: ./images/nginx/nginx-proxy
       dockerfile: Dockerfile
+      network: host
 
   nginx-static:
     container_name: nginx-static
@@ -99,6 +112,7 @@ services:
     build:
       context: ./images/nginx/nginx-static
       dockerfile: Dockerfile
+      network: host
 
   redmine:
     container_name: redmine
@@ -106,6 +120,7 @@ services:
     build:
       context: ./images/redmine
       dockerfile: Dockerfile
+      network: host
 
   ssh:
     container_name: ssh
@@ -113,6 +128,7 @@ services:
     build:
       context: ./images/ssh
       dockerfile: Dockerfile
+      network: host
       args:
         - BOOTSTRAP=alpine:3.12
 
@@ -122,6 +138,7 @@ services:
     build:
       context: ./images/ssh
       dockerfile: Dockerfile
+      network: host
       args:
         - BOOTSTRAP=encircle/wordpress:latest
 
@@ -131,6 +148,7 @@ services:
     build:
       context: ./images/ssh
       dockerfile: Dockerfile
+      network: host
       args:
         - BOOTSTRAP=encircle/drupal7:latest
 
@@ -140,5 +158,6 @@ services:
     build:
       context: ./images/ssh
       dockerfile: Dockerfile
+      network: host
       args:
         - BOOTSTRAP=encircle/drupal9:latest
