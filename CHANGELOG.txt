@@ -588,3 +588,7 @@ v1.8
 - Drupal 10 updated to 10.2.10
 - Wordpress6 updated to 6.6.2
 - CiviCrm versions updated
+
+v1.8.1
+========
+- fix for wrong modsec version in the config
