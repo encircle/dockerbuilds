@@ -592,3 +592,9 @@ v1.8
 v1.8.1
 ========
 - fix for wrong modsec version in the config
+
+
+v1.8.2
+========
+- TT disabled drupal 10 auto update - we are going to do this through composer going forward
+
