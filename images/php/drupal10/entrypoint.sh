@@ -129,13 +129,13 @@ function main() {
   drupal_installed || drupal_install
 
   # check/apply update if installed
-  drupal_installed && drupal_update
+  #drupal_installed && drupal_update
 
   civi=${CIVI:-False}
   if [ "$civi" = true ]; then
     civi_installed || civi_install
 
-    civi_installed && civi_update
+    #civi_installed && civi_update
   fi
 
   webroot_setup
