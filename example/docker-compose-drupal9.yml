@@ -58,7 +58,7 @@ services:
     depends_on:
       - database
     volumes:
-      - ./drupal:/var/www/html
+      - ./drupal:/var/src/drupal
     networks:
       - frontend
       - backend
