@@ -598,3 +598,6 @@ v1.8.2
 ========
 - TT disabled drupal 10 auto update - we are going to do this through composer going forward
 
+v1.8.3
+========
+- nginx header conf fixes re pentesting
