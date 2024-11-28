@@ -7,8 +7,7 @@ wordpress_installed() {
 install_wordpress() {
 
   wp --allow-root core download \
-     --path=/var/www/html \
-     --version="${WORDPRESS_VERSION}"
+     --path=/var/www/html
 
   wp --allow-root config create \
      --path=/var/www/html \
@@ -29,18 +28,18 @@ install_wordpress() {
 
 }
 
-upgrade_wordpress() {
+# upgrade_wordpress() {
 
-  VOLUME_VERSION="$(php -r 'require('"'"'/var/www/html/wp-includes/version.php'"'"'); echo $wp_version;')"
-  echo "Volume version : $VOLUME_VERSION"
-  echo "WordPress version : $WORDPRESS_VERSION"
+#   VOLUME_VERSION="$(php -r 'require('"'"'/var/www/html/wp-includes/version.php'"'"'); echo $wp_version;')"
+#   echo "Volume version : $VOLUME_VERSION"
+#   echo "WordPress version : $WORDPRESS_VERSION"
 
-  if [ "$VOLUME_VERSION" != "$WORDPRESS_VERSION" ]; then
-    echo "Forcing WordPress code update..."
-    wp --allow-root core update --version="$WORDPRESS_VERSION"
-  fi
+#   if [ "$VOLUME_VERSION" != "$WORDPRESS_VERSION" ]; then
+#     echo "Forcing WordPress code update..."
+#     wp --allow-root core update --version="$WORDPRESS_VERSION"
+#   fi
 
-}
+# }
 
 configure_postfix() {
   PRIMARY_DOMAIN=$(echo ${SITE} | awk -F ' ' '{ print $1 }')
@@ -60,7 +59,7 @@ done
 wordpress_installed || install_wordpress
 
 # Only run if wordpress is installed
-wordpress_installed && upgrade_wordpress
+# wordpress_installed && upgrade_wordpress
 
 # Configure postfix
 configure_postfix
