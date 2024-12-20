@@ -1,4 +1,4 @@
-FROM alpine:3.19
+FROM alpine:3.21.0
 
 ENV TZ=
 # Postfix myhostname
