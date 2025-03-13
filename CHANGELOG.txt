@@ -601,3 +601,17 @@ v1.8.2
 v1.8.3
 ========
 - nginx header conf fixes re pentesting
+
+v1.8.4
+========
+- removed wordpress version pinning from container in favour of autoupdate script
+
+v1.8.5
+========
+- Applied Tom's magic fpm config to stock php container build, and nginx modsec
+
+v1.8.6
+========
+- php-memcached bumped to 3.1.5 -> 3.3.0
+- nginx-modsec: pcre2-dev added, nginx version bumped 1.27.2 -> 1.27.4, owasp 3.3.5 -> 3.3.6
+- postfix and memcache alpine version 3.19 -> 3.21

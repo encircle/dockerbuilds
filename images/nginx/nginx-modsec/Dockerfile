@@ -1,6 +1,6 @@
-ARG NGINX_VERSION=1.27.2
+ARG NGINX_VERSION=1.27.4
 ARG MODSEC_VERSION=3
-ARG OWASP_CRS_VERSION=3.3.5
+ARG OWASP_CRS_VERSION=3.3.6
 
 # Temporary image for Modsecurity compilations
 FROM nginx:${NGINX_VERSION}-alpine-perl as build
@@ -34,7 +34,8 @@ RUN apk add --no-cache --virtual general-dependencies \
     wget \
     yajl-dev \
     libstdc++ \
-    libmaxminddb-dev
+    libmaxminddb-dev \
+    pcre2-dev
 
 # Compile Modsecurity
 RUN cd /tmp \

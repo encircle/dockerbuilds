@@ -1,4 +1,4 @@
-FROM mariadb:10.5.3
+FROM mariadb:10.5.28
 
 # users and permissions
 RUN ln -s -f /dev/null /root/.bash_history \

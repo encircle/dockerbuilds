@@ -18,14 +18,6 @@ services:
       dockerfile: Dockerfile
       network: host
 
-  wordpress:
-    container_name: wordpress
-    image: encircle/wordpress:latest
-    build:
-      context: ./images/php
-      dockerfile: wordpress/Dockerfile
-      network: host
-
   wordpress6:
     container_name: wordpress6
     image: encircle/wordpress6:latest
@@ -40,14 +32,6 @@ services:
     build:
       context: ./images/php
       dockerfile: drupal7/Dockerfile
-      network: host
-
-  drupal8:
-    container_name: drupal8
-    image: encircle/drupal8:latest
-    build:
-      context: ./images/php
-      dockerfile: drupal8/Dockerfile
       network: host
 
   drupal9:
@@ -140,7 +124,7 @@ services:
       dockerfile: Dockerfile
       network: host
       args:
-        - BOOTSTRAP=encircle/wordpress:latest
+        - BOOTSTRAP=encircle/wordpress6:latest
 
   ssh-drupal:
     container_name: ssh-drupal
