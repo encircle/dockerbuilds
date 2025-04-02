@@ -12,7 +12,7 @@ RUN sh -c 'echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" > /
 RUN wget -qO - https://packages.sury.org/php/apt.gpg | apt-key add -
 RUN apt update
 RUN apt install php5.6 php5.6-fpm -y
-RUN apt install php5.6-gd php5.6-curl php5.6-xdebug php5.6-dom php5.6-iconv php5.6-mcrypt php5.6-pdo php5.6-pdo-mysql php5.6-simplexml php5.6-mbstring php5.6-soap -y
+RUN apt install php5.6-gd php5.6-curl php5.6-xdebug php5.6-dom php5.6-iconv php5.6-mcrypt php5.6-pdo php5.6-pdo-mysql php5.6-simplexml php5.6-mbstring php5.6-soap php5.6-memcached -y
 
 COPY conf/postfix.ini /usr/php5/fpm/conf.d/postfix.ini
 

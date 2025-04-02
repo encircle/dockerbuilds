@@ -615,3 +615,11 @@ v1.8.6
 - php-memcached bumped to 3.1.5 -> 3.3.0
 - nginx-modsec: pcre2-dev added, nginx version bumped 1.27.2 -> 1.27.4, owasp 3.3.5 -> 3.3.6
 - postfix and memcache alpine version 3.19 -> 3.21
+
+v1.8.7
+========
+- corrected incorrect duplicate fastcgi_buffer_size by removing now defunct file fastcgi_buffer_size.conf file
+- corrected incorrect modsec version in conf files from last bump
+- magento, added php-memcached
+- wordpress, create /var/log/php inline with new php-fpm slowlog configuration
+- postfix, fix issues with opendkim never working

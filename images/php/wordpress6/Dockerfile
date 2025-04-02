@@ -79,6 +79,8 @@ COPY conf/memory_limit.ini /usr/local/etc/php/conf.d/memory_limit.ini
 COPY conf/error-logging.ini /usr/local/etc/php/conf.d/error-logging.ini
 COPY conf/www.conf /usr/local/etc/php-fpm.d/www.conf
 
+RUN mkdir /var/log/php
+
 # users and groups
 RUN apk add shadow \
  && usermod -u 10013 www-data \

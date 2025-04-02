@@ -42,6 +42,12 @@ COPY       smtp_header_checks /etc/postfix/smtp_header_checks
 COPY       commons.sh /
 COPY	   run.sh /
 COPY	   opendkim.sh /
+
+# Set correct ownership
+RUN chown opendkim:opendkim /opendkim.sh
+RUN chown -R opendkim:opendkim /etc/opendkim \
+    && chmod -R 750 /etc/opendkim
+
 RUN        chmod +x /run.sh /opendkim.sh
 
 # Custom scripts
