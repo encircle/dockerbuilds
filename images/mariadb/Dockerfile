@@ -32,3 +32,4 @@ RUN mkdir /etc/mysql/encircle.d \
  && chown -R mysql:mysql /etc/mysql/conf.d \
  && chmod -R 640 /etc/mysql/conf.d/*
  
+ENV MARIADB_AUTO_UPGRADE=1
