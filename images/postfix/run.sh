@@ -180,6 +180,16 @@ if [ -d /etc/opendkim/keys ] && [ ! -z "$(find /etc/opendkim/keys -type f ! -nam
 	# to assume that *all* hosts are trusted.
 	echo "0.0.0.0/0" > /etc/opendkim/TrustedHosts
 
+	if [ ! -z "$DKIM_DOMAIN" ] && [ ! -z "$DKIM_SELECTOR" ] ; then
+		KEYTABLESTRING="$DKIM_SELECTOR._domainkey.$DKIM_DOMAIN $DKIM_DOMAIN:$DKIM_SELECTOR:/etc/opendkim/keys/$DKIM_DOMAIN/$DKIM_SELECTOR.private"
+		echo $KEYTABLESTRING > /etc/opendkim/KeyTable
+
+		SIGNINGTABLESTRING="*@$DKIM_DOMAIN $DKIM_SELECTOR._domainkey.$DKIM_DOMAIN"
+		echo $SIGNINGTABLESTRING > /etc/opendkim/SigningTable
+	fi
+
+	chown opendkim:opendkim /etc/opendkim/TrustedHosts /etc/opendkim/KeyTable /etc/opendkim/SigningTable
+
 else
 	echo  -e "‣ $info No DKIM keys found, will not use DKIM."
 	postconf -# smtpd_milters
