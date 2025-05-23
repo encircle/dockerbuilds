@@ -623,3 +623,13 @@ v1.8.7
 - magento, added php-memcached
 - wordpress, create /var/log/php inline with new php-fpm slowlog configuration
 - postfix, fix issues with opendkim never working
+
+v1.8.8
+========
+- MariaDB - changed the binlog location to the default data directory
+- MariaDB - added MARIADB_AUTO_UPGRADE=1 env to enable auto upgrades.
+
+v1.8.9
+========
+- added CV to wordpress image
+- corrected directory permissions for php-fpm logging

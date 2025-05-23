@@ -59,6 +59,10 @@ RUN set -ex; \
 	apk add --no-network --virtual .wordpress-phpexts-rundeps $runDeps; \
 	apk del --no-network .build-deps
 
+#install cv
+RUN curl -LsS https://download.civicrm.org/cv/cv.phar -o /usr/local/bin/cv
+RUN chmod +x /usr/local/bin/cv
+
 # Set recommended PHP opcache settings
 RUN set -eux; \
 	docker-php-ext-enable opcache; \
@@ -80,6 +84,7 @@ COPY conf/error-logging.ini /usr/local/etc/php/conf.d/error-logging.ini
 COPY conf/www.conf /usr/local/etc/php-fpm.d/www.conf
 
 RUN mkdir /var/log/php
+RUN chown 10013:10013 /var/log/php
 
 # users and groups
 RUN apk add shadow \
