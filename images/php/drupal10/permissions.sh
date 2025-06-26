@@ -18,3 +18,7 @@ find /var/www/html/site/web/.git -type f ! -perm 0640 -exec chmod 640 {} +
 # /sites/default/files
 find /var/www/html/site/web/sites/default/files -type d ! -perm 0770 -exec chmod 770 {} +
 find /var/www/html/site/web/sites/default/files -type f ! -perm 0660 -exec chmod 660 {} +
+
+chown root:www-data -R /var/www/html/private
+find /var/www/html/private -type d ! -perm 0770 -exec chmod 770 {} +
+find /var/www/html/private -type f ! -perm 0660 -exec chmod 660 {} +
