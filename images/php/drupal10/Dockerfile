@@ -1,6 +1,6 @@
 FROM php:8.1-fpm-alpine
 
-ENV COMPOSER_SHA384 dac665fdc30fdd8ec78b38b9800061b4150413ff2e3b6f88543c636f7cd84f6db9189d43a81e5503cda447da73c7e5b6
+ENV COMPOSER_SHA384 ed0feb545ba87161262f2d45a633e34f591ebb3381f2e0063c345ebea4d228dd0043083717770234ec00c5a9f9593792
 ENV DRUPAL_VERSION 10.4.8
 ENV CIVICRM_VERSION 5.81.3
 
@@ -99,6 +99,7 @@ COPY conf/memory_limit.ini /usr/local/etc/php/conf.d/memory_limit.ini
 COPY conf/memcache.ini /usr/local/etc/php/conf.d/memcache.ini
 COPY conf/error-logging.ini /usr/local/etc/php/conf.d/error-logging.ini
 COPY conf/drupal.ini /usr/local/etc/php/conf.d/drupal.ini
+COPY conf/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 COPY conf/www.conf /usr/local/etc/php-fpm.d/www.conf
 
 # composer
