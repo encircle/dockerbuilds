@@ -1,4 +1,4 @@
-FROM php:8.1-fpm-alpine
+FROM php:8.5.0RC3-fpm-alpine
 
 # ENV WORDPRESS_VERSION 6.6.2
 
