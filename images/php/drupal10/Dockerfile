@@ -121,7 +121,7 @@ RUN mkdir -p /var/src/drupal \
  && chmod -R 755 /var/src
 
 # scripts
-COPY drupal9/permissions.sh /usr/local/bin
+COPY drupal10/permissions.sh /usr/local/bin
 RUN chmod 755 /usr/local/bin/permissions.sh \
  && crontab -l > /tmp/.cron \
  && echo "0 3 * * * /usr/local/bin/permissions.sh" >> /tmp/.cron \
