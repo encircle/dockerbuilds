@@ -1,4 +1,4 @@
-FROM mariadb:10.5.28
+FROM mariadb:10.6
 
 # users and permissions
 RUN ln -s -f /dev/null /root/.bash_history \
@@ -7,18 +7,21 @@ RUN ln -s -f /dev/null /root/.bash_history \
  && chown -R mysql:root /docker-entrypoint-initdb.d \
  && chown mysql:mysql /var/log/mysql
 
-# Hold mariadb version
-RUN echo mariadb-backup hold | dpkg --set-selections \
- && echo mariadb-client-10.5 hold | dpkg --set-selections \
- && echo mariadb-client-core-10.5 hold | dpkg --set-selections \
- && echo mariadb-common hold | dpkg --set-selections \
- && echo mariadb-server hold | dpkg --set-selections \
- && echo mariadb-server-10.5 hold | dpkg --set-selections \
- && echo mariadb-server-core-10.5 hold | dpkg --set-selections
+# --- Pin MariaDB packages so apt upgrade doesn't replace them ---
+RUN echo "mariadb-backup hold" | dpkg --set-selections \
+ && echo "mariadb-client-10.6 hold" | dpkg --set-selections \
+ && echo "mariadb-client-core-10.6 hold" | dpkg --set-selections \
+ && echo "mariadb-common hold" | dpkg --set-selections \
+ && echo "mariadb-server" hold | dpkg --set-selections \
+ && echo "mariadb-server-10.6 hold" | dpkg --set-selections \
+ && echo "mariadb-server-core-10.6 hold" | dpkg --set-selections
 
-# Upgrade packages
-RUN apt update -y \
- && apt upgrade -y
+# --- Upgrade OS packages without touching MariaDB ---
+RUN apt-get update -y \
+ && apt-get upgrade -y \
+ && apt-get autoremove -y \
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/*
 
 # configs
 COPY my.cnf /etc/mysql/my.cnf
@@ -33,3 +36,9 @@ RUN mkdir /etc/mysql/encircle.d \
  && chmod -R 640 /etc/mysql/conf.d/*
  
 ENV MARIADB_AUTO_UPGRADE=1
+
+# ----------------------
+# Healthcheck
+# ----------------------
+HEALTHCHECK --interval=30s --timeout=5s --retries=5 \
+    CMD mysqladmin ping --socket=/var/run/mysqld/mysqld.sock || exit 1

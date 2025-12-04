@@ -1,93 +1,89 @@
-FROM php:8.1-fpm-alpine
+FROM php:8.3-fpm-alpine
 
-ENV COMPOSER_SHA384 ed0feb545ba87161262f2d45a633e34f591ebb3381f2e0063c345ebea4d228dd0043083717770234ec00c5a9f9593792
-ENV DRUPAL_VERSION 10.4.8
-ENV CIVICRM_VERSION 5.81.3
+# ------------------------------------------------------------------------------
+# Core system tools
+# ------------------------------------------------------------------------------
+RUN apk add --no-cache \
+    bash \
+    nano \
+    zip \
+    git \
+    curl \
+    openssh \
+    openssh-client \
+    mariadb-client \
+    nodejs \
+    npm \
+    linux-headers \
+	# Runtime deps for PECL extensions
+    libmemcached \
+    cyrus-sasl \
+    zlib
 
-# install the PHP extensions we need
+# ------------------------------------------------------------------------------
+# PHP core extensions (gd, pdo, zip, opcache)
+# ------------------------------------------------------------------------------
 RUN set -eux; \
-	\
-	apk add --no-cache --virtual .build-deps \
-		coreutils \
-		freetype-dev \
-		libjpeg-turbo-dev \
-		libpng-dev \
-		libzip-dev \
-# postgresql-dev is needed for https://bugs.alpinelinux.org/issues/3642
-		postgresql-dev \
-		openssh \
-	; \
-	\
-	docker-php-ext-configure gd --with-freetype --with-jpeg\
-	; \
-	\
-	docker-php-ext-install -j "$(nproc)" \
-		gd \
-		opcache \
-		pdo_mysql \
-		pdo_pgsql \
-		zip \
-	; \
-	\
-	runDeps="$( \
-		scanelf --needed --nobanner --format '%n#p' --recursive /usr/local \
-			| tr ',' '\n' \
-			| sort -u \
-			| awk 'system("[ -e /usr/local/lib/" $1 " ]") == 0 { next } { print "so:" $1 }' \
-	)"; \
-	apk add --no-network --virtual .drupal-phpexts-rundeps $runDeps; \
-	apk del --no-network .build-deps
+    apk add --no-cache --virtual .build-php-core \
+        $PHPIZE_DEPS \
+        freetype-dev \
+        libjpeg-turbo-dev \
+        libpng-dev \
+        libzip-dev \
+        postgresql-dev \
+        icu-dev \
+        libxml2-dev \
+    ; \
+    docker-php-ext-configure gd --with-freetype --with-jpeg; \
+    docker-php-ext-install -j"$(nproc)" \
+        gd \
+        opcache \
+        zip \
+        mysqli \
+        pdo_mysql \
+        pdo_pgsql \
+        intl \
+        bcmath \
+        soap \
+    ; \
+    runDeps="$( \
+        scanelf --needed --nobanner --format '%n#p' --recursive /usr/local \
+            | tr ',' '\n' | sort -u \
+            | awk 'system("[ -e /usr/local/lib/" $1 " ]") == 0 { next } { print "so:" $1 }' \
+    )"; \
+    apk add --no-network --virtual .php-rundeps $runDeps; \
+    apk del .build-php-core
 
-RUN set -eux;\
-# build tools
-apk add --no-cache --virtual .build-deps autoconf g++ make; \
-apk add --update linux-headers; \
-apk add openssh-client; \
-
-# redis
- curl 'https://pecl.php.net/get/redis-5.3.7.tgz' -o redis-5.3.7.tgz; \
- pecl install -o -f redis-5.3.7.tgz; \
- docker-php-ext-enable redis; \
- rm -rf redis-5.3.7.tgz; \
-# xdebug
- curl 'https://pecl.php.net/get/xdebug-3.2.0.tgz' -o xdebug-3.2.0.tgz;\
- pecl install -o -f xdebug-3.2.0.tgz; \
- docker-php-ext-enable xdebug; \
- rm -rf xdebug-3.2.0.tgz; \
-# memcache
-apk add --no-cache \
-        libpq \
+# ------------------------------------------------------------------------------
+# PECL extensions (redis, xdebug, memcached)
+# ------------------------------------------------------------------------------
+RUN set -eux; \
+    apk add --no-cache --virtual .build-pecl \
+        $PHPIZE_DEPS \
         libmemcached-dev \
+        cyrus-sasl-dev \
         zlib-dev \
-        curl;\
-curl -L -o /tmp/memcached.tar.gz "https://github.com/php-memcached-dev/php-memcached/archive/v3.3.0.tar.gz";\
-mkdir -p /usr/src/php/ext/memcached;\
-tar -C /usr/src/php/ext/memcached -zxvf /tmp/memcached.tar.gz --strip 1;\
-docker-php-ext-configure memcached;\
-docker-php-ext-install memcached;\
-rm /tmp/memcached.tar.gz;\
-# mysqli
-docker-php-ext-install mysqli && docker-php-ext-enable mysqli ;\
-# intl, bcmap, soap
-apk add --no-cache\
-        icu-dev\
-        libxml2-dev;\
-docker-php-ext-install intl bcmath soap;\
-# patch
-apk add --no-cache patch;\
-# remove cache
-apk del --no-network .build-deps;\
-# clear cache
-rm -rf /tmp/pear
+        openssl-dev \
+        libevent-dev; \
+    \
+    pecl install redis; \
+    pecl install xdebug; \
+    pecl install memcached; \
+    \
+    docker-php-ext-enable redis xdebug memcached; \
+    \
+    apk del .build-pecl; \
+    rm -rf /tmp/pear
 
-# set recommended opcache settings
-# see https://secure.php.net/manual/en/opcache.installation.php
+# ------------------------------------------------------------------------------
+# PHP configuration
+# ------------------------------------------------------------------------------
 RUN { \
-	echo 'opcache.memory_consumption=128'; \
-	echo 'opcache.interned_strings_buffer=8'; \
-	echo 'opcache.max_accelerated_files=4000'; \
-	echo 'opcache.revalidate_freq=60'; \
-	echo 'opcache.fast_shutdown=1'; \
+    echo 'opcache.memory_consumption=128'; \
+    echo 'opcache.interned_strings_buffer=8'; \
+    echo 'opcache.max_accelerated_files=4000'; \
+    echo 'opcache.revalidate_freq=60'; \
+    echo 'opcache.fast_shutdown=1'; \
 } > /usr/local/etc/php/conf.d/opcache-recommended.ini
 
 # additional php configurations
@@ -102,57 +98,70 @@ COPY conf/drupal.ini /usr/local/etc/php/conf.d/drupal.ini
 COPY conf/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 COPY conf/www.conf /usr/local/etc/php-fpm.d/www.conf
 
-# composer
-RUN set -eux;\
-  php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');";\
-  php -r "if (hash_file('sha384', 'composer-setup.php') === '${COMPOSER_SHA384}') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); };" \
-  && php composer-setup.php --install-dir=/usr/local/bin --filename=composer --quiet;\
-  rm composer-setup.php
+# ------------------------------------------------------------------------------
+# Composer (official binary, no hash required)
+# ------------------------------------------------------------------------------
+COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
 
-# user accounts
-RUN apk add --no-cache --virtual .build-deps shadow;\
-            usermod -u 10013 www-data;\
-            groupmod -g 10013 www-data;\
-            usemod --shell /bin/bash;\
-            apk del shadow
+# ------------------------------------------------------------------------------
+# User / group alignment
+# ------------------------------------------------------------------------------
+RUN apk add --no-cache --virtual .usermod shadow \
+ && usermod -u 10013 www-data \
+ && groupmod -g 10013 www-data \
+ && usermod --shell /bin/bash www-data \
+ && apk del .usermod
 
-# directory for composer drupal project
+# ------------------------------------------------------------------------------
+# Drupal directory
+# ------------------------------------------------------------------------------
 RUN mkdir -p /var/src/drupal \
+ && chown -R www-data:www-data /var/src/drupal \
  && chmod -R 755 /var/src
 
-# scripts
-COPY drupal10/permissions.sh /usr/local/bin
-RUN chmod 755 /usr/local/bin/permissions.sh \
- && crontab -l > /tmp/.cron \
- && echo "0 3 * * * /usr/local/bin/permissions.sh" >> /tmp/.cron \
- && crontab /tmp/.cron \
- && rm -rf /tmp/.cron
+WORKDIR /var/src/drupal/site
 
-# mysql package for drush
-RUN apk add --no-cache mariadb-client
+# ------------------------------------------------------------------------------
+# Drupal / CiviCRM tools
+# ------------------------------------------------------------------------------
+RUN curl -LsS https://download.civicrm.org/cv/cv.phar -o /usr/local/bin/cv \
+ && chmod +x /usr/local/bin/cv
 
-RUN ln -s /var/src/drupal/site/vendor/bin/drush /usr/local/bin/drush || true
-
-RUN curl -LsS https://download.civicrm.org/cv/cv.phar -o /usr/local/bin/cv
-RUN chmod +x /usr/local/bin/cv
-
-#install civix
 RUN curl -LsS https://download.civicrm.org/civix/civix.phar -o /usr/local/bin/civix \
  && chmod +x /usr/local/bin/civix
 
-# admin packages
-RUN apk add --no-cache git nano bash zip
+RUN ln -sf /var/src/drupal/site/vendor/bin/drush /usr/local/bin/drush || true
 
-#sass
-RUN apk add --no-cache nodejs npm && npm install -g sass
+# ------------------------------------------------------------------------------
+# Node tooling (sass)
+# ------------------------------------------------------------------------------
+RUN npm install -g sass
 
-# upgrade packages
-RUN apk update \
- && apk upgrade
+# ------------------------------------------------------------------------------
+# Permissions cron script (NOTE: cron daemon must be started by entrypoint)
+# ------------------------------------------------------------------------------
+COPY drupal10/permissions.sh /usr/local/bin/permissions.sh
+RUN chmod 755 /usr/local/bin/permissions.sh \
+ && crontab -l 2>/dev/null | { cat; echo "0 3 * * * /usr/local/bin/permissions.sh"; } | crontab -
 
-# entrypoint
-COPY drupal10/entrypoint.sh /usr/local/bin/
+# ------------------------------------------------------------------------------
+# System upgrade (last)
+# ------------------------------------------------------------------------------
+RUN apk update && apk upgrade && rm -rf /var/cache/apk/*
+
+# ------------------------------------------------------------------------------
+# Entrypoint
+# ------------------------------------------------------------------------------
+COPY drupal10/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod 755 /usr/local/bin/entrypoint.sh
 
-WORKDIR /var/src/drupal/site
+# ------------------------------------------------------------------------------
+# PHP-FPM healthcheck
+# ------------------------------------------------------------------------------
+HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
+  CMD SCRIPT_NAME=/ping \
+      SCRIPT_FILENAME=/ping \
+      REQUEST_METHOD=GET \
+      cgi-fcgi -bind -connect 127.0.0.1:9000 || exit 1
+
 ENTRYPOINT [ "bash", "/usr/local/bin/entrypoint.sh" ]

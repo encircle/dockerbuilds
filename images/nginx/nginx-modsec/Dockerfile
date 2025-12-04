@@ -1,83 +1,87 @@
-ARG NGINX_VERSION=1.27.4
+ARG NGINX_VERSION=1.29.3
 ARG MODSEC_VERSION=3
-ARG OWASP_CRS_VERSION=3.3.6
+ARG OWASP_CRS_VERSION=4.3.0
 
-# Temporary image for Modsecurity compilations
-FROM nginx:${NGINX_VERSION}-alpine-perl as build
+#
+# ===============================
+# Build stage – compile ModSecurity
+# ===============================
+#
+FROM nginx:${NGINX_VERSION}-alpine-perl AS build
 
 ARG NGINX_VERSION
 ARG MODSEC_VERSION
 
 ENV ENV_MODSEC_VERSION=${MODSEC_VERSION}
 ENV ENV_NGINX_VERSION=${NGINX_VERSION}
-ENV WEBROOT /var/www/html
+ENV WEBROOT=/var/www/html
 
-# Dependencies
-RUN apk add --no-cache --virtual general-dependencies \
-    gcc \
-    make \
-    libc-dev \
-    g++ \
-    openssl-dev \
-    linux-headers \
-    pcre-dev \
-    zlib-dev \
-    git \
-    libtool \
-    automake \
-    autoconf \
-    lmdb-dev \
-    libxml2-dev \
-    curl-dev \
-    byacc \
-    flex \
-    wget \
-    yajl-dev \
-    libstdc++ \
-    libmaxminddb-dev \
-    pcre2-dev
+# Dependencies for building ModSecurity + connector
+RUN apk add --no-cache --virtual build-deps \
+    gcc g++ make libc-dev openssl-dev linux-headers \
+    pcre2-dev zlib-dev git libtool automake autoconf \
+    lmdb-dev libxml2-dev curl-dev byacc flex wget \
+    yajl-dev libstdc++ libmaxminddb-dev
 
-# Compile Modsecurity
+#
+# 1. Build ModSecurity v3
+#
 RUN cd /tmp \
- && git clone --depth 1 -b v${ENV_MODSEC_VERSION}/master --single-branch https://github.com/SpiderLabs/ModSecurity \
+ && git clone --depth 1 -b v${ENV_MODSEC_VERSION}/master --single-branch \
+        https://github.com/SpiderLabs/ModSecurity \
  && cd ModSecurity \
- && git submodule init \
- && git submodule update \
+ && git submodule update --init --recursive --depth 1 \
  && ./build.sh \
  && ./configure \
- && make \
+ && make -j"$(nproc)" \
  && make install
 
+#
+# 2. Build nginx connector
+#
 # Compile Modsecurity NGINX connector
 RUN cd /tmp \
  && git clone --depth 1 https://github.com/SpiderLabs/ModSecurity-nginx.git \
  && wget http://nginx.org/download/nginx-${ENV_NGINX_VERSION}.tar.gz \
- && tar -xvzf nginx-${ENV_NGINX_VERSION}.tar.gz \
+ && tar -xzf nginx-${ENV_NGINX_VERSION}.tar.gz \
+ && ls -lah /tmp \
  && cd /tmp/nginx-${ENV_NGINX_VERSION} \
- && ./configure --with-compat --add-dynamic-module=/tmp/ModSecurity-nginx \
- && make modules
+ && ./configure \
+      --with-compat \
+      --with-pcre-jit \
+      --add-dynamic-module=/tmp/ModSecurity-nginx \
+      --with-cc-opt="-I/usr/include" \
+      --with-ld-opt="-L/usr/lib" \
+ && make modules -j"$(nproc)"  \
+ && ls -lah objs
 
-# The actual image
+#
+# ===============================
+# Final runtime image
+# ===============================
+#
 FROM nginx:${NGINX_VERSION}-alpine-perl
 
 ARG OWASP_CRS_VERSION
 ENV ENV_OWASP_CRS_VERSION=${OWASP_CRS_VERSION}
-ENV WEBROOT /var/www/html
+ENV WEBROOT=/var/www/html
 
-# Dependencies
+# Runtime dependencies
 RUN apk add --no-cache \
     yajl \
     libstdc++ \
-    libmaxminddb-dev \
-    lmdb-dev \
-    libxml2-dev \
-    curl-dev
+    libmaxminddb \
+    lmdb \
+    libxml2 \
+    curl \
+    pcre2 \
+    pcre2-dev
 
-# Copy over precompiled binaries
+# Copy ModSecurity binaries
 COPY --from=build /tmp/nginx-${NGINX_VERSION}/objs/ngx_http_modsecurity_module.so /usr/lib/nginx/modules/
 COPY --from=build /usr/local/modsecurity/ /usr/local/modsecurity/
 
-# Users and groups
+# Users & groups
 RUN apk add shadow \
  && usermod -u 10014 nginx \
  && groupmod -g 10014 nginx \
@@ -85,18 +89,20 @@ RUN apk add shadow \
  && usermod -aG www-data nginx \
  && apk del shadow
 
-# NGINX configurations
+#
+# ===============================
+# NGINX configs
+# ===============================
+#
 RUN rm /etc/nginx/nginx.conf \
  && rm /etc/nginx/conf.d/default.conf \
  && printf "USER:MbMfkhm4azvtI" >> /etc/nginx/.htpasswd
 
-# Copy base config
-COPY nginx.conf  /etc/nginx/nginx.conf
-COPY default.conf       /etc/nginx/conf.d/default.conf
-COPY fastcgi.conf /etc/nginx/conf.d/fastcgi.conf
+COPY nginx.conf        /etc/nginx/nginx.conf
+COPY default.conf      /etc/nginx/conf.d/default.conf
+COPY fastcgi.conf      /etc/nginx/conf.d/fastcgi.conf
 
-# Copy hardening configs
-COPY hardening/*.conf /etc/nginx/hardening.d/
+COPY hardening/*.conf  /etc/nginx/hardening.d/
 COPY hardening/error.html /var/www/error.html
 RUN chown root:www-data /var/www/error.html \
  && chmod 640 /var/www/error.html
@@ -110,47 +116,63 @@ COPY certs/client.crt   /etc/nginx/certs/client.crt
 COPY certs/client.key   /etc/nginx/certs/client.key
 COPY dhparam            /etc/nginx/dhparam
 
-# Modsecurity configurations
-RUN apk add pcre-dev \
-    zlib-dev \
-    openssl-dev \
-    libmaxminddb \
-    yajl-dev \
- && mkdir /etc/nginx/modsec
+#
+# ===============================
+# ModSecurity config
+# ===============================
+#
+RUN apk add --no-cache pcre2 zlib openssl yajl libmaxminddb
+
+RUN mkdir -p /etc/nginx/modsec
 
 COPY modsecurity.conf       /etc/nginx/modsec/modsecurity.conf
 COPY unicode.mapping        /etc/nginx/modsec/unicode.mapping
 COPY nginx-modsecurity.conf /etc/nginx/conf.d/modsecurity.conf
 COPY clamd-hook.sh          /usr/local/bin/clamd-hook.sh
 
-# ClamAV configurations
 RUN chown root:nginx /usr/local/bin/clamd-hook.sh \
  && chmod 750 /usr/local/bin/clamd-hook.sh \
  && mkdir /tmp/modsec \
  && chown nginx:nginx /tmp/modsec \
  && chmod 700 /tmp/modsec
 
-# add admin user packages 
-RUN apk add jq \
- && apk add bash
+# Admin tools
+RUN apk add jq bash
 
-# OWASP ruleset
+#
+# ===============================
+# OWASP CRS (latest 4.3.0)
+# ===============================
+#
 RUN cd /tmp \
- && wget https://github.com/coreruleset/coreruleset/archive/v${OWASP_CRS_VERSION}.tar.gz \
- && tar -xvzf /tmp/v${ENV_OWASP_CRS_VERSION}.tar.gz -C /etc/nginx/modsec \
- && mv /etc/nginx/modsec/coreruleset-${ENV_OWASP_CRS_VERSION}/crs-setup.conf.example /etc/nginx/modsec/coreruleset-${ENV_OWASP_CRS_VERSION}/crs-setup.conf \
- && rm -rf /tmp/coreruleset-${ENV_OWASP_CRS_VERSION}.tar.gz \
- && mkdir /etc/nginx/modsec/whitelist \
+ && wget https://github.com/coreruleset/coreruleset/archive/refs/tags/v${ENV_OWASP_CRS_VERSION}.tar.gz \
+ && tar -xvzf v${ENV_OWASP_CRS_VERSION}.tar.gz -C /etc/nginx/modsec \
+ && mv /etc/nginx/modsec/coreruleset-${ENV_OWASP_CRS_VERSION}/crs-setup.conf.example \
+       /etc/nginx/modsec/coreruleset-${ENV_OWASP_CRS_VERSION}/crs-setup.conf \
+ && mkdir -p /etc/nginx/modsec/whitelist \
  && touch /etc/nginx/modsec/whitelist/whitelist.conf
 
-# CRS set up
-COPY crs-setup.conf   /etc/nginx/modsec/coreruleset-${OWASP_CRS_VERSION}/crs-setup.conf
+# Custom rule exclusions and crs-setup overrides
+COPY REQUEST-900-EXCLUSIONS.conf /etc/nginx/modsec/REQUEST-900-EXCLUSIONS.conf
+COPY RESPONSE-999-EXCLUSIONS-AFTER-CRS.conf /etc/nginx/modsec/RESPONSE-999-EXCLUSIONS-AFTER-CRS.conf
+COPY crs-setup.conf /etc/nginx/modsec/coreruleset-${OWASP_CRS_VERSION}/crs-setup.conf
 
-# Upgrade packages
-RUN apk update \
- && apk upgrade --ignore nginx
+#
+# ===============================
+# Upgrade OS packages
+# ===============================
+#
+RUN apk update && apk upgrade --ignore nginx
 
+RUN rm -rf /tmp/*
+
+#
 # Entrypoint
+# ===============================
+#
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod 755 /usr/local/bin/entrypoint.sh
+
+HEALTHCHECK CMD nginx -t || exit 1
+
 CMD /usr/local/bin/entrypoint.sh

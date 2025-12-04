@@ -642,3 +642,10 @@ v1.9.1
 ========
 - rebuild for libxml vuln
 - disabled xdebug by default
+
+v2.0.0
+========
+- mariadb: bumped to 10.6, healthcheck added
+- drupal10: major rewrite, php bumped to 8.3, healthcheck added
+- wordpress6: major rewrite, php bumped to 8.3, healthcheck added
+- nginx-modsec: major rewrite, nginx version from 1.27.4 to 1.29.3, owasp move from 3 to 4, healthcheck added
