@@ -41,4 +41,4 @@ ENV MARIADB_AUTO_UPGRADE=1
 # Healthcheck
 # ----------------------
 HEALTHCHECK --interval=30s --timeout=5s --retries=5 \
-    CMD mysqladmin ping --socket=/var/run/mysqld/mysqld.sock || exit 1
+    CMD mysqladmin ping -u root -p"$MYSQL_ROOT_PASSWORD" --socket=/var/run/mysqld/mysqld.sock || exit 1
