@@ -18,7 +18,8 @@ RUN apk add --no-cache \
 	# Runtime deps for PECL extensions
     libmemcached \
     cyrus-sasl \
-    zlib
+    zlib \
+    fcgi
 
 # ------------------------------------------------------------------------------
 # PHP core extensions (gd, pdo, zip, opcache)
