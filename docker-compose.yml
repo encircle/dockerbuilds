@@ -26,21 +26,21 @@ services:
       dockerfile: wordpress6/Dockerfile
       network: host
 
-  drupal7:
-    container_name: drupal7
-    image: encircle/drupal7:latest
-    build:
-      context: ./images/php
-      dockerfile: drupal7/Dockerfile
-      network: host
+  # drupal7:
+  #   container_name: drupal7
+  #   image: encircle/drupal7:latest
+  #   build:
+  #     context: ./images/php
+  #     dockerfile: drupal7/Dockerfile
+  #     network: host
 
-  drupal9:
-    container_name: drupal9
-    image: encircle/drupal9:latest
-    build:
-      context: ./images/php
-      dockerfile: drupal9/Dockerfile
-      network: host
+  # drupal9:
+  #   container_name: drupal9
+  #   image: encircle/drupal9:latest
+  #   build:
+  #     context: ./images/php
+  #     dockerfile: drupal9/Dockerfile
+  #     network: host
       
   drupal10:
     container_name: drupal10
@@ -58,13 +58,13 @@ services:
       dockerfile: magento1/Dockerfile
       network: host
    
-  localgovdrupal:
-    container_name: localgovdrupal
-    image: encircle/localgovdrupal:latest
-    build:
-      context: ./images/php
-      dockerfile: localgovdrupal/Dockerfile
-      network: host
+  # localgovdrupal:
+  #   container_name: localgovdrupal
+  #   image: encircle/localgovdrupal:latest
+  #   build:
+  #     context: ./images/php
+  #     dockerfile: localgovdrupal/Dockerfile
+  #     network: host
 
   postfix:
     container_name: postfix
@@ -98,50 +98,50 @@ services:
       dockerfile: Dockerfile
       network: host
 
-  redmine:
-    container_name: redmine
-    image: encircle/redmine:latest
-    build:
-      context: ./images/redmine
-      dockerfile: Dockerfile
-      network: host
+  # redmine:
+  #   container_name: redmine
+  #   image: encircle/redmine:latest
+  #   build:
+  #     context: ./images/redmine
+  #     dockerfile: Dockerfile
+  #     network: host
 
-  ssh:
-    container_name: ssh
-    image: encircle/ssh:latest
-    build:
-      context: ./images/ssh
-      dockerfile: Dockerfile
-      network: host
-      args:
-        - BOOTSTRAP=alpine:3.12
+  # ssh:
+  #   container_name: ssh
+  #   image: encircle/ssh:latest
+  #   build:
+  #     context: ./images/ssh
+  #     dockerfile: Dockerfile
+  #     network: host
+  #     args:
+  #       - BOOTSTRAP=alpine:3.12
 
-  ssh-wordpress:
-    container_name: ssh-wordpress
-    image: encircle/ssh-wordpress:latest
-    build:
-      context: ./images/ssh
-      dockerfile: Dockerfile
-      network: host
-      args:
-        - BOOTSTRAP=encircle/wordpress6:latest
+  # ssh-wordpress:
+  #   container_name: ssh-wordpress
+  #   image: encircle/ssh-wordpress:latest
+  #   build:
+  #     context: ./images/ssh
+  #     dockerfile: Dockerfile
+  #     network: host
+  #     args:
+  #       - BOOTSTRAP=encircle/wordpress6:latest
 
-  ssh-drupal:
-    container_name: ssh-drupal
-    image: encircle/ssh-drupal:latest
-    build:
-      context: ./images/ssh
-      dockerfile: Dockerfile
-      network: host
-      args:
-        - BOOTSTRAP=encircle/drupal7:latest
+  # ssh-drupal:
+  #   container_name: ssh-drupal
+  #   image: encircle/ssh-drupal:latest
+  #   build:
+  #     context: ./images/ssh
+  #     dockerfile: Dockerfile
+  #     network: host
+  #     args:
+  #       - BOOTSTRAP=encircle/drupal7:latest
 
-  ssh-drupal9:
-    container_name: ssh-drupal9
-    image: encircle/ssh-drupal9:latest
-    build:
-      context: ./images/ssh
-      dockerfile: Dockerfile
-      network: host
-      args:
-        - BOOTSTRAP=encircle/drupal9:latest
+  # ssh-drupal9:
+  #   container_name: ssh-drupal9
+  #   image: encircle/ssh-drupal9:latest
+  #   build:
+  #     context: ./images/ssh
+  #     dockerfile: Dockerfile
+  #     network: host
+  #     args:
+  #       - BOOTSTRAP=encircle/drupal9:latest
