@@ -60,7 +60,7 @@ RUN set -eux; \
 # -------------------------------
 # Install bash for entrypoint and scripts
 # -------------------------------
-RUN apk add --no-cache bash
+RUN apk add --no-cache bash fcgi
 
 # -------------------------------
 # Install cv (CiviCRM command line)
