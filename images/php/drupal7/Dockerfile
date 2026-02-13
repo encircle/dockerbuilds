@@ -1,4 +1,4 @@
-FROM php:8.1-fpm-alpine
+FROM php:8.4.13-fpm-alpine
 
 ENV DRUSH_VERSION 8.3.5
 ENV DRUPAL_VERSION 7.101
