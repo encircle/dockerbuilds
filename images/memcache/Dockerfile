@@ -9,4 +9,8 @@ RUN apk update \
 
 USER memcached
 EXPOSE 11211
+
+HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
+    CMD echo stats | nc localhost 11211 | grep -q pid || exit 1
+
 CMD ["/usr/local/bin/entrypoint.sh"]

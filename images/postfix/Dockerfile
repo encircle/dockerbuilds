@@ -67,4 +67,8 @@ RUN apk update \
  && apk upgrade
 
 EXPOSE     587
+
+HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
+    CMD postfix status || exit 1
+
 CMD        ["/bin/sh", "-c", "/run.sh"]

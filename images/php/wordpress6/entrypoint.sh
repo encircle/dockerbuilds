@@ -1,4 +1,5 @@
-set -x
+#!/bin/bash
+set -ex
 
 wordpress_installed() {
   [[ -f /var/www/html/wp-config.php ]]
@@ -47,19 +48,20 @@ configure_postfix() {
 }
 
 # wait for the database connection
-db_status=1
-while [[ $db_status != 0 ]]; do
-  echo 'Waiting for DB to be available'
-  $(nc -z "$WORDPRESS_DB_HOST" 3306 > /dev/null 2>&1)
-  db_status=$?
+echo 'Waiting for DB to be available'
+while ! nc -z "$WORDPRESS_DB_HOST" 3306 > /dev/null 2>&1; do
   sleep 3
 done
 
 # Only run if wordpress is not installed
-wordpress_installed || install_wordpress
+if ! wordpress_installed; then
+  install_wordpress
+fi
 
 # Only run if wordpress is installed
-# wordpress_installed && upgrade_wordpress
+#if wordpress_installed; then
+#  upgrade_wordpress
+#fi
 
 # Configure postfix
 configure_postfix

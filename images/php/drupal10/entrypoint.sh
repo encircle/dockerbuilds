@@ -1,4 +1,5 @@
-set -x
+#!/bin/bash
+set -ex
 
 function configure_postfix() {
   DOMAIN=$(echo ${SITE} | awk -F ' ' '{ print $1 }')
@@ -71,7 +72,7 @@ function drupal_install() {
   set -eux
 
   cd $INSTALL_DIR
-  composer create-project drupal/recommended-project:$DRUPAL_VERSION site
+  composer create-project drupal/recommended-project:"${DRUPAL_VERSION:-^10}" site
   chmod 750 $INSTALL_DIR/site
   chown root:www-data site
   chown -R www-data:www-data $INSTALL_DIR/site/web/sites $INSTALL_DIR/site/web/modules $INSTALL_DIR/site/web/themes
@@ -102,8 +103,13 @@ function drupal_update() {
 }
 
 function webroot_setup() {
-  rm -rf /var/www/html
-  ln -s $INSTALL_DIR /var/www/html
+  # /var/www/html may be a Docker mount point and cannot be removed directly.
+  # Try to replace it with a symlink; if that fails, symlink the site dir inside it.
+  if [ ! -L /var/www/html ]; then
+    rm -rf /var/www/html 2>/dev/null \
+      && ln -s $INSTALL_DIR /var/www/html \
+      || ln -sfn $INSTALL_DIR/site /var/www/html/site
+  fi
   chown -h root:www-data $WEBROOT/
   chown root:www-data $INSTALL_DIR/site/web
   chmod 750 $WEBROOT/
@@ -117,31 +123,39 @@ function main() {
   configure_postfix
 
   # wait for the database connection
-  db_status=1
   echo 'Waiting for DB to be available'
-  while [[ $db_status != 0 ]]; do
-    $(nc -z "$DB_HOST" 3306 > /dev/null 2>&1)
-    db_status=$?
+  while ! nc -z "$DB_HOST" 3306 > /dev/null 2>&1; do
     sleep 3
   done
 
   # install if not installed
-  drupal_installed || drupal_install
+  if ! drupal_installed; then
+    drupal_install
+  fi
 
   # check/apply update if installed
-  #drupal_installed && drupal_update
+  #if drupal_installed; then
+  #  drupal_update
+  #fi
 
   civi=${CIVI:-False}
   if [ "$civi" = true ]; then
-    civi_installed || civi_install
+    if ! civi_installed; then
+      civi_install
+    fi
 
-    #civi_installed && civi_update
+    #if civi_installed; then
+    #  civi_update
+    #fi
   fi
 
   webroot_setup
 
   # enforce permissions
   /usr/local/bin/permissions.sh 2>/dev/null &
+
+  # start cron daemon
+  /usr/sbin/crond -f -l 8 &
 
   # start the daemon
   php-fpm

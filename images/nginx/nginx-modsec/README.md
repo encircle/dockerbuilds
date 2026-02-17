@@ -37,12 +37,6 @@ certificates  /etc/nginx/certs
 
 **DISABLE_CONF**: Disable hardening config files. e.g.   DISABLE_CONF=custom_error.conf block_files.conf\
 
-**AV_SCAN**: (TRUE/FALSE) Whether to scan file uploads via webserver\
-
-**AV_HOST**: Host on which restingclam is hosted\
-
-**AV_PORT**: Port on which restingclam is listening
-
 **NO_CLOUDFLARE**: If set to True the container won't download cloudflare public ips and autogenerate Nginx's set_real_ip directives in /etc/nginx/conf.d/cloudflare.conf. This allows a container to override the stock Cloudflare real_ip configuration For use when the container is used behind a Proxy server
 
 **DRUPAL_MODE**: If set to on - clean urls add the original path as the q parameter in the url for index.php rewriting

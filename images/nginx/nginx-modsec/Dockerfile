@@ -42,9 +42,8 @@ RUN cd /tmp \
 # Compile Modsecurity NGINX connector
 RUN cd /tmp \
  && git clone --depth 1 https://github.com/SpiderLabs/ModSecurity-nginx.git \
- && wget http://nginx.org/download/nginx-${ENV_NGINX_VERSION}.tar.gz \
+ && wget https://nginx.org/download/nginx-${ENV_NGINX_VERSION}.tar.gz \
  && tar -xzf nginx-${ENV_NGINX_VERSION}.tar.gz \
- && ls -lah /tmp \
  && cd /tmp/nginx-${ENV_NGINX_VERSION} \
  && ./configure \
       --with-compat \
@@ -52,8 +51,7 @@ RUN cd /tmp \
       --add-dynamic-module=/tmp/ModSecurity-nginx \
       --with-cc-opt="-I/usr/include" \
       --with-ld-opt="-L/usr/lib" \
- && make modules -j"$(nproc)"  \
- && ls -lah objs
+ && make modules -j"$(nproc)"
 
 #
 # ===============================
@@ -74,20 +72,19 @@ RUN apk add --no-cache \
     lmdb \
     libxml2 \
     curl \
-    pcre2 \
-    pcre2-dev
+    pcre2
 
 # Copy ModSecurity binaries
 COPY --from=build /tmp/nginx-${NGINX_VERSION}/objs/ngx_http_modsecurity_module.so /usr/lib/nginx/modules/
 COPY --from=build /usr/local/modsecurity/ /usr/local/modsecurity/
 
 # Users & groups
-RUN apk add shadow \
+RUN apk add --no-cache --virtual .shadow shadow \
  && usermod -u 10014 nginx \
  && groupmod -g 10014 nginx \
  && groupmod -g 10013 www-data \
  && usermod -aG www-data nginx \
- && apk del shadow
+ && apk del .shadow
 
 #
 # ===============================
@@ -107,7 +104,7 @@ COPY hardening/error.html /var/www/error.html
 RUN chown root:www-data /var/www/error.html \
  && chmod 640 /var/www/error.html
 
-# Copy SSL
+# Copy SSL certs and keys, then lock down permissions
 COPY certs/site.key     /etc/nginx/certs/site.key
 COPY certs/site.crt     /etc/nginx/certs/site.crt
 COPY certs/444.key      /etc/nginx/certs/444.key
@@ -115,26 +112,27 @@ COPY certs/444.crt      /etc/nginx/certs/444.crt
 COPY certs/client.crt   /etc/nginx/certs/client.crt
 COPY certs/client.key   /etc/nginx/certs/client.key
 COPY dhparam            /etc/nginx/dhparam
+RUN chown root:nginx /etc/nginx/certs/*.key /etc/nginx/dhparam \
+ && chmod 640 /etc/nginx/certs/*.key /etc/nginx/dhparam \
+ && chmod 644 /etc/nginx/certs/*.crt
 
 #
 # ===============================
 # ModSecurity config
 # ===============================
 #
-RUN apk add --no-cache pcre2 zlib openssl yajl libmaxminddb
-
 RUN mkdir -p /etc/nginx/modsec
 
 COPY modsecurity.conf       /etc/nginx/modsec/modsecurity.conf
 COPY unicode.mapping        /etc/nginx/modsec/unicode.mapping
 COPY nginx-modsecurity.conf /etc/nginx/conf.d/modsecurity.conf
-COPY clamd-hook.sh          /usr/local/bin/clamd-hook.sh
 
-RUN chown root:nginx /usr/local/bin/clamd-hook.sh \
- && chmod 750 /usr/local/bin/clamd-hook.sh \
- && mkdir /tmp/modsec \
+RUN mkdir /tmp/modsec \
  && chown nginx:nginx /tmp/modsec \
- && chmod 700 /tmp/modsec
+ && chmod 700 /tmp/modsec \
+ && mkdir -p /var/log/nginx/modsec_audit \
+ && chown nginx:nginx /var/log/nginx/modsec_audit \
+ && chmod 700 /var/log/nginx/modsec_audit
 
 # Admin tools
 RUN apk add jq bash
@@ -146,7 +144,8 @@ RUN apk add jq bash
 #
 RUN cd /tmp \
  && wget https://github.com/coreruleset/coreruleset/archive/refs/tags/v${ENV_OWASP_CRS_VERSION}.tar.gz \
- && tar -xvzf v${ENV_OWASP_CRS_VERSION}.tar.gz -C /etc/nginx/modsec \
+ && tar -xzf v${ENV_OWASP_CRS_VERSION}.tar.gz -C /etc/nginx/modsec \
+ && test -d /etc/nginx/modsec/coreruleset-${ENV_OWASP_CRS_VERSION}/rules \
  && mv /etc/nginx/modsec/coreruleset-${ENV_OWASP_CRS_VERSION}/crs-setup.conf.example \
        /etc/nginx/modsec/coreruleset-${ENV_OWASP_CRS_VERSION}/crs-setup.conf \
  && mkdir -p /etc/nginx/modsec/whitelist \
@@ -155,7 +154,7 @@ RUN cd /tmp \
 # Custom rule exclusions and crs-setup overrides
 COPY REQUEST-900-EXCLUSIONS.conf /etc/nginx/modsec/REQUEST-900-EXCLUSIONS.conf
 COPY RESPONSE-999-EXCLUSIONS-AFTER-CRS.conf /etc/nginx/modsec/RESPONSE-999-EXCLUSIONS-AFTER-CRS.conf
-COPY crs-setup.conf /etc/nginx/modsec/coreruleset-${OWASP_CRS_VERSION}/crs-setup.conf
+COPY crs-setup.conf /etc/nginx/modsec/coreruleset-${ENV_OWASP_CRS_VERSION}/crs-setup.conf
 
 #
 # ===============================
@@ -173,6 +172,7 @@ RUN rm -rf /tmp/*
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod 755 /usr/local/bin/entrypoint.sh
 
-HEALTHCHECK CMD nginx -t || exit 1
+HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
+    CMD curl -fsk https://localhost/ || exit 1
 
 CMD /usr/local/bin/entrypoint.sh

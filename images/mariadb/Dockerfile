@@ -7,17 +7,15 @@ RUN ln -s -f /dev/null /root/.bash_history \
  && chown -R mysql:root /docker-entrypoint-initdb.d \
  && chown mysql:mysql /var/log/mysql
 
-# --- Pin MariaDB packages so apt upgrade doesn't replace them ---
+# --- Pin MariaDB packages and upgrade OS ---
 RUN echo "mariadb-backup hold" | dpkg --set-selections \
  && echo "mariadb-client-10.6 hold" | dpkg --set-selections \
  && echo "mariadb-client-core-10.6 hold" | dpkg --set-selections \
  && echo "mariadb-common hold" | dpkg --set-selections \
- && echo "mariadb-server" hold | dpkg --set-selections \
+ && echo "mariadb-server hold" | dpkg --set-selections \
  && echo "mariadb-server-10.6 hold" | dpkg --set-selections \
- && echo "mariadb-server-core-10.6 hold" | dpkg --set-selections
-
-# --- Upgrade OS packages without touching MariaDB ---
-RUN apt-get update -y \
+ && echo "mariadb-server-core-10.6 hold" | dpkg --set-selections \
+ && apt-get update -y \
  && apt-get upgrade -y \
  && apt-get autoremove -y \
  && apt-get clean \
@@ -41,4 +39,4 @@ ENV MARIADB_AUTO_UPGRADE=1
 # Healthcheck
 # ----------------------
 HEALTHCHECK --interval=30s --timeout=5s --retries=5 \
-    CMD mysqladmin ping -u root -p"$MYSQL_ROOT_PASSWORD" --socket=/var/run/mysqld/mysqld.sock || exit 1
+    CMD healthcheck.sh --connect --innodb_initialized || exit 1

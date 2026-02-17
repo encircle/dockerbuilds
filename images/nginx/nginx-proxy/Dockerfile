@@ -13,3 +13,6 @@ RUN sed -i -E "s/client_max_body_size.+/client_max_body_size 1024m;/g" /etc/ngin
 # Upgrade packages
 RUN apk update \
  && apk upgrade --ignore nginx
+
+HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
+    CMD curl -fsk https://localhost/ || exit 1

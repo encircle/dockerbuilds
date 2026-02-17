@@ -657,3 +657,53 @@ v2.0.1
 v2.0.2
 ========
 - regression fixes for incorrect settings carried over from v1
+
+v2.0.3
+========
+Security:
+
+- Added OCSP stapling to SSL configuration for faster TLS handshakes
+- Added Referrer-Policy and Permissions-Policy security headers
+- Tightened SSL private key file permissions to 640 root:nginx
+- Blocked access to .env, .bak, .swp, .old, .orig, .dist, .save, .yml, .yaml files via nginx
+- Added set -euo pipefail to wordpress6 and drupal10 permissions scripts for strict error handling
+- Added .git directory permission hardening (root:root, 750/640) in both permissions scripts
+- Removed AV_SCAN / ClamAV integration entirely (modsecurity.conf, Dockerfile, entrypoint, compose files, clamd-hook.sh)
+- Added ModSecurity rule id:200002 for blocking raw IP access
+
+Performance:
+
+- Enabled gzip compression in nginx (text, CSS, JS, JSON, XML, SVG, woff2)
+- Enabled tcp_nopush in nginx for optimised static file delivery
+- Raised opcache.max_accelerated_files from 4000 to 10000 in both PHP images
+- Added opcache.save_comments=1 for Drupal/CiviCRM annotation support
+- Raised opcache.revalidate_freq from 2 to 60 seconds in both PHP images
+- Consolidated MariaDB Dockerfile into fewer layers
+
+Bug Fixes:
+
+- Fixed WP-CLI sha512 checksum verification (bare hash format incompatible with sha512sum -c)
+- Fixed DB wait loop exiting immediately under set -e in both wordpress6 and drupal10 entrypoints
+- Fixed DRUPAL_VERSION unbound variable error — now defaults to ^10 (latest) if not set
+- Fixed drupal10 webroot_setup failing with "Resource busy" when /var/www/html is a Docker mount point
+- Added missing /var/log/php directory creation to drupal10 Dockerfile (PHP-FPM slowlog)
+- Fixed deprecated listen ... http2 nginx directive syntax for nginx 1.25+
+- Removed duplicate resolver directive conflict between ssl.conf and default.conf
+
+Healthchecks:
+
+- Added Docker HEALTHCHECK to all images (wordpress6, drupal10, nginx-modsec, nginx-proxy, nginx-static, mariadb, memcache, postfix)
+
+Hardening:
+
+- Added directory existence guards before find operations in permissions scripts (uploads, wflogs, sites/default/files, private)
+- Shadow package installed/removed via --virtual to avoid leftover files in both PHP images
+- Upgraded OWASP CRS from 3.3.6 to 4.3.0
+
+Cleanup:
+
+- Removed unused images: redmine, drupal7, drupal8, drupal9 docker-compose files
+- Removed legacy wordpress image (replaced by wordpress6)
+- Modernised example docker-compose files to use .env variable interpolation
+- Added DRUPAL_VERSION to example .env and drupal10 compose file
+- Removed AV_SCAN references from all compose files, .env, and README

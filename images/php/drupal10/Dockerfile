@@ -82,9 +82,10 @@ RUN set -eux; \
 RUN { \
     echo 'opcache.memory_consumption=128'; \
     echo 'opcache.interned_strings_buffer=8'; \
-    echo 'opcache.max_accelerated_files=4000'; \
+    echo 'opcache.max_accelerated_files=10000'; \
     echo 'opcache.revalidate_freq=60'; \
     echo 'opcache.fast_shutdown=1'; \
+    echo 'opcache.save_comments=1'; \
 } > /usr/local/etc/php/conf.d/opcache-recommended.ini
 
 # additional php configurations
@@ -98,6 +99,12 @@ COPY conf/error-logging.ini /usr/local/etc/php/conf.d/error-logging.ini
 COPY conf/drupal.ini /usr/local/etc/php/conf.d/drupal.ini
 COPY conf/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 COPY conf/www.conf /usr/local/etc/php-fpm.d/www.conf
+
+# ------------------------------------------------------------------------------
+# Log directory
+# ------------------------------------------------------------------------------
+RUN mkdir -p /var/log/php \
+ && chown 10013:10013 /var/log/php
 
 # ------------------------------------------------------------------------------
 # Composer (official binary, no hash required)
@@ -126,9 +133,11 @@ WORKDIR /var/src/drupal/site
 # Drupal / CiviCRM tools
 # ------------------------------------------------------------------------------
 RUN curl -LsS https://download.civicrm.org/cv/cv.phar -o /usr/local/bin/cv \
+ && php /usr/local/bin/cv --version \
  && chmod +x /usr/local/bin/cv
 
 RUN curl -LsS https://download.civicrm.org/civix/civix.phar -o /usr/local/bin/civix \
+ && php /usr/local/bin/civix --version \
  && chmod +x /usr/local/bin/civix
 
 RUN ln -sf /var/src/drupal/site/vendor/bin/drush /usr/local/bin/drush || true
