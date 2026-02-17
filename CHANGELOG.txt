@@ -653,3 +653,7 @@ v2.0.0
 v2.0.1
 ========
 - rebuild for vulns
+
+v2.0.2
+========
+- regression fixes for incorrect settings carried over from v1

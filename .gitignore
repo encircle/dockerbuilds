@@ -2,3 +2,4 @@ database/
 migrations/
 ./wordpress/
 logs/
+.claude

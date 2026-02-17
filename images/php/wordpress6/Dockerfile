@@ -58,9 +58,14 @@ RUN set -eux; \
     apk del .build-deps;
 
 # -------------------------------
-# Install bash for entrypoint and scripts
+# Install bash, admin tools, and fcgi for healthcheck
 # -------------------------------
-RUN apk add --no-cache bash fcgi
+RUN apk add --no-cache bash git nano fcgi
+
+# -------------------------------
+# PDF previews and image processing
+# -------------------------------
+RUN apk add --no-cache ghostscript imagemagick
 
 # -------------------------------
 # Install cv (CiviCRM command line)
@@ -76,7 +81,7 @@ RUN set -eux; \
     { \
         echo 'opcache.memory_consumption=128'; \
         echo 'opcache.interned_strings_buffer=8'; \
-        echo 'opcache.max_accelerated_files=8000'; \
+        echo 'opcache.max_accelerated_files=4000'; \
         echo 'opcache.revalidate_freq=2'; \
         echo 'opcache.fast_shutdown=1'; \
     } > /usr/local/etc/php/conf.d/opcache-recommended.ini
