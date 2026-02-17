@@ -173,6 +173,6 @@ COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod 755 /usr/local/bin/entrypoint.sh
 
 HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
-    CMD curl -fsk https://localhost/ || exit 1
+    CMD curl -so /dev/null -w '%{http_code}' http://localhost/ | grep -q 301 || exit 1
 
 CMD /usr/local/bin/entrypoint.sh

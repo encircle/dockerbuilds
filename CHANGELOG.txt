@@ -707,3 +707,7 @@ Cleanup:
 - Modernised example docker-compose files to use .env variable interpolation
 - Added DRUPAL_VERSION to example .env and drupal10 compose file
 - Removed AV_SCAN references from all compose files, .env, and README
+
+v2.0.4
+========
+- fix for nginx healthcheck issue.
