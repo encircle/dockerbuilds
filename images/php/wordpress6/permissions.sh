@@ -28,7 +28,10 @@ if [[ -d /var/www/html/wp-content/wflogs ]]; then
   find /var/www/html/wp-content/wflogs ! -perm 0770 -type d -exec chmod 770 {} +
   find /var/www/html/wp-content/wflogs ! -perm 0660 -type f -exec chmod 660 {} +
 fi
-
+if [[ -d /var/www/html/wp-content/plugins/civicrm_extensions ]]; then
+  find /var/www/html/wp-content/plugins/civicrm_extensions ! -perm 0770 -type d -exec chmod 770 {} +
+  find /var/www/html/wp-content/plugins/civicrm_extensions ! -perm 0660 -type f -exec chmod 660 {} +
+fi
 
 # /wp-config.php
 chmod 440 /var/www/html/wp-config.php
