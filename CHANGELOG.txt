@@ -711,3 +711,8 @@ Cleanup:
 v2.0.4
 ========
 - fix for nginx healthcheck issue.
+
+v2.0.5
+========
+- fix for civi extension updates needing specific folder permissions in wordpress
+- modsec exclusions added for wordpress.
