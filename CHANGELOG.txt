@@ -716,3 +716,12 @@ v2.0.5
 ========
 - fix for civi extension updates needing specific folder permissions in wordpress
 - modsec exclusions added for wordpress.
+
+v2.0.6
+========
+- further fix for modsec rules preventing save.
+
+v2.0.7
+========
+- further fix for wordpress modsec rules
+- rebuild for vulns
