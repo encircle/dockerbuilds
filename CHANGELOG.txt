@@ -725,3 +725,7 @@ v2.0.7
 ========
 - further fix for wordpress modsec rules
 - rebuild for vulns
+
+v2.0.8
+========
+- added missing patch command in drupal image

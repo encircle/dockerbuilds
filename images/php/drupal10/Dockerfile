@@ -9,6 +9,7 @@ RUN apk add --no-cache \
     zip \
     git \
     curl \
+    patch \
     openssh \
     openssh-client \
     mariadb-client \
