@@ -101,6 +101,8 @@ COPY conf/drupal.ini /usr/local/etc/php/conf.d/drupal.ini
 COPY conf/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 COPY conf/www.conf /usr/local/etc/php-fpm.d/www.conf
 
+RUN chmod 644 /usr/local/etc/php/conf.d/*.ini
+
 # ------------------------------------------------------------------------------
 # Log directory
 # ------------------------------------------------------------------------------
@@ -169,7 +171,7 @@ RUN chmod 755 /usr/local/bin/entrypoint.sh
 # ------------------------------------------------------------------------------
 # PHP-FPM healthcheck
 # ------------------------------------------------------------------------------
-HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
+HEALTHCHECK --interval=30s --timeout=5s --retries=3 --start-period=120s \
   CMD SCRIPT_NAME=/ping \
       SCRIPT_FILENAME=/ping \
       REQUEST_METHOD=GET \

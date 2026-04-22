@@ -101,6 +101,8 @@ COPY conf/memory_limit.ini /usr/local/etc/php/conf.d/memory_limit.ini
 COPY conf/error-logging.ini /usr/local/etc/php/conf.d/error-logging.ini
 COPY conf/www.conf /usr/local/etc/php-fpm.d/www.conf
 
+RUN chmod 644 /usr/local/etc/php/conf.d/*.ini
+
 # -------------------------------
 # Log directory
 # -------------------------------
@@ -139,7 +141,7 @@ RUN apk update && apk upgrade && rm -rf /var/cache/apk/*
 
 COPY wordpress6/entrypoint.sh /usr/local/bin/
 
-HEALTHCHECK --interval=30s --timeout=5s --retries=3 CMD \
+HEALTHCHECK --interval=30s --timeout=5s --retries=3 --start-period=120s CMD \
     SCRIPT_NAME=/ping \
     SCRIPT_FILENAME=/ping \
     REQUEST_METHOD=GET \
