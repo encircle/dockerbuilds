@@ -96,11 +96,15 @@ if ($request_uri ~* "/wp-admin/|/wp-login.php|/xmlrpc.php|wp-cron.php|/admin/|/u
     set $skip_cache 1;
 }
 
-# WordPress session cookies
-if ($http_cookie ~* "wordpress_logged_in|wordpress_[a-f0-9]+|wp-postpass|comment_author") { set $skip_cache 1; }
+# WordPress session cookies — anchored to cookie name to avoid matching inside cookie values
+if ($http_cookie ~* "(^|;\s*)wordpress_logged_in") { set $skip_cache 1; }
+if ($http_cookie ~* "(^|;\s*)wordpress_[a-f0-9]{32}") { set $skip_cache 1; }
+if ($http_cookie ~* "(^|;\s*)wp-postpass") { set $skip_cache 1; }
+if ($http_cookie ~* "(^|;\s*)comment_author") { set $skip_cache 1; }
 
-# Drupal session cookies
-if ($http_cookie ~* "SESS[a-z0-9]+|SSESS[a-z0-9]+") { set $skip_cache 1; }
+# Drupal session cookies — anchored to cookie name
+if ($http_cookie ~* "(^|;\s*)SESS[a-z0-9]+") { set $skip_cache 1; }
+if ($http_cookie ~* "(^|;\s*)SSESS[a-z0-9]+") { set $skip_cache 1; }
 EOF
     cat > $location_include << 'EOF'
 fastcgi_cache_bypass $skip_cache;
