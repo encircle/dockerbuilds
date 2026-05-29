@@ -132,7 +132,10 @@ RUN mkdir /tmp/modsec \
  && chmod 700 /tmp/modsec \
  && mkdir -p /var/log/nginx/modsec_audit \
  && chown nginx:nginx /var/log/nginx/modsec_audit \
- && chmod 700 /var/log/nginx/modsec_audit
+ && chmod 700 /var/log/nginx/modsec_audit \
+ && mkdir -p /var/cache/nginx/microcache \
+ && chown nginx:nginx /var/cache/nginx/microcache \
+ && chmod 700 /var/cache/nginx/microcache
 
 # Admin tools
 RUN apk add jq bash

@@ -41,6 +41,8 @@ certificates  /etc/nginx/certs
 
 **DRUPAL_MODE**: If set to on - clean urls add the original path as the q parameter in the url for index.php rewriting
 
+**NGINX_CACHE_ENABLED** If set to true - enables fastcgi caching
+
 ## Upgrade NGINX Version
 
 Update the NGINX_VERSION environment variable in the Dockerfile

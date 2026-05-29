@@ -80,6 +80,39 @@ function get_cloudflare_ips() {
   echo "real_ip_header CF-Connecting-IP;" >> $conf_file
 }
 
+function setup_cache() {
+  server_include=/etc/nginx/conf.d/cache-server.conf.include
+  location_include=/etc/nginx/conf.d/cache-location.conf.include
+
+  if [ "${NGINX_CACHE_ENABLED:-false}" = "true" ]; then
+    cat > $server_include << 'EOF'
+set $skip_cache 0;
+
+if ($request_method = POST) { set $skip_cache 1; }
+if ($query_string != "")    { set $skip_cache 1; }
+
+# WordPress, Drupal, CiviCRM admin/dynamic paths
+if ($request_uri ~* "/wp-admin/|/wp-login.php|/xmlrpc.php|wp-cron.php|/admin/|/user/login|/user/register|/cron.php|/install.php|/update.php|/civicrm/") {
+    set $skip_cache 1;
+}
+
+# WordPress session cookies
+if ($http_cookie ~* "wordpress_logged_in|wordpress_[a-f0-9]+|wp-postpass|comment_author") { set $skip_cache 1; }
+
+# Drupal session cookies
+if ($http_cookie ~* "SESS[a-z0-9]+|SSESS[a-z0-9]+") { set $skip_cache 1; }
+EOF
+    cat > $location_include << 'EOF'
+fastcgi_cache_bypass $skip_cache;
+fastcgi_no_cache     $skip_cache;
+add_header X-FastCGI-Cache $upstream_cache_status always;
+EOF
+  else
+    echo 'fastcgi_cache off;' > $server_include
+    truncate -s 0 $location_include
+  fi
+}
+
 function main() {
   set -e
   env_sub
@@ -88,6 +121,7 @@ function main() {
   basic_auth_whitelist
   modsec
   custom_errors
+  setup_cache
   no_cloudflare=${NO_CLOUDFLARE:-False}
   if [ $no_cloudflare = False ]; then
     get_cloudflare_ips
