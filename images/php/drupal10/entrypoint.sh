@@ -3,7 +3,10 @@ set -ex
 
 function configure_postfix() {
   DOMAIN=$(echo ${SITE} | awk -F ' ' '{ print $1 }')
-  sed -i "s/\${SITE}/${DOMAIN}/g" /usr/local/etc/php/conf.d/postfix.ini
+  tmpfile=$(mktemp)
+  sed "s/\${SITE}/${DOMAIN}/g" /usr/local/etc/php/conf.d/postfix.ini > "$tmpfile"
+  cp "$tmpfile" /usr/local/etc/php/conf.d/postfix.ini
+  rm "$tmpfile"
 }
 
 function drupal_installed() {
