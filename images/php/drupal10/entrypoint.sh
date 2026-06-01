@@ -29,6 +29,7 @@ function civi_install(){
   composer config --no-plugins allow-plugins.civicrm/composer-downloads-plugin true
   composer config --no-plugins allow-plugins.civicrm/composer-compile-plugin true
   composer config extra.compile-mode all
+  composer config extra.civicrm-asset-path web/
 
   # if we are using an esr release - add civicrm gitlab repo
   if [[ "$CIVICRM_VERSION" = *+esr ]]; then
@@ -150,6 +151,13 @@ function main() {
     #if civi_installed; then
     #  civi_update
     #fi
+
+  fi
+
+  if civi_installed; then
+    cd $INSTALL_DIR/site
+    composer config extra.civicrm-asset-path web/
+    composer civicrm:publish
   fi
 
   webroot_setup
