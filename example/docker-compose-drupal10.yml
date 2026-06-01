@@ -9,7 +9,8 @@ services:
       - '80:80'
       - '443:443'
     depends_on:
-      - drupal
+      drupal:
+        condition: service_healthy
     volumes:
       - ./logs/nginx/:/var/log/nginx
       - ./drupal:/var/www/html
@@ -51,7 +52,8 @@ services:
     expose:
       - '9000'
     depends_on:
-      - database
+      database:
+        condition: service_healthy
     volumes:
       - ./drupal:/var/src/drupal
     networks:
