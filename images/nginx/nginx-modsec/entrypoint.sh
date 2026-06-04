@@ -121,6 +121,17 @@ EOF
 add_header Cache-Control $cloudflare_cc always;
 EOF
   fi
+
+  # Security headers must be repeated here because any add_header in a location
+  # block suppresses all add_header directives from the parent server block.
+  cat >> $location_include << 'EOF'
+add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;
+add_header X-Frame-Options SAMEORIGIN always;
+add_header X-Content-Type-Options "nosniff" always;
+add_header Content-Security-Policy "frame-ancestors 'self';" always;
+add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+add_header Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()" always;
+EOF
 }
 
 function main() {
