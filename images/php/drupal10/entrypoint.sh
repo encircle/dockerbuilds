@@ -31,6 +31,8 @@ function civi_install(){
   composer config extra.compile-mode all
   composer config extra.civicrm-asset-path web/
 
+  CIVICRM_VERSION="${CIVICRM_VERSION:-^6}"
+
   # if we are using an esr release - add civicrm gitlab repo
   if [[ "$CIVICRM_VERSION" = *+esr ]]; then
     ssh-keyscan -H lab.civicrm.org > ~/.ssh/known_hosts
