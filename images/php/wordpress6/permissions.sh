@@ -24,6 +24,26 @@ if [[ -d /var/www/html/wp-content/uploads ]]; then
   find /var/www/html/wp-content/uploads ! -perm 0770 -type d -exec chmod 770 {} +
   find /var/www/html/wp-content/uploads ! -perm 0660 -type f -exec chmod 660 {} +
 fi
+if [[ -d /var/www/html/wp-content/uploads/civicrm/templates_c ]]; then
+  find /var/www/html/wp-content/uploads/civicrm/templates_c ! -perm 0770 -type d -exec chmod 770 {} +
+  find /var/www/html/wp-content/uploads/civicrm/templates_c ! -perm 0660 -type f -exec chmod 660 {} +
+fi
+if [[ -d /var/www/html/wp-content/uploads/civicrm/ext ]]; then
+  find /var/www/html/wp-content/uploads/civicrm/ext ! -perm 0770 -type d -exec chmod 770 {} +
+  find /var/www/html/wp-content/uploads/civicrm/ext ! -perm 0660 -type f -exec chmod 660 {} +
+fi
+if [[ -d /var/www/html/wp-content/uploads/civicrm/persist/contribute ]]; then
+  find /var/www/html/wp-content/uploads/civicrm/persist/contribute ! -perm 0770 -type d -exec chmod 770 {} +
+  find /var/www/html/wp-content/uploads/civicrm/persist/contribute ! -perm 0660 -type f -exec chmod 660 {} +
+fi
+if [[ -d /var/www/html/wp-content/uploads/civicrm/upload ]]; then
+  find /var/www/html/wp-content/uploads/civicrm/upload ! -perm 0770 -type d -exec chmod 770 {} +
+  find /var/www/html/wp-content/uploads/civicrm/upload ! -perm 0660 -type f -exec chmod 660 {} +
+fi
+if [[ -d /var/www/html/wp-content/uploads/civicrm/custom ]]; then
+  find /var/www/html/wp-content/uploads/civicrm/custom ! -perm 0770 -type d -exec chmod 770 {} +
+  find /var/www/html/wp-content/uploads/civicrm/custom ! -perm 0660 -type f -exec chmod 660 {} +
+fi
 if [[ -d /var/www/html/wp-content/wflogs ]]; then
   find /var/www/html/wp-content/wflogs ! -perm 0770 -type d -exec chmod 770 {} +
   find /var/www/html/wp-content/wflogs ! -perm 0660 -type f -exec chmod 660 {} +
