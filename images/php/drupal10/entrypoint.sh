@@ -50,6 +50,9 @@ function civi_install(){
   cv core:install --cms-base-url="https://${SITE}" --lang="en_GB"
   cv upgrade:db
   cv ext:upgrade-db
+
+  $INSTALL_DIR/site/vendor/bin/drush updatedb -y
+  $INSTALL_DIR/site/vendor/bin/drush cache:rebuild
 }
 
 function civi_update(){

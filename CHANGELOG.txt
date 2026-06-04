@@ -735,3 +735,13 @@ v2.0.9
 - bug with php ini files not being loaded
 - healthcheck added start period
 - drupal mode code in nginx conf removed.
+
+v2.0.10
+========
+- drupal10,wordpress6: fix, allow postfix.ini to be overridden without resource busy issue
+- nginx-modsec: nginx caching implemented - see readme for new NGINX_CACHE_ENABLED var
+- nginx-modsec: fix for graviton container startup race condition
+- drupal10: fix for civicrm assets path bug.
+- wordpress6: permissions - backported missing civicrm subdirectory paths (templates_c, ext, persist/contribute, upload, custom)
+- nginx-modsec: Cache-Control headers now sent to Cloudflare for edge caching (public/s-maxage=300 for cacheable pages, no-store for admin/authenticated)
+- nginx-modsec: fixed duplicate Cache-Control header caused by WordPress upstream header not being suppressed
