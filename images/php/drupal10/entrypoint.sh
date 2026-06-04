@@ -90,6 +90,9 @@ function drupal_install() {
     --site-name="${TITLE}"\
     --account-name="${ADMIN_USER}"\
     --account-pass="${ADMIN_PASSWORD}"
+
+  $INSTALL_DIR/site/vendor/bin/drush updatedb -y
+  $INSTALL_DIR/site/vendor/bin/drush cache:rebuild
 }
 
 function drupal_update() {
