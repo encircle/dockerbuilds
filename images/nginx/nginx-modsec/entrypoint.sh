@@ -84,8 +84,9 @@ function setup_cache() {
   server_include=/etc/nginx/conf.d/cache-server.conf.include
   location_include=/etc/nginx/conf.d/cache-location.conf.include
 
-  if [ "${NGINX_CACHE_ENABLED:-false}" = "true" ]; then
-    cat > $server_include << 'EOF'
+  # Always emit $skip_cache bypass logic so the cloudflare_cc map works regardless
+  # of whether nginx's internal fastcgi cache is on or off.
+  cat > $server_include << 'EOF'
 set $skip_cache 0;
 
 if ($request_method = POST) { set $skip_cache 1; }
@@ -106,14 +107,19 @@ if ($http_cookie ~* "(^|;\s*)comment_author") { set $skip_cache 1; }
 if ($http_cookie ~* "(^|;\s*)SESS[a-z0-9]+") { set $skip_cache 1; }
 if ($http_cookie ~* "(^|;\s*)SSESS[a-z0-9]+") { set $skip_cache 1; }
 EOF
+
+  if [ "${NGINX_CACHE_ENABLED:-false}" = "true" ]; then
     cat > $location_include << 'EOF'
 fastcgi_cache_bypass $skip_cache;
 fastcgi_no_cache     $skip_cache;
 add_header X-FastCGI-Cache $upstream_cache_status always;
+add_header Cache-Control $cloudflare_cc always;
 EOF
   else
-    echo 'fastcgi_cache off;' > $server_include
-    truncate -s 0 $location_include
+    echo 'fastcgi_cache off;' >> $server_include
+    cat > $location_include << 'EOF'
+add_header Cache-Control $cloudflare_cc always;
+EOF
   fi
 }
 
