@@ -1,3 +1,10 @@
+# Build gosu with patched Go to fix CVE-2025-68121 (crypto/tls TLS session resumption)
+FROM golang:1.25 AS gosu-builder
+ARG GOSU_VERSION=1.17
+RUN git clone --depth 1 --branch ${GOSU_VERSION} https://github.com/tianon/gosu.git /src \
+ && cd /src \
+ && CGO_ENABLED=0 go build -o /go/bin/gosu .
+
 FROM mariadb:10.6
 
 # users and permissions
@@ -6,6 +13,9 @@ RUN ln -s -f /dev/null /root/.bash_history \
  && groupmod -g 10012 mysql \
  && chown -R mysql:root /docker-entrypoint-initdb.d \
  && chown mysql:mysql /var/log/mysql
+
+# Replace gosu with version compiled against patched Go (CVE-2025-68121)
+COPY --from=gosu-builder /go/bin/gosu /usr/local/bin/gosu
 
 # --- Pin MariaDB packages and upgrade OS ---
 RUN echo "mariadb-backup hold" | dpkg --set-selections \
