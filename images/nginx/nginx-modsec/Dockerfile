@@ -14,7 +14,7 @@ ARG MODSEC_VERSION
 
 ENV ENV_MODSEC_VERSION=${MODSEC_VERSION}
 ENV ENV_NGINX_VERSION=${NGINX_VERSION}
-ENV WEBROOT=/var/www/html
+ENV WEBROOT=/var/www/html/web
 
 # Dependencies for building ModSecurity + connector
 RUN apk add --no-cache --virtual build-deps \
@@ -62,7 +62,7 @@ FROM nginx:${NGINX_VERSION}-alpine-perl
 
 ARG OWASP_CRS_VERSION
 ENV ENV_OWASP_CRS_VERSION=${OWASP_CRS_VERSION}
-ENV WEBROOT=/var/www/html
+ENV WEBROOT=/var/www/html/web
 
 # Runtime dependencies
 RUN apk add --no-cache \
@@ -85,6 +85,32 @@ RUN apk add --no-cache --virtual .shadow shadow \
  && groupmod -g 10013 www-data \
  && usermod -aG www-data nginx \
  && apk del .shadow
+
+#
+# ===============================
+# Drupal codebase -- baked in at build time (PED architecture). nginx
+# serves static assets (css/js/images) directly from $WEBROOT via
+# try_files before falling back to PHP-FPM, so it needs the same docroot
+# php-fpm has, not just a reverse-proxy config. The CI/build pipeline
+# drops the composer-built codebase in src/ (same artifact used for the
+# php-fpm image) before `docker build` runs; only web/ is copied in here.
+# ===============================
+#
+COPY src/web/ /var/www/html/web
+
+# Numeric GID (10013), not the symbolic "www-data" name -- the group name
+# doesn't reliably resolve at this point in this base image, even after
+# the "Users & groups" groupmod above. Same numeric convention already
+# used by this Dockerfile's own log directories and by drupal10's.
+RUN chown root:10013 /var/www/html/web \
+ && chmod 750 /var/www/html/web \
+ && find /var/www/html/web -maxdepth 1 -type f -exec chown root:10013 {} + \
+ && find /var/www/html/web -maxdepth 1 -type f ! -perm 0740 -exec chmod 740 {} + \
+ && find /var/www/html/web -exec chown root:10013 {} + \
+ && find /var/www/html/web -type d ! -perm 0750 -exec chmod 750 {} + \
+ && find /var/www/html/web -type f ! -perm 0640 -exec chmod 640 {} + \
+ && mkdir -p /var/www/html/web/sites/default/files \
+ && chown 10013:10013 /var/www/html/web/sites/default/files
 
 #
 # ===============================

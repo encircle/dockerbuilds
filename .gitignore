@@ -3,3 +3,10 @@ migrations/
 ./wordpress/
 logs/
 .claude
+
+# PED: CI drops the built Drupal codebase here before `docker build` runs.
+# Only the placeholder marker is tracked.
+images/php/drupal10/src/*
+!images/php/drupal10/src/.gitkeep
+images/nginx/nginx-modsec/src/*
+!images/nginx/nginx-modsec/src/.gitkeep

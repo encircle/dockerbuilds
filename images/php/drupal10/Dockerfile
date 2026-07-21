@@ -124,26 +124,18 @@ RUN apk add --no-cache --virtual .usermod shadow \
  && apk del .usermod
 
 # ------------------------------------------------------------------------------
-# Drupal directory
+# Drupal codebase -- baked in at build time (PED architecture: no runtime
+# install, no EFS-mounted codebase). CI runs composer update against the
+# previous image's codebase, tarballs the result, and drops it in
+# drupal10/src/ (composer project root: web/, vendor/, composer.json/lock)
+# before `docker build` runs. See dockerbuilds/ped branch README for the
+# full pipeline.
 # ------------------------------------------------------------------------------
-RUN mkdir -p /var/src/drupal \
- && chown -R www-data:www-data /var/src/drupal \
- && chmod -R 755 /var/src
+COPY drupal10/src/ /var/www/html
 
-WORKDIR /var/src/drupal/site
+RUN ln -sf /var/www/html/vendor/bin/drush /usr/local/bin/drush || true
 
-# ------------------------------------------------------------------------------
-# Drupal / CiviCRM tools
-# ------------------------------------------------------------------------------
-RUN curl -LsS https://download.civicrm.org/cv/cv.phar -o /usr/local/bin/cv \
- && php /usr/local/bin/cv --version \
- && chmod +x /usr/local/bin/cv
-
-RUN curl -LsS https://download.civicrm.org/civix/civix.phar -o /usr/local/bin/civix \
- && php /usr/local/bin/civix --version \
- && chmod +x /usr/local/bin/civix
-
-RUN ln -sf /var/src/drupal/site/vendor/bin/drush /usr/local/bin/drush || true
+WORKDIR /var/www/html
 
 # ------------------------------------------------------------------------------
 # Node tooling (sass)
@@ -151,11 +143,29 @@ RUN ln -sf /var/src/drupal/site/vendor/bin/drush /usr/local/bin/drush || true
 RUN npm install -g sass
 
 # ------------------------------------------------------------------------------
-# Permissions cron script (NOTE: cron daemon must be started by entrypoint)
+# Permissions -- hardened once at build time, against the image's own layer.
+# Public files (sites/default/files) and private files (private/) are EFS
+# mount points at runtime; their ownership comes from the EFS access
+# point's configured POSIX identity (uid/gid 33, i.e. www-data) instead, so
+# only empty mount-point directories are needed here.
 # ------------------------------------------------------------------------------
-COPY drupal10/permissions.sh /usr/local/bin/permissions.sh
-RUN chmod 755 /usr/local/bin/permissions.sh \
- && crontab -l 2>/dev/null | { cat; echo "0 3 * * * /usr/local/bin/permissions.sh"; } | crontab -
+RUN chown root:10013 /var/www/html/web \
+ && chmod 750 /var/www/html/web \
+ && find /var/www/html/web -maxdepth 1 -type f -exec chown root:10013 {} + \
+ && find /var/www/html/web -maxdepth 1 -type f ! -perm 0740 -exec chmod 740 {} + \
+ && find /var/www/html/web -exec chown root:10013 {} + \
+ && find /var/www/html/web -type d ! -perm 0750 -exec chmod 750 {} + \
+ && find /var/www/html/web -type f ! -perm 0640 -exec chmod 640 {} + \
+ && mkdir -p /var/www/html/web/sites/default/files /var/www/html/private \
+ && chown 10013:10013 /var/www/html/web/sites/default/files /var/www/html/private
+
+# Config-sync YAML (ped-drupal's config/sync, dropped in alongside the
+# codebase by CI -- outside the docroot, never web-served, read-only at
+# runtime since drush only ever reads it to import into the DB).
+RUN mkdir -p /var/www/html/config/sync \
+ && chown -R root:10013 /var/www/html/config \
+ && find /var/www/html/config -type d -exec chmod 750 {} + \
+ && find /var/www/html/config -type f -exec chmod 640 {} +
 
 # ------------------------------------------------------------------------------
 # System upgrade (last)

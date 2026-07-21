@@ -9,176 +9,93 @@ function configure_postfix() {
   rm "$tmpfile"
 }
 
-function drupal_installed() {
-  [[ -f $INSTALL_DIR/site/web/sites/default/settings.php ]]
+function generate_settings() {
+  # Redis: the 'tls://' host prefix is phpredis's own native TLS syntax
+  # (drupal/redis's PhpRedis client factory passes the configured host
+  # straight into phpredis's connect() call), so this should hold regardless
+  # of exactly which drupal/redis module version is baked into the image --
+  # but it hasn't been confirmed against a real build yet.
+  cat > /var/www/html/web/sites/default/settings.php <<PHPEOF
+<?php
+\$databases['default']['default'] = [
+  'database' => getenv('MYSQL_DATABASE'),
+  'username' => getenv('MYSQL_USER'),
+  'password' => getenv('MYSQL_PASSWORD'),
+  'host' => getenv('DB_HOST'),
+  'port' => 3306,
+  'driver' => 'mysql',
+  'prefix' => '',
+];
+
+\$settings['hash_salt'] = getenv('DRUPAL_HASH_SALT');
+
+\$settings['redis.connection']['host'] = 'tls://' . getenv('REDIS_HOST');
+\$settings['redis.connection']['port'] = getenv('REDIS_PORT');
+\$settings['redis.connection']['password'] = getenv('REDIS_PASSWORD');
+\$settings['cache']['default'] = 'cache.backend.redis';
+
+\$settings['reverse_proxy'] = TRUE;
+\$settings['trusted_host_patterns'] = ['^' . preg_quote(getenv('SITE'), '/') . '\$'];
+
+\$settings['config_sync_directory'] = '/var/www/html/config/sync';
+PHPEOF
+  chown root:www-data /var/www/html/web/sites/default/settings.php
+  chmod 640 /var/www/html/web/sites/default/settings.php
 }
 
-function civi_installed() {
-  [[ -f $INSTALL_DIR/site/vendor/civicrm/civicrm-core/civicrm-version.php ]]
-}
-
-function civi_install(){
-  set -eux
-
-  #civi requirements
-  composer config extra.enable-patching true
-  composer config minimum-stability dev
-  composer remove drush/drush
-  composer config --no-plugins allow-plugins.cweagans/composer-patches true
-  composer config --no-plugins allow-plugins.civicrm/civicrm-asset-plugin true
-  composer config --no-plugins allow-plugins.civicrm/composer-downloads-plugin true
-  composer config --no-plugins allow-plugins.civicrm/composer-compile-plugin true
-  composer config extra.compile-mode all
-  composer config extra.civicrm-asset-path web/
-
-  CIVICRM_VERSION="${CIVICRM_VERSION:-^6}"
-
-  # if we are using an esr release - add civicrm gitlab repo
-  if [[ "$CIVICRM_VERSION" = *+esr ]]; then
-    ssh-keyscan -H lab.civicrm.org > ~/.ssh/known_hosts
-    composer config repositories.esr-core vcs git@lab.civicrm.org:esr/core.git
-    composer config repositories.esr-packages vcs git@lab.civicrm.org:esr/packages.git
-    composer config repositories.esr-drupal-8 vcs git@lab.civicrm.org:esr/drupal-8.git
-    
-  fi
-
-  #require civi
-  composer require civicrm/civicrm-{core,packages,drupal-8}:"${CIVICRM_VERSION}"
-  composer require drush/drush
-
-  #civi install onto site
-  cv core:install --cms-base-url="https://${SITE}" --lang="en_GB"
-  cv upgrade:db
-  cv ext:upgrade-db
-
-  $INSTALL_DIR/site/vendor/bin/drush updatedb -y
-  $INSTALL_DIR/site/vendor/bin/drush cache:rebuild
-}
-
-function civi_update(){
-  volume_civi_version=$(composer show 'civicrm/civicrm-core' | sed -n '/versions/s/^[^0-9]\+\([^,]\+\).*$/\1/p')
-  image_civi_version=$CIVICRM_VERSION
-
-  if [[ "$volume_civi_version" != $image_civi_version ]]; then
-
-    # if we are using an esr release - add civicrm gitlab repo
-    if [[ "$CIVICRM_VERSION" = *+esr ]]; then
-      ssh-keyscan -H lab.civicrm.org > ~/.ssh/known_hosts
-      composer config repositories.esr-core vcs git@lab.civicrm.org:esr/core.git
-      composer config repositories.esr-packages vcs git@lab.civicrm.org:esr/packages.git
-      composer config repositories.esr-drupal-8 vcs git@lab.civicrm.org:esr/drupal-8.git
-    fi
-
-    #require updated civi
-    composer require civicrm/civicrm-{core,packages,drupal-8}:"${CIVICRM_VERSION}" --with-all-dependencies
-
-    cv upgrade:db
-    cv ext:upgrade-db
-  fi
-}
-
-function drupal_install() {
-  set -eux
-
-  cd $INSTALL_DIR
-  composer create-project drupal/recommended-project:"${DRUPAL_VERSION:-^10}" site
-  chmod 750 $INSTALL_DIR/site
-  chown root:www-data site
-  chown -R www-data:www-data $INSTALL_DIR/site/web/sites $INSTALL_DIR/site/web/modules $INSTALL_DIR/site/web/themes
-
-  cd $INSTALL_DIR/site
-  composer require drush/drush
-
-  cp $INSTALL_DIR/site/web/sites/default/default.settings.php $INSTALL_DIR/site/web/sites/default/settings.php
-  yes | $INSTALL_DIR/site/vendor/bin/drush site-install standard install_configure_form.update_status_module='array(FALSE,FALSE)'\
-    --db-url="mysql://${MYSQL_USER}:${MYSQL_PASSWORD}@${DB_HOST}/${MYSQL_DATABASE}"\
-    --site-name="${TITLE}"\
-    --account-name="${ADMIN_USER}"\
-    --account-pass="${ADMIN_PASSWORD}"
-
-  $INSTALL_DIR/site/vendor/bin/drush updatedb -y
-  $INSTALL_DIR/site/vendor/bin/drush cache:rebuild
-}
-
-function drupal_update() {
-  volume_version=$($INSTALL_DIR/site/vendor/bin/drush status | grep 'Drupal version' | awk '{print $4}')
-  image_version=$DRUPAL_VERSION
-
-  if [[ "$volume_version" != $image_version ]]; then
-    composer require "drupal/core-composer-scaffold:=${DRUPAL_VERSION}" --with-all-dependencies
-    composer require "drupal/core-project-message:=${DRUPAL_VERSION}" --with-all-dependencies
-    composer require "drupal/core-recommended:=${DRUPAL_VERSION}" --with-all-dependencies
-
-    $INSTALL_DIR/site/vendor/bin/drush updatedb -y
-    $INSTALL_DIR/site/vendor/bin/drush cache:rebuild
-  fi
-}
-
-function webroot_setup() {
-  # /var/www/html may be a Docker mount point and cannot be removed directly.
-  # Try to replace it with a symlink; if that fails, symlink the site dir inside it.
-  if [ ! -L /var/www/html ]; then
-    rm -rf /var/www/html 2>/dev/null \
-      && ln -s $INSTALL_DIR /var/www/html \
-      || ln -sfn $INSTALL_DIR/site /var/www/html/site
-  fi
-  chown -h root:www-data $WEBROOT/
-  chown root:www-data $INSTALL_DIR/site/web
-  chmod 750 $WEBROOT/
-  chmod 750 $INSTALL_DIR/site/web
-}
-
-function main() {
-  INSTALL_DIR=/var/src/drupal
-  WEBROOT=/var/www/html/site/web
-  
-  configure_postfix
-
-  # wait for the database connection
+function wait_for_db() {
   echo 'Waiting for DB to be available'
   while ! nc -z "$DB_HOST" 3306 > /dev/null 2>&1; do
     sleep 3
   done
+}
 
-  # install if not installed
-  if ! drupal_installed; then
-    drupal_install
+function run_updates() {
+  # Every instance in the fleet runs this on boot, but only one may ever
+  # actually run `drush updb`/`config:import` at a time -- a blue/green
+  # rollout brings up multiple APP instances at once, all on the same new
+  # codebase and config, and neither Drupal's update system nor its config
+  # importer protect against two hosts applying the same DB changes
+  # concurrently. GET_LOCK/RELEASE_LOCK is
+  # session-scoped in MariaDB, so it must be acquired, held, and released
+  # over one single persistent connection (a `mysql -e` per statement would
+  # release it immediately on disconnect) -- a bash coproc keeps that one
+  # connection open across the external `drush updb` call. As a bonus, if
+  # this instance dies mid-update, the lock is dropped automatically when
+  # its connection closes, rather than staying stuck forever.
+  local lock_name='drupal_updb'
+  local lock_timeout=300
+  local got_lock
+
+  coproc MYSQL_LOCK {
+    mysql --ssl-mode=REQUIRED -h "$DB_HOST" -u "$MYSQL_USER" -p"$MYSQL_PASSWORD" \
+        "$MYSQL_DATABASE" -N -B
+  }
+
+  echo "SELECT GET_LOCK('${lock_name}', ${lock_timeout});" >&"${MYSQL_LOCK[1]}"
+  read -r -u "${MYSQL_LOCK[0]}" got_lock
+
+  if [ "$got_lock" = "1" ]; then
+    drush -r /var/www/html/web updb -y
+    drush -r /var/www/html/web config:import -y
+    drush -r /var/www/html/web cache:rebuild
+    echo "SELECT RELEASE_LOCK('${lock_name}');" >&"${MYSQL_LOCK[1]}"
+    read -r -u "${MYSQL_LOCK[0]}" _
+  else
+    echo "drupal_updb lock held by another instance (or acquire timed out) -- skipping updates on this boot"
   fi
 
-  # check/apply update if installed
-  #if drupal_installed; then
-  #  drupal_update
-  #fi
+  echo "quit" >&"${MYSQL_LOCK[1]}"
+  wait "$MYSQL_LOCK_PID" 2>/dev/null || true
+}
 
-  civi=${CIVI:-False}
-  if [ "$civi" = true ]; then
-    if ! civi_installed; then
-      civi_install
-    fi
+function main() {
+  configure_postfix
+  generate_settings
+  wait_for_db
+  run_updates
 
-    #if civi_installed; then
-    #  civi_update
-    #fi
-
-  fi
-
-  if civi_installed; then
-    cd $INSTALL_DIR/site
-    composer config extra.civicrm-asset-path web/
-    composer civicrm:publish
-  fi
-
-  webroot_setup
-
-  # enforce permissions
-  /usr/local/bin/permissions.sh 2>/dev/null &
-
-  # start cron daemon
-  /usr/sbin/crond -f -l 8 &
-
-  # start the daemon
   php-fpm
-
 }
 
 main

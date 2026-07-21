@@ -1,26 +1,26 @@
-# Drupal 10
+# Drupal 10 (PED branch)
 
-This readme is for the encircle Drupal 10 image.
+This is the PED-specific fork of the encircle Drupal 10 image. Unlike the
+`master` branch version, the Drupal codebase is baked into the image at
+build time (see `src/.gitkeep`) rather than installed onto a persistent
+mount at container boot -- there is no install/upgrade automation in the
+entrypoint. Upgrades happen by rebuilding the image with a new codebase,
+not by running composer inside a running container.
 
-The image is Drupal 10 on the official PHP alpine image, packaged with Composer and Drush.
-
-Installations/upgrades are automated, if no site is present a new one will be installed.
-
-If a site is present (through a persistent mount), the version will be checked against the image version and upgraded if required.
+`settings.php` is generated at container boot from environment variables
+(see `entrypoint.sh`) rather than baked in or stored on a persistent
+mount, since it's fully deterministic given the DB/Redis/site config
+available at boot.
 
 ## Environment Variables
 
 **SITE**: Space seperated domains, the first of which is used for sendmail From address (noreply@$domain)
 
-**TITLE**: Site title for new installs
-
-**ADMIN_USER**: Admin username for new installs
-
-**ADMIN_PASSWORD**: Admin password for new installs
-
 **DB_HOST**: Database host for Drupal
 
-**CIVI**: False by default, If set to true, the container will install civicrm (minimum version 5.60 for drupal10), if you are using the ESR release in the Dockerfile then you need to mount a folder for the civilab ssh keys
+**MYSQL_DATABASE / MYSQL_USER / MYSQL_PASSWORD**: Database credentials for Drupal
+
+**REDIS_HOST / REDIS_PORT**: Redis cache backend
 
 ## Upgrade Drupal/CiviCRM Version
 
