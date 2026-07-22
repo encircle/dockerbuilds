@@ -133,7 +133,11 @@ RUN apk add --no-cache --virtual .usermod shadow \
 # ------------------------------------------------------------------------------
 COPY drupal10/src/ /var/www/html
 
-RUN ln -sf /var/www/html/vendor/bin/drush /usr/local/bin/drush || true
+# No `|| true` here -- the codebase is baked in before this step runs (PED
+# architecture), so a missing drush/drush dependency is a real build
+# problem, not an expected gap. Fail loudly at build time rather than ship
+# an image that only breaks at container boot with "drush: command not found".
+RUN ln -sf /var/www/html/vendor/bin/drush /usr/local/bin/drush
 
 WORKDIR /var/www/html
 
