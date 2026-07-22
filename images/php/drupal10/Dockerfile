@@ -142,6 +142,20 @@ RUN ln -sf /var/www/html/vendor/bin/drush /usr/local/bin/drush
 WORKDIR /var/www/html
 
 # ------------------------------------------------------------------------------
+# RDS CA bundle -- baked in at build time so boot doesn't need internet
+# egress for it. RDS enforces require_secure_transport=ON (Invariant #3);
+# without this, Drupal's own PDO connection (unlike the raw mariadb CLI
+# lock check, which requests --ssl itself) has no way to negotiate TLS,
+# and RDS rejects it with a generic "Access denied" that looks exactly
+# like a wrong password. generate_settings() in entrypoint.sh references
+# this exact path via PDO::MYSQL_ATTR_SSL_CA.
+# ------------------------------------------------------------------------------
+RUN curl -o /var/www/html/web/sites/default/rds-ca.pem \
+    https://truststore.pki.rds.amazonaws.com/eu-west-2/eu-west-2-bundle.pem \
+ && chown root:10013 /var/www/html/web/sites/default/rds-ca.pem \
+ && chmod 640 /var/www/html/web/sites/default/rds-ca.pem
+
+# ------------------------------------------------------------------------------
 # Node tooling (sass)
 # ------------------------------------------------------------------------------
 RUN npm install -g sass

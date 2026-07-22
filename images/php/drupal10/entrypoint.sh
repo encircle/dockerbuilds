@@ -25,6 +25,9 @@ function generate_settings() {
   'port' => 3306,
   'driver' => 'mysql',
   'prefix' => '',
+  'pdo' => [
+    PDO::MYSQL_ATTR_SSL_CA => '/var/www/html/web/sites/default/rds-ca.pem',
+  ],
 ];
 
 \$settings['hash_salt'] = getenv('DRUPAL_HASH_SALT');
@@ -33,6 +36,39 @@ function generate_settings() {
 \$settings['redis.connection']['port'] = getenv('REDIS_PORT');
 \$settings['redis.connection']['password'] = getenv('REDIS_PASSWORD');
 \$settings['cache']['default'] = 'cache.backend.redis';
+
+// cache.backend.redis is needed VERY early -- before Drupal's normal
+// module/container system has loaded -- since it's also used as the
+// container definition cache itself, not just a regular cache bin.
+// Confirmed live: without this block, bootstrap fails with "You have
+// requested a non-existent service 'cache.backend.redis'" even with
+// drupal/redis correctly present in the codebase and enabled.
+\$class_loader->addPsr4('Drupal\\\\redis\\\\', 'modules/contrib/redis/src');
+
+\$settings['bootstrap_container_definition'] = [
+  'parameters' => [],
+  'services' => [
+    'redis.factory' => [
+      'class' => 'Drupal\redis\ClientFactory',
+    ],
+    'cache.backend.redis' => [
+      'class' => 'Drupal\redis\Cache\CacheBackendFactory',
+      'arguments' => ['@redis.factory', '@cache_tags_provider.container', '@serialization.phpserialize'],
+    ],
+    'cache.container' => [
+      'class' => '\Drupal\redis\Cache\PhpRedis',
+      'factory' => ['@cache.backend.redis', 'get'],
+      'arguments' => ['container'],
+    ],
+    'cache_tags_provider.container' => [
+      'class' => 'Drupal\redis\Cache\RedisCacheTagsChecksum',
+      'arguments' => ['@redis.factory'],
+    ],
+    'serialization.phpserialize' => [
+      'class' => 'Drupal\Component\Serialization\PhpSerialize',
+    ],
+  ],
+];
 
 \$settings['reverse_proxy'] = TRUE;
 \$settings['trusted_host_patterns'] = ['^' . preg_quote(getenv('SITE'), '/') . '\$'];
