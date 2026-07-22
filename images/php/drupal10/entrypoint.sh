@@ -68,7 +68,7 @@ function run_updates() {
   local got_lock
 
   coproc MYSQL_LOCK {
-    mysql --ssl-mode=REQUIRED -h "$DB_HOST" -u "$MYSQL_USER" -p"$MYSQL_PASSWORD" \
+    mariadb --ssl -h "$DB_HOST" -u "$MYSQL_USER" -p"$MYSQL_PASSWORD" \
         "$MYSQL_DATABASE" -N -B
   }
 
