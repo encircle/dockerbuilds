@@ -113,7 +113,18 @@ function run_updates() {
 
   if [ "$got_lock" = "1" ]; then
     drush -r /var/www/html/web updb -y
-    drush -r /var/www/html/web config:import -y
+    # core.extension.yml is Drupal's own marker for "this directory holds a
+    # real config export" -- config:import correctly refuses to run against
+    # an empty/missing config_sync_directory (it would otherwise delete all
+    # existing config), but that refusal is fatal to this script under
+    # set -e. An empty config/sync is an expected state (ped-drupal's
+    # config hasn't been baked into every image yet), not a real failure,
+    # so skip the step entirely rather than crash the whole container over it.
+    if [ -f /var/www/html/config/sync/core.extension.yml ]; then
+      drush -r /var/www/html/web config:import -y
+    else
+      echo "config/sync has no core.extension.yml -- nothing to import, skipping"
+    fi
     drush -r /var/www/html/web cache:rebuild
     echo "SELECT RELEASE_LOCK('${lock_name}');" >&"${MYSQL_LOCK[1]}"
     read -r -u "${MYSQL_LOCK[0]}" _
