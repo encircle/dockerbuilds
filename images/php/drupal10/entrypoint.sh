@@ -92,13 +92,12 @@ function run_updates() {
   # rollout brings up multiple APP instances at once, all on the same new
   # codebase and config, and neither Drupal's update system nor its config
   # importer protect against two hosts applying the same DB changes
-  # concurrently. GET_LOCK/RELEASE_LOCK is
-  # session-scoped in MariaDB, so it must be acquired, held, and released
-  # over one single persistent connection (a `mysql -e` per statement would
-  # release it immediately on disconnect) -- a bash coproc keeps that one
-  # connection open across the external `drush updb` call. As a bonus, if
-  # this instance dies mid-update, the lock is dropped automatically when
-  # its connection closes, rather than staying stuck forever.
+  # concurrently. GET_LOCK is session-scoped in MariaDB and auto-releases
+  # the moment its connection closes (a `mysql -e` per statement would
+  # release it immediately, before the lock could do anything useful) -- a
+  # bash coproc holds one connection open across the whole update sequence,
+  # and closing it at the end (via `quit`) is what releases the lock, not
+  # an explicit RELEASE_LOCK query (see below -- that hangs in practice).
   local lock_name='drupal_updb'
   local lock_timeout=300
   local got_lock
@@ -126,8 +125,15 @@ function run_updates() {
       echo "config/sync has no core.extension.yml -- nothing to import, skipping"
     fi
     drush -r /var/www/html/web cache:rebuild
-    echo "SELECT RELEASE_LOCK('${lock_name}');" >&"${MYSQL_LOCK[1]}"
-    read -r -u "${MYSQL_LOCK[0]}" _
+    # No explicit RELEASE_LOCK query here -- confirmed live, this hangs:
+    # after the real wall-clock time updb/config:import/cache:rebuild take
+    # as separate processes, the long-idle coproc connection can be silently
+    # dropped (NAT/connection-tracking idle timeout or similar) without the
+    # client noticing, so the read for this query's response never returns.
+    # GET_LOCK already auto-releases the moment its session disconnects, and
+    # we're about to send `quit` and close this connection anyway -- that's
+    # sufficient, and removes the failure point entirely instead of working
+    # around it.
   else
     echo "drupal_updb lock held by another instance (or acquire timed out) -- skipping updates on this boot"
   fi
