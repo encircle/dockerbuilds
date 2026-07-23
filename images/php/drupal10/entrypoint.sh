@@ -142,7 +142,16 @@ function main() {
   wait_for_db
   run_updates
 
-  php-fpm
+  # --nodaemonize: without it, php-fpm forks to the background and returns
+  # immediately -- this script (bash, the container's PID 1) would then hit
+  # its own end and exit, tearing down the whole container and killing the
+  # now-orphaned php-fpm child before it ever served anything. Confirmed
+  # live: the container ran cleanly through run_updates() and then just
+  # stopped, no php-fpm startup output at all.
+  # exec: replaces this script as PID 1 with php-fpm directly, so
+  # `docker stop`'s SIGTERM reaches php-fpm for a clean shutdown instead of
+  # going to bash first.
+  exec php-fpm --nodaemonize
 }
 
 main
