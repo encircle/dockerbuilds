@@ -21,6 +21,19 @@ general conf  /etc/nginx/conf.d
 certificates  /etc/nginx/certs
 ```
 
+**`certificates` is not optional for `site.crt`/`site.key`.** Unlike `444.crt`/
+`444.key` (catch-all default_server) and `client.crt`/`client.key` (Cloudflare
+mTLS), which are baked into the image, the real origin TLS cert/key are
+**not** bundled — mounting `/etc/nginx/certs/site.crt` and `site.key` (or the
+whole directory) is required for nginx to start at all. This changed
+2026-07: the image used to ship a committed dev placeholder here, which was
+self-signed and sat expired in git for years. A private key should never
+live in a git-committed image layer, so it was removed rather than renewed
+in place. The PED deployment fetches its real cert/key from Secrets Manager
+at instance boot and mounts them in (see `ho-ped/templates/userdata-dmz.sh.tpl`
+and `docker-compose/dmz/docker-compose.yml` in `ped-iac`); any other
+deployment of this image needs an equivalent mount.
+
 ## Environment Variables
 
 **SITE**: Space seperated list of domain names for site\

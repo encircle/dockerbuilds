@@ -130,9 +130,15 @@ COPY hardening/error.html /var/www/error.html
 RUN chown root:www-data /var/www/error.html \
  && chmod 640 /var/www/error.html
 
-# Copy SSL certs and keys, then lock down permissions
-COPY certs/site.key     /etc/nginx/certs/site.key
-COPY certs/site.crt     /etc/nginx/certs/site.crt
+# site.crt/site.key (the real origin TLS cert/key) are deliberately NOT
+# copied in here -- they used to be, baked in from a committed dev
+# placeholder that was self-signed and sat expired in git for years
+# (PED OAT reconciliation, 2026-07). A private key must never live in a
+# git-committed image layer. The PED deployment now fetches the real
+# cert/key from Secrets Manager at instance boot and bind-mounts them into
+# /etc/nginx/certs/site.{crt,key} (see ho-ped/templates/userdata-dmz.sh.tpl
+# and docker-compose/dmz/docker-compose.yml) -- this image will not start
+# nginx successfully without that mount (or an equivalent one) present.
 COPY certs/444.key      /etc/nginx/certs/444.key
 COPY certs/444.crt      /etc/nginx/certs/444.crt
 COPY certs/client.crt   /etc/nginx/certs/client.crt
