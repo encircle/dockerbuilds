@@ -1,0 +1,6 @@
+This directory is intentionally empty in git.
+
+At build time, the CI/build pipeline drops the same composer-built Drupal
+codebase used for the php-fpm image here (project root: web/, vendor/,
+composer.json, composer.lock) before `docker build` runs. Only web/ is
+copied into this image -- `COPY src/web/ /var/www/html/web`.
