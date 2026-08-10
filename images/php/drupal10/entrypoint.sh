@@ -13,8 +13,11 @@ function generate_settings() {
   # Redis: the 'tls://' host prefix is phpredis's own native TLS syntax
   # (drupal/redis's PhpRedis client factory passes the configured host
   # straight into phpredis's connect() call), so this should hold regardless
-  # of exactly which drupal/redis module version is baked into the image --
-  # but it hasn't been confirmed against a real build yet.
+  # of exactly which drupal/redis module version is baked into the image.
+  # Conditional on REDIS_TLS rather than always-on: AWS ElastiCache requires
+  # TLS (Invariant #3), but a local `docker compose up` typically runs a
+  # bare redis container with no TLS support at all -- REDIS_TLS lets the
+  # same settings.php logic work against both without a separate code path.
   cat > /var/www/html/web/sites/default/settings.php <<PHPEOF
 <?php
 \$databases['default']['default'] = [
@@ -32,7 +35,7 @@ function generate_settings() {
 
 \$settings['hash_salt'] = getenv('DRUPAL_HASH_SALT');
 
-\$settings['redis.connection']['host'] = 'tls://' . getenv('REDIS_HOST');
+\$settings['redis.connection']['host'] = (getenv('REDIS_TLS') === 'true' ? 'tls://' : '') . getenv('REDIS_HOST');
 \$settings['redis.connection']['port'] = getenv('REDIS_PORT');
 \$settings['redis.connection']['password'] = getenv('REDIS_PASSWORD');
 
