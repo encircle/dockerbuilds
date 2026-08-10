@@ -35,14 +35,35 @@ function generate_settings() {
 \$settings['redis.connection']['host'] = 'tls://' . getenv('REDIS_HOST');
 \$settings['redis.connection']['port'] = getenv('REDIS_PORT');
 \$settings['redis.connection']['password'] = getenv('REDIS_PASSWORD');
-\$settings['cache']['default'] = 'cache.backend.redis';
+
+// Deliberately scoped to specific bins, NOT \$settings['cache']['default'].
+// A blanket default routes EVERY bin through Redis -- including
+// cache.container/cache.bootstrap, which Drupal's real (post-bootstrap)
+// container needs for near enough every operation, drush commands
+// included. That means any drush command (updb, config:import, cron,
+// anything) hard-fails with "You have requested a non-existent service
+// 'cache.backend.redis'" whenever the redis module isn't enabled in the
+// current database yet -- which is exactly the state a freshly-restored
+// or not-yet-config-imported database is in. Confirmed live: this blocked
+// updb, which blocked config:import from ever running, which is the one
+// thing that would have enabled the module -- a real chicken-and-egg.
+// Scoping to just the bins that matter for request performance means
+// cache.container/cache.bootstrap/cache.default fall through to Drupal's
+// own database backend instead, which needs no module and no live Redis
+// connection at all, so drush operations always work regardless of
+// whether redis happens to be enabled yet.
+\$settings['cache']['bins']['render'] = 'cache.backend.redis';
+\$settings['cache']['bins']['dynamic_page_cache'] = 'cache.backend.redis';
 
 // cache.backend.redis is needed VERY early -- before Drupal's normal
-// module/container system has loaded -- since it's also used as the
-// container definition cache itself, not just a regular cache bin.
-// Confirmed live: without this block, bootstrap fails with "You have
-// requested a non-existent service 'cache.backend.redis'" even with
-// drupal/redis correctly present in the codebase and enabled.
+// module/container system has loaded -- since bootstrap_container_definition
+// below also uses it for the container definition cache itself, not just
+// a regular cache bin. This part is independent of the bin-scoping above:
+// it's a separate, hand-wired bootstrap-only container, not affected by
+// \$settings['cache']['bins']. Confirmed live: without this block, bootstrap
+// fails with "You have requested a non-existent service
+// 'cache.backend.redis'" even with drupal/redis correctly present in the
+// codebase and enabled.
 \$class_loader->addPsr4('Drupal\\\\redis\\\\', 'modules/contrib/redis/src');
 
 \$settings['bootstrap_container_definition'] = [
