@@ -125,18 +125,27 @@ RUN apk add --no-cache --virtual .usermod shadow \
 
 # ------------------------------------------------------------------------------
 # Drupal codebase -- baked in at build time (PED architecture: no runtime
-# install, no EFS-mounted codebase). CI runs composer update against the
-# previous image's codebase, tarballs the result, and drops it in
-# drupal10/src/ (composer project root: web/, vendor/, composer.json/lock)
-# before `docker build` runs. See dockerbuilds/ped branch README for the
-# full pipeline.
+# install, no EFS-mounted codebase). drupal10/src/ is a bind mount to the
+# real ped-drupal checkout, already composer-installed externally (see
+# docs/build-deploy-procedure.md's "Preseeding the codebase" section, run
+# on the control plane before `docker build`) -- web/ and vendor/ are
+# already fully built (core, vendor, contrib) with no governance clutter
+# inside either, so they're copied wholesale. Only the specific root-level
+# real-source dirs are copied alongside them -- NOT the whole repo
+# (Docs/, Project/, tests/, .git, etc. never enter the image).
 # ------------------------------------------------------------------------------
-COPY drupal10/src/ /var/www/html
+COPY drupal10/src/composer.json drupal10/src/composer.lock /var/www/html/
+COPY drupal10/src/vendor /var/www/html/vendor
+COPY drupal10/src/web /var/www/html/web
+COPY drupal10/src/config /var/www/html/config
+COPY drupal10/src/recipes /var/www/html/recipes
+COPY drupal10/src/content /var/www/html/content
+COPY drupal10/src/scripts /var/www/html/scripts
 
 # No `|| true` here -- the codebase is baked in before this step runs (PED
-# architecture), so a missing drush/drush dependency is a real build
-# problem, not an expected gap. Fail loudly at build time rather than ship
-# an image that only breaks at container boot with "drush: command not found".
+# architecture), so a missing drush dependency is a real build problem.
+# Fail loudly at build time rather than ship an image that only breaks at
+# container boot with "drush: command not found".
 RUN ln -sf /var/www/html/vendor/bin/drush /usr/local/bin/drush
 
 WORKDIR /var/www/html
