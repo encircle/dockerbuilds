@@ -100,6 +100,10 @@ COPY conf/error-logging.ini /usr/local/etc/php/conf.d/error-logging.ini
 COPY conf/drupal.ini /usr/local/etc/php/conf.d/drupal.ini
 COPY conf/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 COPY conf/www.conf /usr/local/etc/php-fpm.d/www.conf
+# Loads after docker.conf/www.conf/zz-docker.conf -- redirects the access and
+# error logs from the base image's stderr default to files under /var/log/php,
+# so the deployed CloudWatch agent can ship them. See the file's own header.
+COPY conf/zzz-logging.conf /usr/local/etc/php-fpm.d/zzz-logging.conf
 
 RUN chmod 644 /usr/local/etc/php/conf.d/*.ini
 
