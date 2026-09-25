@@ -745,3 +745,7 @@ v2.0.10
 - wordpress6: permissions - backported missing civicrm subdirectory paths (templates_c, ext, persist/contribute, upload, custom)
 - nginx-modsec: Cache-Control headers now sent to Cloudflare for edge caching (public/s-maxage=300 for cacheable pages, no-store for admin/authenticated)
 - nginx-modsec: fixed duplicate Cache-Control header caused by WordPress upstream header not being suppressed
+
+v2.1.1
+========
+- rebuild for vulns: openssh 10.3_p1-r1 (CVE-2026-60002) in drupal10. No code changes.
