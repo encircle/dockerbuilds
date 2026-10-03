@@ -34,6 +34,24 @@ function modsec()
     && mv /tmp/modsecurity.conf /etc/nginx/modsec/modsecurity.conf
 }
 
+function csp()
+{
+  # Content-Security-Policy. NGINX_CSP unset or empty keeps the fixed value
+  # this image has always sent, so every consumer that does not set it is
+  # unaffected. Do not put a double quote in the value: it closes the
+  # add_header string and nginx will not start.
+  export NGINX_CSP="${NGINX_CSP:-frame-ancestors 'self';}"
+
+  # headers.conf can be turned off through DISABLE_CONF, which custom_errors
+  # renames to .disabled, so only substitute when the file is there. main()
+  # runs with set -e and a missing file would stop the container.
+  headers_file=/etc/nginx/hardening.d/headers.conf
+  if [ -f "$headers_file" ]; then
+    envsubst '${NGINX_CSP}' < $headers_file > /tmp/headers.conf \
+      && mv /tmp/headers.conf $headers_file
+  fi
+}
+
 function custom_errors()
 {
   conf_dir=/etc/nginx/hardening.d
@@ -128,7 +146,15 @@ EOF
 add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;
 add_header X-Frame-Options SAMEORIGIN always;
 add_header X-Content-Type-Options "nosniff" always;
-add_header Content-Security-Policy "frame-ancestors 'self';" always;
+EOF
+
+  # Outside the quoted heredoc, so the shell expands NGINX_CSP. The other
+  # five headers stay inside it because that block must not expand
+  # $upstream_cache_status or $cloudflare_cc. csp() runs before this and
+  # exports the default, so the fallback here only covers a direct call.
+  echo "add_header Content-Security-Policy \"${NGINX_CSP:-frame-ancestors 'self';}\" always;" >> $location_include
+
+  cat >> $location_include << 'EOF'
 add_header Referrer-Policy "strict-origin-when-cross-origin" always;
 add_header Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()" always;
 EOF
@@ -142,6 +168,7 @@ function main() {
   basic_auth_whitelist
   modsec
   custom_errors
+  csp
   setup_cache
   no_cloudflare=${NO_CLOUDFLARE:-False}
   if [ $no_cloudflare = False ]; then

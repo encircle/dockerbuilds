@@ -749,3 +749,8 @@ v2.0.10
 v2.1.1
 ========
 - rebuild for vulns: openssh 10.3_p1-r1 (CVE-2026-60002) in drupal10. No code changes.
+
+
+v2.1.2
+========
+- nginx-modsec: Content-Security-Policy now comes from the new NGINX_CSP variable. Unset or empty keeps the previous fixed "frame-ancestors 'self';", so existing consumers are unchanged. The value reaches both the static hardening/headers.conf and the PHP location headers written by setup_cache, because nginx drops every inherited add_header in a block that declares one of its own. Do not put a double quote in the value.
