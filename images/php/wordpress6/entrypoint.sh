@@ -46,7 +46,8 @@ function configure_postfix() {
   DOMAIN=$(echo ${SITE} | awk -F ' ' '{ print $1 }')
   tmpfile=$(mktemp)
   sed "s/\${SITE}/${DOMAIN}/g" /usr/local/etc/php/conf.d/postfix.ini > "$tmpfile"
-  cp "$tmpfile" /usr/local/etc/php/conf.d/postfix.ini
+  # cat into the existing file (not cp) so its mode is kept, and so a bind-mounted file works
+  cat "$tmpfile" > /usr/local/etc/php/conf.d/postfix.ini
   rm "$tmpfile"
 }
 

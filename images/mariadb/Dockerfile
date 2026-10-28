@@ -5,7 +5,7 @@ RUN git clone --depth 1 --branch ${GOSU_VERSION} https://github.com/tianon/gosu.
  && cd /src \
  && CGO_ENABLED=0 go build -o /go/bin/gosu .
 
-FROM mariadb:10.6
+FROM mariadb:10.11
 
 # users and permissions
 RUN ln -s -f /dev/null /root/.bash_history \
@@ -19,12 +19,11 @@ COPY --from=gosu-builder /go/bin/gosu /usr/local/bin/gosu
 
 # --- Pin MariaDB packages and upgrade OS ---
 RUN echo "mariadb-backup hold" | dpkg --set-selections \
- && echo "mariadb-client-10.6 hold" | dpkg --set-selections \
- && echo "mariadb-client-core-10.6 hold" | dpkg --set-selections \
+ && echo "mariadb-client hold" | dpkg --set-selections \
+ && echo "mariadb-client-core hold" | dpkg --set-selections \
  && echo "mariadb-common hold" | dpkg --set-selections \
  && echo "mariadb-server hold" | dpkg --set-selections \
- && echo "mariadb-server-10.6 hold" | dpkg --set-selections \
- && echo "mariadb-server-core-10.6 hold" | dpkg --set-selections \
+ && echo "mariadb-server-core hold" | dpkg --set-selections \
  && apt-get update -y \
  && apt-get upgrade -y \
  && apt-get autoremove -y \
