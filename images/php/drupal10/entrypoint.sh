@@ -45,7 +45,8 @@ function civi_install(){
 
   #require civi
   composer require civicrm/civicrm-{core,packages,drupal-8}:"${CIVICRM_VERSION}"
-  composer require drush/drush
+  # robo 5.2.x needs Symfony Console 7.4+ (addCommand), Drupal 10 uses 6.4 - remove once a fixed robo is released
+  composer require drush/drush "consolidation/robo:~5.1.0"
 
   #civi install onto site
   cv core:install --cms-base-url="https://${SITE}" --lang="en_GB"
@@ -88,7 +89,8 @@ function drupal_install() {
   chown -R www-data:www-data $INSTALL_DIR/site/web/sites $INSTALL_DIR/site/web/modules $INSTALL_DIR/site/web/themes
 
   cd $INSTALL_DIR/site
-  composer require drush/drush
+  # robo 5.2.x needs Symfony Console 7.4+ (addCommand), Drupal 10 uses 6.4 - remove once a fixed robo is released
+  composer require drush/drush "consolidation/robo:~5.1.0"
 
   cp $INSTALL_DIR/site/web/sites/default/default.settings.php $INSTALL_DIR/site/web/sites/default/settings.php
   yes | $INSTALL_DIR/site/vendor/bin/drush site-install standard install_configure_form.update_status_module='array(FALSE,FALSE)'\

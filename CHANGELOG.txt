@@ -766,3 +766,7 @@ v2.1.4
 v2.1.5
 ========
 - nginx-modsec: nginx 1.29.3 to 1.30.7 (stable) for CVE-2026-123007 (HTTP/2 memory corruption) and other nginx fixes
+
+v2.1.6
+========
+- drupal10: pin consolidation/robo to ~5.1.0 when installing drush (robo 5.2.x breaks drush on Symfony Console 6.4)
