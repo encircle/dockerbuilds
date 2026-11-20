@@ -95,6 +95,7 @@ RUN set -eux; \
 # -------------------------------
 COPY conf/max_file_upload.ini /usr/local/etc/php/conf.d/max_file_upload.ini
 COPY conf/cookie-security.ini /usr/local/etc/php/conf.d/cookie-security.ini
+COPY conf/session.ini /usr/local/etc/php/conf.d/session.ini
 COPY conf/expose_php.ini /usr/local/etc/php/conf.d/expose_php.ini
 COPY conf/postfix.ini /usr/local/etc/php/conf.d/postfix.ini
 COPY conf/memory_limit.ini /usr/local/etc/php/conf.d/memory_limit.ini
